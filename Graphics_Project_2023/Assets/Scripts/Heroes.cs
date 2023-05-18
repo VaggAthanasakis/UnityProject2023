@@ -62,17 +62,27 @@ public class Heroes : MonoBehaviour {
     /****************************** Incoming Events ***********************************/
 
     /* This event arrives from MouseClick when the user clicks on any hero
-    // Inside it, we check if the hero selected is this hero */
+    // Inside it, we check if the hero selected is this hero 
+    // If yes, we activate the selected visual 
+    // if not, but 1) This hero was previously selected
+                   2) This hero is !GetIsEnemy() of the selected hero
+    // then we leave the selected visual activated
+    // else we diactivate it */
     private void Instance_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
         if ((Heroes)e.selectedHero == this) {
             this.SetIsSelected(true);
             SelectedHeroVisual();
-            Debug.Log("Selected "+this.ToString());
+            Debug.Log("Selected " + this.ToString());
+        }
+        else if ((Heroes)e.selectedHero != this && this.GetIsSelected() && e.selectedHero.GetIsEnemy() != this.GetIsEnemy()) {
+            //this.SetIsSelected(false);
+            SelectedHeroVisual();
         }
         else {
             this.SetIsSelected(false);
             SelectedHeroVisual();
         }
+
     }
 
     /**************************************************************/
@@ -319,6 +329,9 @@ public class Heroes : MonoBehaviour {
         float stoppingDistance = 0.05f;
         float rotateSpeed = 10f;
         Vector3 moveDirection;
+
+        /* Cannot Perform Move When Is Dead */
+        if (this.isDead) { return; }
 
         /* If we are at free roam state => we can move
          * If we are at combat mode and it is our turn => we can move 

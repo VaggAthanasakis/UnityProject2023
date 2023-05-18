@@ -90,13 +90,13 @@ public class MouseClick : MonoBehaviour {
                         OnHeroSelectAction?.Invoke(this, new OnHeroSelectActionEventArgs {
                             selectedHero = selectedHero
                         });
-                    }/*
+                    }
                     else if(this.selectedEnemy != selectedHero && selectedHero.GetIsEnemy()) {
                         this.selectedEnemy = selectedHero;
                         OnHeroSelectAction?.Invoke(this, new OnHeroSelectActionEventArgs {
                             selectedHero = selectedEnemy
                         }) ;
-                    }*/
+                    }
                 }
             }
             /*else { // else if we havent selected a hero

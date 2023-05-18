@@ -84,7 +84,11 @@ public class TurnSystem : MonoBehaviour {
     }
 
     public int GetTurnNumber() {
-        return turnNumber;
+        return this.turnNumber;
+    }
+
+    public int GetRoundNumber() {
+        return this.roundNumber;
     }
 
     public bool IsHeroTurn() {
