@@ -317,7 +317,7 @@ public class Heroes : MonoBehaviour {
     }
     protected void PerformMove() {
         float stoppingDistance = 0.05f;
-        float rotateSpeed = 20f;
+        float rotateSpeed = 10f;
         Vector3 moveDirection;
 
         /* If we are at free roam state => we can move
