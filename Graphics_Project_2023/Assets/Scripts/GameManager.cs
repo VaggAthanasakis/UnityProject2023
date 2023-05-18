@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
 
     private void Update() {
         //Debug.Log("Current State: "+currentState);
+        UI_Manager.Instance.SetGameStateText();
         switch (currentState) {
             case State.WaitingToStart:
                 timeBuffer -= Time.deltaTime;

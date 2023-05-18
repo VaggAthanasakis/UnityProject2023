@@ -2,27 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UI_Manager : MonoBehaviour
 {
+    public static UI_Manager Instance { get; private set; }
+
     private const string MAIN_GAME_SCENE = "MainGameScene";
-    //private const string MAIN_MENU_SCENE = "MainMenuScene";
+    private string freeRoam = "Free Roam";
+    private string combatMode = "Combat Mode";
+    private string gameOver = "Game Over";
 
     [SerializeField] GameObject actionButtons;
     [SerializeField] GameObject DiceButton;
-    //[SerializeField] GameObject mainMenuButtons;
+    [SerializeField] TextMeshProUGUI gameState;
 
     private void Awake() {
+        Instance = this;
 
+        // this.gameState.text = freeRoam;
         this.actionButtons.SetActive(true);
-        //this.mainMenuButtons.SetActive(true);
         this.DiceButton.SetActive(true);
     }
 
- 
-
+    /***********************************************************************/
+    /* Code for buttons */
     public void Button_Attack() {
- 
         Debug.Log("Attack Button Pushed!");
         Heroes enemyHero = MouseClick.instance.GetSelectedHero();
         Heroes hero = GameManager.Instance.GetHeroWithTurn();
@@ -32,13 +37,6 @@ public class UI_Manager : MonoBehaviour
         }
         // IF HERO CANNOT FURTHER MOVE
         TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
-    }
-
-    private IEnumerable Attack_Wait(Heroes hero, Heroes enemyHero) {
-        float attackDuration = 5f;
-        yield return new WaitForSeconds(attackDuration);
-        //hero.SetIsAttacking(false);
-        //enemyHero.SetGetsHit(false);
     }
 
     public void Buttom_Heal() {
@@ -61,9 +59,21 @@ public class UI_Manager : MonoBehaviour
         }
         TurnSystem.Instance.CharactersSortByDicePlay();
 
-
     }
 
-    
+    /***********************************************************************/
+    public void SetGameStateText() {
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+            this.gameState.text = freeRoam;
+        }
+        else if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            this.gameState.text = combatMode;
+        }
+        else if (GameManager.Instance.GetCurrentState() == GameManager.State.GameOver) {
+            this.gameState.text = gameOver;
+        }
+    }
+
+
 
 }
