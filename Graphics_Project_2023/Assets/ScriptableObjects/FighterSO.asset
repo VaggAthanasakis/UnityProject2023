@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50af2b65857db9d4c85c290776bf6d2c, type: 3}
+  m_Name: FighterSO
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 6110140164746532010, guid: 56d6401eaec6de54299a869500421ac2, type: 3}
+  objectName: Fighter
