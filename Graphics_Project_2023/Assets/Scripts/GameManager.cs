@@ -140,8 +140,8 @@ public class GameManager : MonoBehaviour
         int width = Mathf.CeilToInt(size.x/2); 
         int depth = Mathf.CeilToInt(size.z/2); 
 
-        Debug.Log("Size X: "+width);
-        Debug.Log("Size Z: "+depth);
+        /*Debug.Log("Size X: "+width);
+        Debug.Log("Size Z: "+depth);*/
 
         for (int i=-width; i<=width; i++) {
             for (int j = -depth; j <= depth; j++) {

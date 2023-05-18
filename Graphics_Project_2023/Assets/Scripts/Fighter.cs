@@ -60,7 +60,7 @@ public class Fighter : Heroes {
     // Update is called once per frame
     void Update() {
         PerformMove();
-        base.AnimationsControll();
+        base.AnimationsDurationControll();
         //Interact();
     }
 
@@ -92,6 +92,8 @@ public class Fighter : Heroes {
         this.SetAttackRange(2);
         this.SetMoveRange(4);
         this.SetCurrentHealthPoints(this.GetHealthPoints());
+        this.SetRemainingMoveRange(this.GetMoveRange());
+      
 
         /* Initialize Hero's Statistics */
         this.InitializeHeroStatistics();

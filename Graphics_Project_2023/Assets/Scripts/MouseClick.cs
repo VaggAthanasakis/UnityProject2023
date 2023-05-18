@@ -85,7 +85,7 @@ public class MouseClick : MonoBehaviour {
             if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, instance.heroLayerMask)) { // if we select a hero                
                 Debug.Log(raycastHit.transform);
                 if (raycastHit.transform.TryGetComponent(out Heroes selectedHero)) { // if we have selected a hero
-                    if (this.selectedHero != selectedHero) {
+                    if (this.selectedHero != selectedHero && !selectedHero.GetIsEnemy()) {
                         this.selectedHero = selectedHero;
                         OnHeroSelectAction?.Invoke(this, new OnHeroSelectActionEventArgs {
                             selectedHero = selectedHero
@@ -99,17 +99,8 @@ public class MouseClick : MonoBehaviour {
                     }
                 }
             }
-            /*else { // else if we havent selected a hero
-                this.selectedHero = null;
-                /*OnHeroSelectAction?.Invoke(this, new OnHeroSelectActionEventArgs {
-                    selectedHero = selectedHero
-                });
-            }*/
-
-
-
-
         }
+ 
     }
 
 

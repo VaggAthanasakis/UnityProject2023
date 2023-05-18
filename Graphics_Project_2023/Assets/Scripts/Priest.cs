@@ -58,6 +58,7 @@ public class Priest : Heroes {
         this.SetAttackRange(2);
         this.SetMoveRange(4);
         this.SetCurrentHealthPoints(this.GetHealthPoints());
+        this.SetRemainingMoveRange(this.GetMoveRange());
 
         /* Initialize Hero's Statistics */
         this.InitializeHeroStatistics();

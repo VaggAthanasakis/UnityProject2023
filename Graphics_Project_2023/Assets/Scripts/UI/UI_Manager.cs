@@ -52,7 +52,10 @@ public class UI_Manager : MonoBehaviour
         this.DiceButton.SetActive(true);
         this.selectedHeroPanel.SetActive(false);
         this.selectedObjectPanel.SetActive(false);
-        this.roundInfoPanel.SetActive(true); // PREPEI NA TO KANO NA ANAVEI OTAN COMBAT
+        this.roundInfoPanel.SetActive(false); // PREPEI NA TO KANO NA ANAVEI OTAN COMBAT
+        gameRound.text = "ROUND 1";
+        gameTurn.text = "TURN 1";
+
     }
 
     private void Start() {
@@ -76,23 +79,40 @@ public class UI_Manager : MonoBehaviour
 
     }
 
-
-
-
     /***********************************************************************/
     /* Code for buttons */
     public void Button_Attack() {
-        Debug.Log("Attack Button Pushed!");
-        Heroes enemyHero = MouseClick.instance.GetSelectedHero();
-        Heroes hero = GameManager.Instance.GetHeroWithTurn();
-        if (enemyHero.GetIsEnemy()) {
-            Debug.Log("Can Perform Attack! Select Enemy!");
-            hero.PerformAttack(enemyHero);  
+        Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
+        Heroes attackedHero;
+        if (heroWithTurn.GetIsEnemy()) {
+            attackedHero = MouseClick.instance.GetSelectedHero();
         }
-        // IF HERO CANNOT FURTHER MOVE
-        TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
-        gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-        gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        else {
+            attackedHero = MouseClick.instance.GetSelectedEnemy();
+        }
+        if (attackedHero != null && attackedHero != heroWithTurn) {
+            Debug.Log("Can Perform Attack!");
+            heroWithTurn.PerformAttack(attackedHero);
+            // IF HERO CANNOT FURTHER MOVE
+            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        }
+
+        /* AUTA THA MPOUN OTAN KANO TO AI
+
+        Heroes enemyHero = MouseClick.instance.GetSelectedEnemy();
+        
+        if (enemyHero != null && enemyHero != heroWithTurn) {
+            Debug.Log("Can Perform Attack!");
+            heroWithTurn.PerformAttack(enemyHero);
+            // IF HERO CANNOT FURTHER MOVE
+            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        }
+        */
+
     }
 
     public void Buttom_Heal() {
@@ -104,7 +124,8 @@ public class UI_Manager : MonoBehaviour
     }
 
     public void DicePlay() {
-        //Debug.Log("Dice Button Pushed!");
+        this.roundInfoPanel.SetActive(true);
+
         TurnSystem.Instance.turnBasedOnDice.Clear();
         TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
 

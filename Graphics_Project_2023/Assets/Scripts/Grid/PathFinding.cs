@@ -40,6 +40,7 @@ public class PathFinding : MonoBehaviour {
 
     /* Get The Selected Player */ 
     private void Instance_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
+        // PREPEI NA TO FTIAXO NA PAIRNEI MONO HERO 
         this.hero = e.selectedHero;
         startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
         Debug.Log("StartGridPath Position: "+startGridPosition);
@@ -122,6 +123,7 @@ public class PathFinding : MonoBehaviour {
             Debug.Log(heroPositionsList.Count);
             /* if the hero is selected, then move it from the path calculated above */
             if (hero.GetIsSelected()) {
+                Debug.Log("========================== list: "+heroPositionsList.Count);
                 hero.SetPositionsList(heroPositionsList);
             }
             //selectedHeroStartingPosition = hero.transform.position;

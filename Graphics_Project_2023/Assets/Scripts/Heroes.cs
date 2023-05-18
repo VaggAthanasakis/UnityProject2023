@@ -24,6 +24,7 @@ public class Heroes : MonoBehaviour {
     private bool isHealing = false;
     private bool getsHit = false;
     private int currentHealthPoints;
+    private int remainingMoveRange;
 
     protected Vector3 targetPosition;
     protected GridPosition gridPosition;
@@ -46,6 +47,7 @@ public class Heroes : MonoBehaviour {
     /**********************/
     protected virtual void Awake() {
         targetPosition = this.transform.position;
+        
     }
 
     protected virtual void Start() {
@@ -186,6 +188,9 @@ public class Heroes : MonoBehaviour {
     public int GetExperiencePoints() {
         return this.experiencePoints;
     }
+    public int GetRemainingMoveRange() {
+        return this.remainingMoveRange;
+    }
 
     /* Generate Setters */
     public void SetNumOfAttributes(int numOfAttributes) {
@@ -252,6 +257,9 @@ public class Heroes : MonoBehaviour {
     public void SetExperiencePoints(int value) {
         this.experiencePoints = value;
     }
+    public void SetRemainingMoveRange(int value) {
+        this.remainingMoveRange = value;
+    }
 
     /* Increase Experience Points By One */
     public void IncreaseExperiencePoints() {
@@ -299,6 +307,12 @@ public class Heroes : MonoBehaviour {
     }
 
     public void killHero() {
+        /* Have to make the node in which the character died Walkable */
+        Vector3 killPosition = this.transform.position;
+        GridPosition killPosionAtGrid = PathFinding.Instance.GetGridPosition(killPosition);
+        PathNode killNode = PathFinding.Instance.Grid().GetPathNode(killPosionAtGrid);
+        killNode.SetIsWalkable(true);
+
         this.SetIsDead(true);
         this.SetCurrentHealthPoints(0);
         Destroy(this.gameObject, 5f);
@@ -368,10 +382,13 @@ public class Heroes : MonoBehaviour {
     public void SetPositionsList(List<Vector3> pathGridPositions) {
         /* When we are at combat mode, we check if the position we want to move to can be reached with the hero's moveRange amount
          * If we are at free roam, we dont mind about the moveRange and the hero can move freely */
-        if (pathGridPositions.Count > this.GetMoveRange() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            Debug.Log(pathGridPositions.Count+" > "+ this.GetMoveRange());
+        if (pathGridPositions.Count - 1 > this.remainingMoveRange && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            Debug.Log(pathGridPositions.Count - 1 + " > " + this.GetMoveRange());
             Debug.Log("Hero cannot move that far!");
             return;
+        }
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            this.remainingMoveRange -= pathGridPositions.Count - 1;
         }
         foreach (Vector3 pathPosition in pathGridPositions)
             positionList.Add(pathPosition);
@@ -402,7 +419,15 @@ public class Heroes : MonoBehaviour {
         isHeroSelected.SetActive(this.isSelected);
     }
 
-    
+    /* Method That Points The Character To The Interacted Hero */
+    private void PointAtTheInteractedHero(Heroes interactedHero) {
+        //Quaternion oldDirection = transform.rotation;
+        Vector3 direction = interactedHero.transform.position - this.transform.position;
+        if (direction != Vector3.zero) {
+            this.transform.rotation = Quaternion.LookRotation(direction);
+        }
+        //this.transform.rotation = oldDirection;
+    }
 
     //public virtual void Interact() { }
     public virtual void AttackAmountCalculation() { }
@@ -415,10 +440,12 @@ public class Heroes : MonoBehaviour {
                 return;
             }
             AttackAmountCalculation();
+            PointAtTheInteractedHero(heroToAttack);
             if (heroToAttack.GetArmorClass() < this.GetCurrentAttackAmount()) {
                 heroToAttack.TakeDamage(this.GetCurrentAttackAmount(), this);
                 this.IncreaseExperiencePoints();
                 if (heroToAttack.GetIsDead()) {
+                    // NA KANO WALKABLE TO NODE PANO STO OPOIO PETHANE
                     Debug.Log("Enemy killed!");
                     this.SetNumOfKills(this.GetNumOfKills() + 1);
                     this.IncreaseExperiencePoints();
@@ -452,7 +479,7 @@ public class Heroes : MonoBehaviour {
     }
 
 
-    protected void AnimationsControll() {
+    protected void AnimationsDurationControll() {
         int animationHitDuration = 2;
         int animationsAttackingDuration = 100;
 

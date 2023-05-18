@@ -18,7 +18,7 @@ public class Mage : Heroes {
     }
 
     // Start is called before the first frame update
-    protected override void Start() {
+    protected override void Start() { 
         base.Start();
         
 

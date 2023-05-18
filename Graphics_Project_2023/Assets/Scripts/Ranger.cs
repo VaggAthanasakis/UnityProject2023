@@ -51,6 +51,7 @@ public class Ranger : Heroes {
         this.SetAttackRange(6);
         this.SetMoveRange(7);
         this.SetCurrentHealthPoints(this.GetHealthPoints());
+        this.SetRemainingMoveRange(this.GetMoveRange());
 
         /* Initialize Hero's Statistics */
         this.InitializeHeroStatistics();
