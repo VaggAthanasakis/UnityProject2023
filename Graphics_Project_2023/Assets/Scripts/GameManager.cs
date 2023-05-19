@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     public enum State {  
         WaitingToStart,
         CountdownToStart,
+        CharacterSelection,
         FreeRoam,
         CombatMode,
         GameOver,
@@ -67,15 +68,17 @@ public class GameManager : MonoBehaviour
     }
 
     public void Start() {
-        FillPrefabLists();
-        HeroesAndEnemiesToSpawn(2);
-        SetAliveCharactersAtTurnSystem();
-        GameObjectsInstantiation();
+        if(GameManager.Instance.GetCurrentState() != GameManager.State.CharacterSelection) {
+            FillPrefabLists();
+            HeroesAndEnemiesToSpawn(2);
+            SetAliveCharactersAtTurnSystem();
+            GameObjectsInstantiation();
+        }
     }
 
     private void Update() {
         //Debug.Log("Current State: "+currentState);
-        UI_Manager.Instance.SetStateInfo();
+        
         switch (currentState) {
             case State.WaitingToStart:
                 timeBuffer -= Time.deltaTime;
@@ -89,9 +92,13 @@ public class GameManager : MonoBehaviour
                     currentState = State.FreeRoam;
                 }
                 break;
+            case State.CharacterSelection:
+                break;
             case State.FreeRoam:
+                UI_Manager.Instance.SetStateInfo();
                 break;
             case State.GameOver:
+                UI_Manager.Instance.SetStateInfo();
                 break; 
         }
         //Debug.Log(currentState);  
@@ -112,15 +119,18 @@ public class GameManager : MonoBehaviour
     }
 
     private void HeroesAndEnemiesToSpawn(int numberOfHeroes) {
-        /* Create Heroes */
-        Fighter fighter = (Fighter)Instantiate(fighterPrefab, Vector3.zero, Quaternion.identity);
 
-        /* Create Enemies */
-        Fighter enemyFighter =(Fighter)Instantiate(enemyFighterPrefab, new Vector3 (1,0,3), Quaternion.identity);
+        if (GameManager.Instance.GetCurrentState() != GameManager.State.CharacterSelection) {
+            /* Create Heroes */
+            Fighter fighter = (Fighter)Instantiate(fighterPrefab, Vector3.zero, Quaternion.identity);
 
-        this.spawnedCharacters.Add(fighter); 
-        this.spawnedCharacters.Add(enemyFighter);
-        aliveCharacters = spawnedCharacters;
+            /* Create Enemies */
+            Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(1, 0, 3), Quaternion.identity);
+
+            this.spawnedCharacters.Add(fighter);
+            this.spawnedCharacters.Add(enemyFighter);
+            aliveCharacters = spawnedCharacters;
+        }
     }
 
     private void SetAliveCharactersAtTurnSystem() {

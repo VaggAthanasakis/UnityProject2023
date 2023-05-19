@@ -344,6 +344,10 @@ public class Heroes : MonoBehaviour {
         float rotateSpeed = 10f;
         Vector3 moveDirection;
 
+        /* If we are at character selection scene, diactivate the move */
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.CharacterSelection) {
+            return;
+        }
         /* Cannot Perform Move When Is Dead */
         if (this.isDead) { return; }
 

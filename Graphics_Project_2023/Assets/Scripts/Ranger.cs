@@ -18,9 +18,10 @@ public class Ranger : Heroes {
 
     // Update is called once per frame
     private void Update() {
-        
-        PerformMove();
-       
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam || GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            PerformMove();
+        }
+
     }
 
     /* Getters */

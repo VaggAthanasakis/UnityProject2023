@@ -59,7 +59,9 @@ public class Fighter : Heroes {
  
     // Update is called once per frame
     void Update() {
-        PerformMove();
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam || GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            PerformMove();
+        }
         base.AnimationsDurationControll();
         //Interact();
     }
