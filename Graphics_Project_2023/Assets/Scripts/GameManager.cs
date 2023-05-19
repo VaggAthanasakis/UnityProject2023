@@ -64,11 +64,11 @@ public class GameManager : MonoBehaviour
 
     private void Awake() {
         Instance = this;
-        currentState = State.WaitingToStart;   
+        //currentState = State.WaitingToStart;   
     }
 
     public void Start() {
-        if(GameManager.Instance.GetCurrentState() != GameManager.State.CharacterSelection) {
+        if(GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             FillPrefabLists();
             HeroesAndEnemiesToSpawn(2);
             SetAliveCharactersAtTurnSystem();
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
             case State.CountdownToStart:
                 waitingForGameStart -= Time.deltaTime;
                 if (waitingForGameStart < 0f) {
-                    currentState = State.FreeRoam;
+                    currentState = State.CharacterSelection;
                 }
                 break;
             case State.CharacterSelection:
