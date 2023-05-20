@@ -72,6 +72,7 @@ public class TurnSystem : MonoBehaviour {
             OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {
                 roundNum = roundNumber
             });
+            return;
         }
         Debug.Log("Next Turn: " + turnNumber);
         this.playingCharacters[turnNumber-1].SetIsPlayersTurn(false);

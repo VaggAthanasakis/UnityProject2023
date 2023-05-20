@@ -67,18 +67,16 @@ public class Fighter : Heroes {
         this.SetMoveRange(4);
         this.SetCurrentHealthPoints(this.GetHealthPoints());
         this.SetRemainingMoveRange(this.GetMoveRange());
-      
 
         /* Initialize Hero's Statistics */
         this.InitializeHeroStatistics();
 
     }
+    /* Calculates the damage amount of the attack. damageAmount = dice + main attribute */
     public override void AttackAmountCalculation() {
- 
             int damageAmount = diceValue + this.GetStrength();
             this.SetIsAttacking(true);
-            this.SetCurrentAttackAmount(damageAmount);
-             
+            this.SetCurrentAttackAmount(damageAmount);   
         } 
     
 

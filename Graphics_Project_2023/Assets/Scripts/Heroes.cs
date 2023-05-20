@@ -421,12 +421,11 @@ public class Heroes : MonoBehaviour {
 
     /* Method That Points The Character To The Interacted Hero */
     private void PointAtTheInteractedHero(Heroes interactedHero) {
-        //Quaternion oldDirection = transform.rotation;
         Vector3 direction = interactedHero.transform.position - this.transform.position;
         if (direction != Vector3.zero) {
             this.transform.rotation = Quaternion.LookRotation(direction);
         }
-        //this.transform.rotation = oldDirection;
+
     }
 
     //public virtual void Interact() { }

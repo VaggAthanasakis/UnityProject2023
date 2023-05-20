@@ -113,29 +113,28 @@ public class GameManager : MonoBehaviour
     }
 
     private void HeroesAndEnemiesToSpawn(List<string> listOfHeroes) {
-        int i = 0;
+        int xWorldPos = 0;
 
-        if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+        if (currentState == GameManager.State.FreeRoam) {
             /* Create Heroes */
             foreach (string heroString in listOfHeroes) {
                 if (heroString.Equals(Fighter.HERO_CLASS)) {
-                    Fighter fighter = (Fighter)Instantiate(fighterPrefab,new Vector3(i,0,1), Quaternion.identity);
+                    Fighter fighter = (Fighter)Instantiate(fighterPrefab,new Vector3(xWorldPos, 0,1), Quaternion.identity);
                     this.spawnedCharacters.Add(fighter);
                 }
                 else if (heroString.Equals(Ranger.HERO_CLASS)) {
-                    Ranger ranger = (Ranger)Instantiate(rangerPrefab, new Vector3(i, 0, 1), Quaternion.identity);
+                    Ranger ranger = (Ranger)Instantiate(rangerPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
                     this.spawnedCharacters.Add(ranger);
                 }
                 else if (heroString.Equals(Mage.HERO_CLASS)) {
-                    Mage mage = (Mage)Instantiate(magePrefab, new Vector3(i, 0, 1), Quaternion.identity);
+                    Mage mage = (Mage)Instantiate(magePrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
                     this.spawnedCharacters.Add(mage);
                 }
                 else if (heroString.Equals(Priest.HERO_CLASS)) {
-                    Priest priest = (Priest)Instantiate(priestPrefab, new Vector3(i, 0, 1), Quaternion.identity);
+                    Priest priest = (Priest)Instantiate(priestPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
                     this.spawnedCharacters.Add(priest);
                 }
-
-                i++;
+                xWorldPos++;
             }
 
             aliveCharacters = spawnedCharacters;

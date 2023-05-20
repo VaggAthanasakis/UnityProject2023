@@ -21,6 +21,7 @@ public class Ranger : Heroes {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam || GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             PerformMove();
         }
+        base.AnimationsDurationControll();
 
     }
 
@@ -56,6 +57,13 @@ public class Ranger : Heroes {
 
         /* Initialize Hero's Statistics */
         this.InitializeHeroStatistics();
+    }
+
+    /* Calculates the damage amount of the attack. damageAmount = dice + main attribute */
+    public override void AttackAmountCalculation() {
+        int damageAmount = diceValue + this.GetStrength();
+        this.SetIsAttacking(true);
+        this.SetCurrentAttackAmount(damageAmount);
     }
 
     protected override void LevelUp() {
