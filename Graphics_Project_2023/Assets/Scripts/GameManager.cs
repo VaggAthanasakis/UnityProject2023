@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    private Heroes heroWithTurn = null;
+    //private Heroes heroWithTurn = null;
 
     /******/
     private List<Heroes> heroesPrefabs = new List<Heroes>();
@@ -50,9 +50,6 @@ public class GameManager : MonoBehaviour
         this.currentState = newState;
     }
 
-    public void setHeroesFromCharacterSelectionScene(List<string> list) {
-        this.heroesFromCharacterSelectionScene = list;
-    }
 
     public Heroes GetHeroWithTurn() {
         foreach (Heroes hero in spawnedCharacters) {
@@ -79,7 +76,7 @@ public class GameManager : MonoBehaviour
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             Debug.Log("INSIDE START WITH FREE ROAM");
             FillPrefabLists();
-            HeroesAndEnemiesToSpawn(2);
+            HeroesAndEnemiesToSpawn(heroesFromCharacterSelectionScene);
             SetAliveCharactersAtTurnSystem();
             GameObjectsInstantiation();
         }
@@ -87,7 +84,6 @@ public class GameManager : MonoBehaviour
 
     private void Update() {
         //Debug.Log("Current State: "+currentState);
-        
         switch (currentState) {
             case State.FreeRoam:
                 UI_Manager.Instance.SetStateInfo();
@@ -116,17 +112,32 @@ public class GameManager : MonoBehaviour
         this.enemiesPrefabs.Add(enemyPriestPrefab);
     }
 
-    private void HeroesAndEnemiesToSpawn(int numberOfHeroes) {
+    private void HeroesAndEnemiesToSpawn(List<string> listOfHeroes) {
+        int i = 0;
 
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             /* Create Heroes */
-            Fighter fighter = (Fighter)Instantiate(fighterPrefab, Vector3.zero, Quaternion.identity);
+            foreach (string heroString in listOfHeroes) {
+                if (heroString.Equals(Fighter.HERO_CLASS)) {
+                    Fighter fighter = (Fighter)Instantiate(fighterPrefab,new Vector3(i,0,1), Quaternion.identity);
+                    this.spawnedCharacters.Add(fighter);
+                }
+                else if (heroString.Equals(Ranger.HERO_CLASS)) {
+                    Ranger ranger = (Ranger)Instantiate(rangerPrefab, new Vector3(i, 0, 1), Quaternion.identity);
+                    this.spawnedCharacters.Add(ranger);
+                }
+                else if (heroString.Equals(Mage.HERO_CLASS)) {
+                    Mage mage = (Mage)Instantiate(magePrefab, new Vector3(i, 0, 1), Quaternion.identity);
+                    this.spawnedCharacters.Add(mage);
+                }
+                else if (heroString.Equals(Priest.HERO_CLASS)) {
+                    Priest priest = (Priest)Instantiate(priestPrefab, new Vector3(i, 0, 1), Quaternion.identity);
+                    this.spawnedCharacters.Add(priest);
+                }
 
-            /* Create Enemies */
-            Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(1, 0, 3), Quaternion.identity);
+                i++;
+            }
 
-            this.spawnedCharacters.Add(fighter);
-            this.spawnedCharacters.Add(enemyFighter);
             aliveCharacters = spawnedCharacters;
         }
     }
@@ -136,7 +147,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void GameObjectsInstantiation() {
-        GameObject cubeObject = Instantiate(cube,new Vector3(4,1,2), Quaternion.identity);
+        GameObject cubeObject = Instantiate(cube,new Vector3(4,1,4), Quaternion.identity);
         SetNoWalkableAreaAtObjectInstantiation(cubeObject);
     }
 

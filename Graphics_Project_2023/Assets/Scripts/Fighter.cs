@@ -9,34 +9,6 @@ public class Fighter : Heroes {
     private int strength;
     public const string HERO_CLASS = "Fighter";
 
-    /* Event that is fired when the player performs an attack */
-    public event EventHandler<OnFighterAttackActionEventArgs> OnFighterAttackAction;
-    public class OnFighterAttackActionEventArgs : EventArgs {
-        public int damageAmount;
-    }
-
-    private void Fighter_OnFighterAttackAction(object sender, OnFighterAttackActionEventArgs e) {
-        if ((Fighter)sender == this) {
-            Debug.Log("Error: Same Sender And Receiver Of An Attack Action!");
-        }
-        else {
-            if (e.damageAmount >= this.GetArmorClass()) {
-                /* Incoming Successful Attack */
-                //this.SetGetsHit(true);
-                if (e.damageAmount >= this.GetCurrentHealthPoints()) {
-                    /* This Hero Is Killed By This Attack */
-                    //this.SetIsDead(true);
-                    //this.SetCurrentHealthPoints(0);
-                    this.killHero();
-                }
-                else {
-                    this.SetCurrentHealthPoints(this.GetCurrentHealthPoints() - e.damageAmount);
-                    this.SetGetsHit(true);
-                }
-                
-            }
-        }
-    }
     /*   */
 
     /* Awake(), Start(), Update() */
