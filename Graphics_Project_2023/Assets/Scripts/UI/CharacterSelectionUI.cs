@@ -5,11 +5,16 @@ using TMPro;
 
 public class CharacterSelectionUI : MonoBehaviour {
 
-    private void Start() {
-        GameManager.Instance.SetCurrentState(GameManager.State.CharacterSelection);
+    public static CharacterSelectionUI Instance { get; private set; }
+
+    private void Awake() {
+        if (Instance == null) {
+            Instance = this;
+        } 
     }
 
     [SerializeField] GameObject errorMessage;
+    private List<string> selectedHeroes = new List<string>();
 
     /**************************************************/
     [SerializeField] TextMeshProUGUI fighterCounterText;
@@ -23,23 +28,46 @@ public class CharacterSelectionUI : MonoBehaviour {
     private int priestCounter = 0;
     private int charactersCounter = 0;
 
+    /* The Heroes That The User Has Select */
+    private void SelectedCharactersToSpawn() {
+        for (int i = 0; i < charactersCounter; i++) { // we need to spawn charactersCounter heroes
+            if (fighterCounter > 0) {
+                selectedHeroes.Add(Fighter.HERO_CLASS);
+                fighterCounter--;
+            }
+            if (rangerCounter > 0) {
+                selectedHeroes.Add(Ranger.HERO_CLASS);
+                rangerCounter--;
+            }
+            if (mageCounter > 0) {
+                selectedHeroes.Add(Mage.HERO_CLASS);
+                mageCounter--;
+            }
+            if (priestCounter > 0) {
+                selectedHeroes.Add(Priest.HERO_CLASS);
+                priestCounter--;
+            }
+        }
+    }
+
+    public List<string> GetSelectedCharacters() { 
+        return this.selectedHeroes;
+    }
+
+
     /* Start Game Button */
     public void Button_StartGame() {
         if (charactersCounter > 0 && charactersCounter <= 3) {
             /* Then We Can Start The Game */
             this.errorMessage.SetActive(false);
             Debug.Log("Game Can Start!");
+            SelectedCharactersToSpawn();
             SceneLoader.LoadScene(SceneLoader.Scene.MainGameScene);
-            //GameManager.Instance.SetCurrentState(GameManager.State.FreeRoam);
-            Debug.Log("State from character selection "+GameManager.Instance.GetCurrentState());
         }
         else {
             this.errorMessage.SetActive(true);
         }
     }
-
-
-
 
 
     /* Add/Remove Fighter */

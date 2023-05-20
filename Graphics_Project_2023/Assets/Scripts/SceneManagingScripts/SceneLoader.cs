@@ -13,6 +13,7 @@ public static class SceneLoader {
     }
 
     private static Scene targetScene;
+    public static List<string> selectedCharacters = new List<string>();
 
     /* When we try to change scene, at first we load the loading scene for a single frame */
     public static void LoadScene(Scene targetScene) {
@@ -22,23 +23,12 @@ public static class SceneLoader {
     }
 
     public static void LoadingSceneWait() { // this function will run at the first update of the LoadingScene
-       /* After the first frame at the loading scene, we load the next one */
-        SceneManager.LoadScene(targetScene.ToString());
-        Debug.Log("Exiting Switch");
-        switch (SceneLoader.targetScene) {
-            case Scene.MainMenuScene:
-                GameManager.Instance.SetCurrentState(GameManager.State.MainMenu);
-                Debug.Log("State From Load: "+GameManager.Instance.GetCurrentState());
-                break;
-            case Scene.CharacterSelectionScene:
-                GameManager.Instance.SetCurrentState(GameManager.State.CharacterSelection);
-                break;
-            case Scene.MainGameScene:
-                GameManager.Instance.SetCurrentState(GameManager.State.FreeRoam);
-                break;
-         
-
+        /* After the first frame at the loading scene, we load the next one */
+        if (targetScene == Scene.MainGameScene) {
+            selectedCharacters = CharacterSelectionUI.Instance.GetSelectedCharacters(); // we inform the character list with the selected
+                                                                                        // by the user characters
         }
+        SceneManager.LoadScene(targetScene.ToString());
     }
 
 }

@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public List<Heroes> spawnedCharacters;
     public List<Heroes> aliveCharacters;
 
+    private List<string> heroesFromCharacterSelectionScene = new List<string>();
+
     private List<int> turnBasedOnDice = new List<int>();
 
     /* Heroes Prefabs */
@@ -33,8 +35,6 @@ public class GameManager : MonoBehaviour
 
 
     public enum State {  
-        MainMenu,
-        CharacterSelection,
         FreeRoam,
         CombatMode,
         GameOver,
@@ -50,6 +50,10 @@ public class GameManager : MonoBehaviour
         this.currentState = newState;
     }
 
+    public void setHeroesFromCharacterSelectionScene(List<string> list) {
+        this.heroesFromCharacterSelectionScene = list;
+    }
+
     public Heroes GetHeroWithTurn() {
         foreach (Heroes hero in spawnedCharacters) {
             if (hero.GetIsPlayersTurn()) {
@@ -60,13 +64,20 @@ public class GameManager : MonoBehaviour
     }
 
     private void Awake() {
+        if (Instance != null) {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
-        //currentState = State.WaitingToStart;   
+    
     }
 
+
     public void Start() {
-        Debug.Log("START AT GAMEMANAGER");
-        if(GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+        Debug.Log("START AT GAMEMANAGER "+this.currentState);
+        heroesFromCharacterSelectionScene = SceneLoader.selectedCharacters;
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+            Debug.Log("INSIDE START WITH FREE ROAM");
             FillPrefabLists();
             HeroesAndEnemiesToSpawn(2);
             SetAliveCharactersAtTurnSystem();
@@ -75,21 +86,20 @@ public class GameManager : MonoBehaviour
     }
 
     private void Update() {
-        Debug.Log("Current State: "+currentState);
+        //Debug.Log("Current State: "+currentState);
         
         switch (currentState) {
-            case State.MainMenu:
-                break;
-            case State.CharacterSelection:
-                break;
             case State.FreeRoam:
-                //UI_Manager.Instance.SetStateInfo();
+                UI_Manager.Instance.SetStateInfo();
+                break;
+            case State.CombatMode:
+                UI_Manager.Instance.SetStateInfo();
                 break;
             case State.GameOver:
                 UI_Manager.Instance.SetStateInfo();
                 break; 
         }
-        //Debug.Log(currentState);  
+        
     }
 
     private void FillPrefabLists() {
@@ -108,7 +118,7 @@ public class GameManager : MonoBehaviour
 
     private void HeroesAndEnemiesToSpawn(int numberOfHeroes) {
 
-        if (GameManager.Instance.GetCurrentState() != GameManager.State.CharacterSelection) {
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             /* Create Heroes */
             Fighter fighter = (Fighter)Instantiate(fighterPrefab, Vector3.zero, Quaternion.identity);
 
