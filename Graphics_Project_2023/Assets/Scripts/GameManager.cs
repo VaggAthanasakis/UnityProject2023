@@ -33,8 +33,7 @@ public class GameManager : MonoBehaviour
 
 
     public enum State {  
-        WaitingToStart,
-        CountdownToStart,
+        MainMenu,
         CharacterSelection,
         FreeRoam,
         CombatMode,
@@ -42,8 +41,6 @@ public class GameManager : MonoBehaviour
     }
 
     private State currentState;
-    private float timeBuffer = 1f;
-    private float waitingForGameStart = 2f;
 
     public State GetCurrentState() {
         return this.currentState;
@@ -68,6 +65,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void Start() {
+        Debug.Log("START AT GAMEMANAGER");
         if(GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             FillPrefabLists();
             HeroesAndEnemiesToSpawn(2);
@@ -77,25 +75,15 @@ public class GameManager : MonoBehaviour
     }
 
     private void Update() {
-        //Debug.Log("Current State: "+currentState);
+        Debug.Log("Current State: "+currentState);
         
         switch (currentState) {
-            case State.WaitingToStart:
-                timeBuffer -= Time.deltaTime;
-                if (timeBuffer < 0f) {
-                    currentState = State.CountdownToStart;
-                }
-                break;
-            case State.CountdownToStart:
-                waitingForGameStart -= Time.deltaTime;
-                if (waitingForGameStart < 0f) {
-                    currentState = State.CharacterSelection;
-                }
+            case State.MainMenu:
                 break;
             case State.CharacterSelection:
                 break;
             case State.FreeRoam:
-                UI_Manager.Instance.SetStateInfo();
+                //UI_Manager.Instance.SetStateInfo();
                 break;
             case State.GameOver:
                 UI_Manager.Instance.SetStateInfo();

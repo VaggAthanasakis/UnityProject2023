@@ -29,6 +29,9 @@ public class CharacterSelectionUI : MonoBehaviour {
             /* Then We Can Start The Game */
             this.errorMessage.SetActive(false);
             Debug.Log("Game Can Start!");
+            SceneLoader.LoadScene(SceneLoader.Scene.MainGameScene);
+            //GameManager.Instance.SetCurrentState(GameManager.State.FreeRoam);
+            Debug.Log("State from character selection "+GameManager.Instance.GetCurrentState());
         }
         else {
             this.errorMessage.SetActive(true);

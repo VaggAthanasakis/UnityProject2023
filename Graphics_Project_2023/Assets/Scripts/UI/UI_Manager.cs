@@ -59,6 +59,7 @@ public class UI_Manager : MonoBehaviour
     }
 
     private void Start() {
+        GameManager.Instance.SetCurrentState(GameManager.State.FreeRoam);
         MouseClick.instance.OnHeroSelectAction += MouseClick_OnHeroSelectAction;
     }
 

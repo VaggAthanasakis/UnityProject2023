@@ -11,8 +11,8 @@ public class MainMenuIU : MonoBehaviour {
 
     public void Button_StartGame() {
         Debug.Log("Start Game Pushed!");
-        SceneLoader.LoadScene(SceneLoader.Scene.MainGameScene);
-        GameManager.Instance.SetCurrentState(GameManager.State.FreeRoam);
+        SceneLoader.LoadScene(SceneLoader.Scene.CharacterSelectionScene);
+        //GameManager.Instance.SetCurrentState(GameManager.State.CharacterSelection);
     }
 
     public void Button_Credits() {

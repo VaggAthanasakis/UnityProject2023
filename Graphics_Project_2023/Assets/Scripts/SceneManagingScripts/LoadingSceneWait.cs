@@ -13,7 +13,9 @@ public class LoadingSceneWait : MonoBehaviour
         if (isFirstUpdate) { // If we are at the first update then make the variable false
             this.isFirstUpdate = false;
             SceneLoader.LoadingSceneWait();
+            
         }
+ 
     }
 
 
