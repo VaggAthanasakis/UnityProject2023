@@ -131,11 +131,11 @@ public class UI_Manager : MonoBehaviour
         this.roundInfoPanel.SetActive(true);
 
         TurnSystem.Instance.turnBasedOnDice.Clear();
-        TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
+        //TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
 
-        foreach (Heroes character in GameManager.Instance.aliveHeroes) {
-            //Debug.Log("Class: " + character.ToString());
+        foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();
+            Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
             character.diceValue = diceValue;
             TurnSystem.Instance.turnBasedOnDice.Add(diceValue);
             //Debug.Log("Dice Value: " + diceValue);

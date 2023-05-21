@@ -38,6 +38,7 @@ public class TurnSystem : MonoBehaviour {
 
     public void SetPlayingCharacters(List<Heroes> playingCharacters) {
         this.playingCharacters = playingCharacters;
+
     }
 
     public void ResetTurnNumber() {
@@ -78,13 +79,23 @@ public class TurnSystem : MonoBehaviour {
             });
             return;
         }
-        Debug.Log("Next Turn: " + turnNumber);
+        
         this.playingCharacters[turnNumber-1].SetIsPlayersTurn(false);
-        this.playingCharacters[turnNumber].SetIsPlayersTurn(true);
+        /* Have to check if the next character has been killed previously in the round */
+        int k = 0;
+        for (int i = turnNumber; i < this.playingCharacters.Count; i++) {
+            if (this.playingCharacters[turnNumber + k] != null && !this.playingCharacters[turnNumber + k].GetIsDead()) {
+                this.playingCharacters[turnNumber].SetIsPlayersTurn(true);
+            }
+            else {
+                k++;
+            }
+        }
         turnNumber++;
+        Debug.Log("Next Turn: " + turnNumber);
 
         OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { 
-            heroWithTurn = this.playingCharacters[turnNumber - 1]
+            heroWithTurn = this.playingCharacters[turnNumber - 1 + k]
         });
     }
 

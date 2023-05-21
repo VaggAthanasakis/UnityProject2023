@@ -335,7 +335,9 @@ public class Heroes : MonoBehaviour {
 
         this.SetIsDead(true);
         this.SetCurrentHealthPoints(0);
+        GameManager.Instance.aliveCharacters.Remove(this); // remove the character for the game
         Destroy(this.gameObject, 5f);
+
     }
 
     public void GetHeal(int healAmount) {

@@ -187,6 +187,9 @@ public class GameManager : MonoBehaviour
         this.aliveCharacters.Add(enemyRanger);
         this.aliveEnemies.Add(enemyFighter);
         this.aliveEnemies.Add(enemyRanger);
+        /*foreach (Heroes hero in aliveCharacters) {
+            Debug.Log("Enemy: "+hero.GetIsEnemy());
+        }*/
     }
 
     private void SetAliveCharactersAtTurnSystem() {
