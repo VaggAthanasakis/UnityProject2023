@@ -302,6 +302,7 @@ public class Heroes : MonoBehaviour {
 
     /* Methods */
     public void TakeDamage(int damageAmount, Heroes otherHero) {
+        Debug.Log("Other Hero "+otherHero);
         int newHealth = this.GetCurrentHealthPoints() - damageAmount;
         if (newHealth < 0) {
             newHealth = 0;
@@ -322,8 +323,7 @@ public class Heroes : MonoBehaviour {
             this.SetIsDead(false);
         }
         
-        //otherHero.SetIdle();
-      
+     
     }
 
     public void killHero() {
@@ -459,6 +459,9 @@ public class Heroes : MonoBehaviour {
     public virtual void AttackAmountCalculation() { }
 
     public virtual void PerformAttack(Heroes heroToAttack) {
+        /* If we are not in combat mode, return */
+        if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+
         if (heroToAttack.GetIsEnemy() != this.GetIsEnemy()) {
             if (diceValue == 1) {
                 this.SetIsAttacking(false);
@@ -468,6 +471,7 @@ public class Heroes : MonoBehaviour {
             AttackAmountCalculation();
             PointAtTheInteractedHero(heroToAttack);
             if (heroToAttack.GetArmorClass() < this.GetCurrentAttackAmount()) {
+                Debug.Log("Successfull Attack");
                 heroToAttack.TakeDamage(this.GetCurrentAttackAmount(), this);
                 this.IncreaseExperiencePoints();
                 if (heroToAttack.GetIsDead()) {
@@ -477,6 +481,9 @@ public class Heroes : MonoBehaviour {
                     this.IncreaseExperiencePoints();
                 }
                 FirstLevelUp();
+            }
+            else {
+                Debug.Log("Unsuccessful Due To Armor > DamageAmount");
             }
         }
 

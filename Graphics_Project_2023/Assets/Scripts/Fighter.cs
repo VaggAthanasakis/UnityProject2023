@@ -82,45 +82,7 @@ public class Fighter : Heroes {
     
 
 
-    public  void Interact() {
-        //if (this.GetIsSelected() && this.GetIsPlayersTurn()) {
-        if (this.GetIsPlayersTurn()) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            /* Check if we want to interact with an other hero */
-            /* if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue)) {
-                 Heroes otherHero = hit.collider.GetComponent<Heroes>();*/
-
-            Heroes otherHero = null;
-            while (otherHero != null && otherHero.GetIsEnemy() != this.GetIsEnemy() && otherHero != this) {
-                otherHero = MouseClick.instance.GetSelectedHero();
-            }
-            Debug.Log(otherHero.ToString());
-                //otherHero.statistics();
-            /* Attack */
-                if (otherHero != null && otherHero != this && otherHero.GetIsEnemy() != this.GetIsEnemy()) {
-                    this.AttackAmountCalculation();
-                   // Debug.Log("Crr Attack amount: "+this.GetCurrentAttackAmount());
-                    //Debug.Log("Crr Attack amount: " + this.GetCurrentAttackAmount());
-
-                    if (otherHero.GetArmorClass() < this.GetCurrentAttackAmount()) {
-                        otherHero.TakeDamage(this.GetCurrentAttackAmount(),this);
-                        //if (otherHero.GetIsDead() || otherHero.GetCurrentHealthPoints() <= 0) {
-                        if (otherHero.GetIsDead()) {
-                            Debug.Log("Enemy killed!");
-                            this.SetNumOfKills(this.GetNumOfKills() + 1);
-                            
-                        }
-                    }
-                    
-                    
-                }
-                
-
-            }
-        }
       
     }
 
 
-//}

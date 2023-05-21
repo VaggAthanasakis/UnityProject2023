@@ -75,9 +75,11 @@ public class MouseClick : MonoBehaviour {
         mouseIndicator.position = GetPosition();
         //if (EventSystem.current.IsPointerOverGameObject()) return;
         if (this.selectedEnemy != null) {
-            if (this.selectedEnemy.GetIsDead())
+            if (this.selectedEnemy.GetIsDead()) {
+                Debug.Log("IS DEAD");
                 this.selectedEnemy.SetIsSelected(false);
                 this.selectedEnemy = null;
+            }
         }
         if (Input.GetMouseButtonDown(0)) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -87,12 +89,14 @@ public class MouseClick : MonoBehaviour {
                 if (raycastHit.transform.TryGetComponent(out Heroes selectedHero)) { // if we have selected a hero
                     if (this.selectedHero != selectedHero && !selectedHero.GetIsEnemy()) {
                         this.selectedHero = selectedHero;
+                        Debug.Log("Selected Hero: "+selectedHero);
                         OnHeroSelectAction?.Invoke(this, new OnHeroSelectActionEventArgs {
                             selectedHero = selectedHero
                         });
                     }
                     else if(this.selectedEnemy != selectedHero && selectedHero.GetIsEnemy()) {
                         this.selectedEnemy = selectedHero;
+                        Debug.Log("Selected Enemy: " + selectedEnemy);
                         OnHeroSelectAction?.Invoke(this, new OnHeroSelectActionEventArgs {
                             selectedHero = selectedEnemy
                         }) ;
@@ -100,7 +104,7 @@ public class MouseClick : MonoBehaviour {
                 }
             }
         }
- 
+        //Debug.Log("SELECTED ENEMY: "+this.GetSelectedEnemy());
     }
 
 

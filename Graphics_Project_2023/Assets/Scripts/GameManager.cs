@@ -79,10 +79,10 @@ public class GameManager : MonoBehaviour
     public void Start() {
         TurnSystem.Instance.OnRoundEnded += TurnSystem_OnRoundEnded;
         heroesFromCharacterSelectionScene = SceneLoader.selectedCharacters;
-            FillPrefabLists();
-            HeroesAndEnemiesToSpawn(heroesFromCharacterSelectionScene);
-            SetAliveCharactersAtTurnSystem();
-            GameObjectsInstantiation();
+        FillPrefabLists();
+        HeroesAndEnemiesToSpawn(heroesFromCharacterSelectionScene);
+        SetAliveCharactersAtTurnSystem();
+        GameObjectsInstantiation();
         
         
     }
@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
     private void TurnSystem_OnRoundEnded(object sender, TurnSystem.OnRoundEndedEventArgs e) {
         TurnSystem.Instance.ResetTurnNumber();
         ResetCharactersMoveRange();
+        SetAliveCharactersAtTurnSystem();
         gameRound++;
     }
 

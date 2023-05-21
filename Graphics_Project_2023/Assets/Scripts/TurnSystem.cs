@@ -34,7 +34,6 @@ public class TurnSystem : MonoBehaviour {
             return;
         }
         Instance = this;
-        //heroHasTurm = null;
     }
 
     public void SetPlayingCharacters(List<Heroes> playingCharacters) {
@@ -60,7 +59,7 @@ public class TurnSystem : MonoBehaviour {
         this.playingCharacters = tmpTurnPlay;
         this.playingCharacters[0].SetIsPlayersTurn(true);
         Debug.Log("Player's turn: "+this.playingCharacters[0].ToString());
-        OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
+        OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
             heroWithTurn = this.playingCharacters[0]
         });
         return this.playingCharacters;
