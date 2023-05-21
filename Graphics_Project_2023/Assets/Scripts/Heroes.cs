@@ -71,11 +71,28 @@ public class Heroes : MonoBehaviour {
     // then we leave the selected visual activated
     // else we diactivate it */
     private void Instance_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
-        if ((Heroes)e.selectedHero == this) {
+        if ((Heroes)e.selectedHero == this && this.GetIsEnemy()) {
             this.SetIsSelected(true);
             SelectedHeroVisual();
             Debug.Log("Selected " + this.ToString());
         }
+        else if ((Heroes)e.selectedHero == this && !this.GetIsEnemy() && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+            this.SetIsSelected(true);
+            SelectedHeroVisual();
+            Debug.Log("Selected " + this.ToString());
+        }
+        else if ((Heroes)e.selectedHero == this && !this.GetIsEnemy() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            if (isPlayersTurn) {
+                this.SetIsSelected(true);
+                SelectedHeroVisual();
+                Debug.Log("Selected " + this.ToString());
+            }
+            else {
+                this.SetIsSelected(false);
+                SelectedHeroVisual();
+            }
+        }
+
         else if ((Heroes)e.selectedHero != this && this.GetIsSelected() && e.selectedHero.GetIsEnemy() != this.GetIsEnemy()) {
             //this.SetIsSelected(false);
             SelectedHeroVisual();
@@ -100,11 +117,14 @@ public class Heroes : MonoBehaviour {
 
         if (e.heroWithTurn == this) {
             this.SetIsPlayersTurn(true);
+            this.SetIsSelected(true);
+            SelectedHeroVisual();
             Debug.Log("This Players Turn: "+this.ToString());
         }
         else {
             this.SetIsPlayersTurn(false);
-
+            this.SetIsSelected(false);
+            SelectedHeroVisual();
         }
         /* Set the opposite turn for hero and enemy */
         /*if (!this.GetIsEnemy()) {
@@ -341,7 +361,7 @@ public class Heroes : MonoBehaviour {
     }
     protected void PerformMove() {
         float stoppingDistance = 0.05f;
-        float rotateSpeed = 10f;
+        float rotateSpeed = 15f;
         Vector3 moveDirection;
 
         /* Cannot Perform Move When Is Dead */
@@ -356,34 +376,40 @@ public class Heroes : MonoBehaviour {
                 return;
             }
             targetPosition = positionList[currentPositionIndex];
+            //GameManager.Instance.CheckForCombatMode(targetPosition, this);
             moveDirection = (targetPosition - transform.position).normalized;
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
 
             if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance) {
                 float moveSpeed = 4f;
                 transform.position += moveDirection * moveSpeed * Time.deltaTime;
-                this.SetIsWalking(true);              
+                this.SetIsWalking(true);
+                // GameManager.Instance.CheckForCombatMode();
             }
             else {
+                //GameManager.Instance.CheckForCombatMode();
                 this.SetIsWalking(true);
                 currentPositionIndex++;
                 if (currentPositionIndex >= positionList.Count) {
                     //ÅÍÄ
                     // at targetPoint
-                    //Debug.Log("CurrentPos:" + currentPositionIndex);
                     positionList.Clear();
                     currentPositionIndex = 0;
+                    GameManager.Instance.CheckForCombatMode(targetPosition, this);
+                    this.SetIsWalking(false);
                 }
             }
-
         }
+        
+
+
     }
     /* Set the path that the hero must follow in order to move */
     public void SetPositionsList(List<Vector3> pathGridPositions) {
         /* When we are at combat mode, we check if the position we want to move to can be reached with the hero's moveRange amount
          * If we are at free roam, we dont mind about the moveRange and the hero can move freely */
         if (pathGridPositions.Count - 1 > this.remainingMoveRange && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            Debug.Log(pathGridPositions.Count - 1 + " > " + this.GetMoveRange());
+            Debug.Log(pathGridPositions.Count - 1 + " > " + this.remainingMoveRange);
             Debug.Log("Hero cannot move that far!");
             return;
         }
@@ -392,7 +418,8 @@ public class Heroes : MonoBehaviour {
         }
         foreach (Vector3 pathPosition in pathGridPositions)
             positionList.Add(pathPosition);
-        
+        Debug.Log("target: "+pathGridPositions[pathGridPositions.Count - 1].ToString());
+        //GameManager.Instance.CheckForCombatMode(pathGridPositions[pathGridPositions.Count-1], this);
     }
 
     public void SetIdle() {

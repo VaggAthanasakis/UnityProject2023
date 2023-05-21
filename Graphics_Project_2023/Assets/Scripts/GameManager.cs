@@ -11,12 +11,18 @@ public class GameManager : MonoBehaviour
     /******/
     private List<Heroes> heroesPrefabs = new List<Heroes>();
     private List<Heroes> enemiesPrefabs = new List<Heroes>();
-    public List<Heroes> spawnedCharacters;
-    public List<Heroes> aliveCharacters;
+
+    public List<Heroes> aliveCharacters;  // list with both heroes and enemies
+    public List<Heroes> aliveHeroes;  // list with heroes
+    private List<Heroes> aliveEnemies; // list with the alive enemies
 
     private List<string> heroesFromCharacterSelectionScene = new List<string>();
 
     private List<int> turnBasedOnDice = new List<int>();
+
+    private int enterCombatModeRange = 3;
+    public bool isCheckingForCombat = false;
+    private int gameRound = 1;
 
     /* Heroes Prefabs */
     [SerializeField] Heroes fighterPrefab;
@@ -37,6 +43,7 @@ public class GameManager : MonoBehaviour
     public enum State {  
         FreeRoam,
         CombatMode,
+        Victory,
         GameOver,
     }
 
@@ -52,7 +59,7 @@ public class GameManager : MonoBehaviour
 
 
     public Heroes GetHeroWithTurn() {
-        foreach (Heroes hero in spawnedCharacters) {
+        foreach (Heroes hero in aliveCharacters) {
             if (hero.GetIsPlayersTurn()) {
                 return hero;
             }
@@ -66,36 +73,63 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
-    
     }
 
 
     public void Start() {
-        Debug.Log("START AT GAMEMANAGER "+this.currentState);
+        TurnSystem.Instance.OnRoundEnded += TurnSystem_OnRoundEnded;
         heroesFromCharacterSelectionScene = SceneLoader.selectedCharacters;
-        if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
-            Debug.Log("INSIDE START WITH FREE ROAM");
             FillPrefabLists();
             HeroesAndEnemiesToSpawn(heroesFromCharacterSelectionScene);
             SetAliveCharactersAtTurnSystem();
             GameObjectsInstantiation();
-        }
+        
+        
+    }
+
+    /* This event arrives when the round ends */
+    private void TurnSystem_OnRoundEnded(object sender, TurnSystem.OnRoundEndedEventArgs e) {
+        TurnSystem.Instance.ResetTurnNumber();
+        ResetCharactersMoveRange();
+        gameRound++;
     }
 
     private void Update() {
+        //CheckForCombatMode();
         //Debug.Log("Current State: "+currentState);
+
         switch (currentState) {
             case State.FreeRoam:
                 UI_Manager.Instance.SetStateInfo();
                 break;
             case State.CombatMode:
                 UI_Manager.Instance.SetStateInfo();
+                CheckIfGameEnded();
+                break;
+            case State.Victory:
                 break;
             case State.GameOver:
                 UI_Manager.Instance.SetStateInfo();
                 break; 
         }
         
+    }
+
+    /* Chech if the game has ended, check if all heroes are dead or all enemies are dead */
+    private void CheckIfGameEnded() {
+        if (aliveEnemies.Count <= 0) { //
+            currentState = State.Victory;
+        }
+        if (aliveHeroes.Count <= 0) {
+            currentState = State.GameOver;
+        }
+    }
+
+    /* Reset Heroes MoveRange */
+    private void ResetCharactersMoveRange() {
+        foreach (Heroes hero in aliveCharacters) {
+            hero.SetRemainingMoveRange(hero.GetMoveRange());
+        }
     }
 
     private void FillPrefabLists() {
@@ -114,31 +148,44 @@ public class GameManager : MonoBehaviour
 
     private void HeroesAndEnemiesToSpawn(List<string> listOfHeroes) {
         int xWorldPos = 0;
+        this.aliveHeroes = new List<Heroes>();
+        this.aliveEnemies = new List<Heroes>();
+        this.aliveCharacters = new List<Heroes>();
 
         if (currentState == GameManager.State.FreeRoam) {
             /* Create Heroes */
             foreach (string heroString in listOfHeroes) {
                 if (heroString.Equals(Fighter.HERO_CLASS)) {
                     Fighter fighter = (Fighter)Instantiate(fighterPrefab,new Vector3(xWorldPos, 0,1), Quaternion.identity);
-                    this.spawnedCharacters.Add(fighter);
+                    this.aliveCharacters.Add(fighter);
+                    this.aliveHeroes.Add(fighter);
                 }
                 else if (heroString.Equals(Ranger.HERO_CLASS)) {
                     Ranger ranger = (Ranger)Instantiate(rangerPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
-                    this.spawnedCharacters.Add(ranger);
+                    this.aliveCharacters.Add(ranger);
+                    this.aliveHeroes.Add(ranger);
                 }
                 else if (heroString.Equals(Mage.HERO_CLASS)) {
                     Mage mage = (Mage)Instantiate(magePrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
-                    this.spawnedCharacters.Add(mage);
+                    this.aliveCharacters.Add(mage);
+                    this.aliveHeroes.Add(mage);
                 }
                 else if (heroString.Equals(Priest.HERO_CLASS)) {
                     Priest priest = (Priest)Instantiate(priestPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
-                    this.spawnedCharacters.Add(priest);
+                    this.aliveCharacters.Add(priest);
+                    this.aliveHeroes.Add(priest);
                 }
                 xWorldPos++;
-            }
-
-            aliveCharacters = spawnedCharacters;
+            } 
         }
+
+        /* Create Enemies */
+        Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(2,0,9), Quaternion.identity);
+        Ranger enemyRanger = (Ranger)Instantiate(enemyRangerPrefab,new Vector3(4,0,9), Quaternion.identity);
+        this.aliveCharacters.Add(enemyFighter);
+        this.aliveCharacters.Add(enemyRanger);
+        this.aliveEnemies.Add(enemyFighter);
+        this.aliveEnemies.Add(enemyRanger);
     }
 
     private void SetAliveCharactersAtTurnSystem() {
@@ -174,13 +221,56 @@ public class GameManager : MonoBehaviour
   
     }
 
-    /* Represents One Game Round */
-    /*private void GameRound() {
-        int numberOfTurns = this.aliveCharacters.Count;
+    /* Now we will check if during the movement, the hero comes close to an enemy
+     * if yes, then the game state changes to combatMode */
+    public bool CheckForCombatMode(Vector3 targetPosition, Heroes walkingHero1) {
+        /* if we are already, return */
+        if (currentState == State.CombatMode) return false;
 
+        /* at first we find, if it exists, the walking hero */
+        /*Heroes walkingHero = null;
+        foreach (Heroes hero in aliveHeroes) {
+            if (!hero.GetIsWalking()) { continue; } // If this one is not moving, check the next one
+            else {
+                walkingHero = hero;
+            }
+        }
+        /* Check if someone is walking */
+        if (walkingHero1 == null) return false;
 
+        isCheckingForCombat = true;
+        /* If there is someone walking check if he is at combat range eith an enemy*/
+        //GridPosition walkingHeroGridPos = PathFinding.Instance.GetGridPosition(targetPosition);
+        GridPosition walkingHeroTargetPos = PathFinding.Instance.GetGridPosition(targetPosition);
+        foreach (Heroes enemy in aliveEnemies) {
+            Debug.Log(enemy.ToString());
+            GridPosition enemyGridPos = PathFinding.Instance.GetGridPosition(enemy.transform.position);
+            Debug.Log("Hero Pos "+walkingHeroTargetPos);
+            Debug.Log("Enemy Pos "+enemyGridPos);
+            List<GridPosition>  gridPosList = PathFinding.Instance.Grid().FindPath(walkingHeroTargetPos, enemyGridPos);
 
-    }*/
-
+            if (gridPosList == null) {
+                Debug.Log("Empty List");
+                continue;
+            }
+            /* Check If they are not in range of combat */
+            //if (gridPosList.Count - 1 > enterCombatModeRange) continue;
+            int distance = gridPosList.Count - 1;
+            Debug.Log("NOT    Empty List");
+            Debug.Log("count "+ distance);
+            /* If they are, enter combat mode */
+            if (distance <= enterCombatModeRange) {
+                Debug.Log("ENTERING COMBAT MODE!!!!!!");
+                //walkingHero.SetPositionsList();
+                isCheckingForCombat = false;
+                currentState = GameManager.State.CombatMode;
+                isCheckingForCombat = false;
+                return true;
+            }
+ 
+        }
+        isCheckingForCombat = false;
+        return false;
+    }
 
 }

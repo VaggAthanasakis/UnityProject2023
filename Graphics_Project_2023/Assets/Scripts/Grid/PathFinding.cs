@@ -14,7 +14,8 @@ public class PathFinding : MonoBehaviour {
     private GridPathSystem gridPathSystem;
     private Vector3 selectedHeroStartingPosition;
     private GridPosition startGridPosition;
-    private Heroes hero;
+    private Heroes selectedHero;
+    private Heroes heroWithTurn;
 
     private void Awake() {
         if (Instance != null) {
@@ -32,17 +33,23 @@ public class PathFinding : MonoBehaviour {
 
     private void Start() {
         MouseClick.instance.OnHeroSelectAction += Instance_OnHeroSelectAction;
+        TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
         //startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
         //Debug.Log("Starting Hero Position: " + startGridPosition.ToString());
         //startGridPosition = new GridPosition(0, 0);
         //startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
     }
 
-    /* Get The Selected Player */ 
+    private void TurnSystem_OnTurnChanged(object sender, TurnSystem.OnTurnChangedEventArgs e) {
+        this.heroWithTurn = e.heroWithTurn;
+        startGridPosition = PathFinding.Instance.GetGridPosition(heroWithTurn.transform.position);
+    }
+
+    /* Get The Selected Player */
     private void Instance_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
         // PREPEI NA TO FTIAXO NA PAIRNEI MONO HERO 
-        this.hero = e.selectedHero;
-        startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
+        this.selectedHero = e.selectedHero;
+        startGridPosition = PathFinding.Instance.GetGridPosition(selectedHero.transform.position);
         Debug.Log("StartGridPath Position: "+startGridPosition);
         //this.hero.SetIsSelected(true);
     }
@@ -77,15 +84,18 @@ public class PathFinding : MonoBehaviour {
                 }
             }
             /**************************************/
-
             gridPathPositionList = null;
 
             GridPosition mouseGridPosition = PathFinding.Instance.GetGridPosition(MouseClick.GetPosition());
-            if (hero != null) {
-                if (hero.currentPositionIndex == 0) {
-                    Debug.Log("HEre");
-                    startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
-                    
+            if (selectedHero != null) {
+                if (selectedHero.currentPositionIndex == 0) {
+                    startGridPosition = PathFinding.Instance.GetGridPosition(selectedHero.transform.position);       
+                }
+            }
+
+            if (heroWithTurn != null) {
+                if (heroWithTurn.currentPositionIndex == 0) {
+                    startGridPosition = PathFinding.Instance.GetGridPosition(heroWithTurn.transform.position);
                 }
             }
 
@@ -98,7 +108,7 @@ public class PathFinding : MonoBehaviour {
                 PathNode startNode = gridPathSystem.GetPathNode(start);
                 PathNode endNode = gridPathSystem.GetPathNode(end);
 
-                Debug.Log("Start Node: "+ startNode.IsWalkable()+" End Node: "+ endNode.IsWalkable());
+                //Debug.Log("Start Node: "+ startNode.IsWalkable()+" End Node: "+ endNode.IsWalkable());
                 
             }
 
@@ -120,11 +130,14 @@ public class PathFinding : MonoBehaviour {
                 );
             }
             //Update Unit's list
-            Debug.Log(heroPositionsList.Count);
+            //Debug.Log(heroPositionsList.Count);
             /* if the hero is selected, then move it from the path calculated above */
-            if (hero.GetIsSelected()) {
-                Debug.Log("========================== list: "+heroPositionsList.Count);
-                hero.SetPositionsList(heroPositionsList);
+            if (selectedHero.GetIsSelected() && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+                // Debug.Log("========================== list: "+heroPositionsList.Count);
+                selectedHero.SetPositionsList(heroPositionsList);
+            } 
+            else if (heroWithTurn != null && heroWithTurn.GetIsPlayersTurn() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+                heroWithTurn.SetPositionsList(heroPositionsList);
             }
             //selectedHeroStartingPosition = hero.transform.position;
             //Debug.Log("Hero Transform: " + PathFinding.Instance.GetGridPosition(hero.transform.position));

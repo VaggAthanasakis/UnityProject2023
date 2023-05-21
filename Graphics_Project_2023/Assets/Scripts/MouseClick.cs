@@ -74,14 +74,14 @@ public class MouseClick : MonoBehaviour {
     private void MouseSelectHero() {
         mouseIndicator.position = GetPosition();
         //if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (this.selectedEnemy != null) {
+            if (this.selectedEnemy.GetIsDead())
+                this.selectedEnemy.SetIsSelected(false);
+                this.selectedEnemy = null;
+        }
         if (Input.GetMouseButtonDown(0)) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            // if we select a hero
-            /*LayerMask UILayerMask = LayerMask.GetMask("UI","Default");
-            if (Physics.Raycast(ray, out RaycastHit raycastHitUI, float.MaxValue, UILayerMask)) {
-                Debug.Log("UI Layer");
-                return;
-            }*/
+
             if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, instance.heroLayerMask)) { // if we select a hero                
                 Debug.Log(raycastHit.transform);
                 if (raycastHit.transform.TryGetComponent(out Heroes selectedHero)) { // if we have selected a hero

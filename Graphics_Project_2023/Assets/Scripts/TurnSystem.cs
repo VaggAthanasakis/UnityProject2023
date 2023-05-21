@@ -41,6 +41,10 @@ public class TurnSystem : MonoBehaviour {
         this.playingCharacters = playingCharacters;
     }
 
+    public void ResetTurnNumber() {
+        this.turnNumber = 1;
+    }
+
     /* This Method Sorts The Characters List Based On The Turn */
     public List<Heroes> CharactersSortByDicePlay() {
 
@@ -64,11 +68,12 @@ public class TurnSystem : MonoBehaviour {
 
     public void NextTurn() { // den exei xrhsimopoihthei akoma
         /* Check if the round has ended */
-        if (turnNumber > this.playingCharacters.Count) {
+        if (turnNumber >= this.playingCharacters.Count) {
             /* fire the event of round end */
+            Debug.Log("Round " + roundNumber + " Ended");
             roundNumber++;
             turnNumber = 1;
-            Debug.Log("Round "+roundNumber+" Ended");
+   
             OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {
                 roundNum = roundNumber
             });
@@ -76,9 +81,9 @@ public class TurnSystem : MonoBehaviour {
         }
         Debug.Log("Next Turn: " + turnNumber);
         this.playingCharacters[turnNumber-1].SetIsPlayersTurn(false);
+        this.playingCharacters[turnNumber].SetIsPlayersTurn(true);
         turnNumber++;
-        this.playingCharacters[turnNumber - 1].SetIsPlayersTurn(true);
-        
+
         OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { 
             heroWithTurn = this.playingCharacters[turnNumber - 1]
         });

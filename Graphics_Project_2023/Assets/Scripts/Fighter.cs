@@ -70,6 +70,7 @@ public class Fighter : Heroes {
 
         /* Initialize Hero's Statistics */
         this.InitializeHeroStatistics();
+        
 
     }
     /* Calculates the damage amount of the attack. damageAmount = dice + main attribute */

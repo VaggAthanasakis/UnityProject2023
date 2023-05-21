@@ -70,8 +70,10 @@ public class GridPathSystem {
 
         PathNode startNode = GetPathNode(startPosition);
         PathNode endNode = GetPathNode(endPosition);
-
-        if (!endNode.IsWalkable()) {
+        Debug.Log("Inside Find Path");
+        Debug.Log("StartPosition "+startPosition);
+        Debug.Log("EndPosition "+endPosition);
+        if (!endNode.IsWalkable() && !GameManager.Instance.isCheckingForCombat) {
             Debug.Log("Cannot Move There!");
             return null;
         }
@@ -101,6 +103,7 @@ public class GridPathSystem {
                 /*  */
                 startNode.SetIsWalkable(true);
                 endNode.SetIsWalkable(false);
+                Debug.Log("Returning 1");
                 return CalculatePath(startNode, endNode);
             }
 
@@ -137,6 +140,8 @@ public class GridPathSystem {
             }
         }
         //No path found
+        //Debug.Log("No path Found");
+        Debug.Log("Returning 2");
         return null;
     }
 
@@ -157,7 +162,7 @@ public class GridPathSystem {
     }
 
 
-    private int CalculateDistance(GridPosition gridPositionA, GridPosition gridPositionB) {
+    public int CalculateDistance(GridPosition gridPositionA, GridPosition gridPositionB) {
         GridPosition gridPositionDistance = (gridPositionA - gridPositionB);
 
         /*int distance = Mathf.Abs(gridPositionDistance.x) + Mathf.Abs(gridPositionDistance.z);

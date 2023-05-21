@@ -83,13 +83,16 @@ public class UI_Manager : MonoBehaviour
     /***********************************************************************/
     /* Code for buttons */
     public void Button_Attack() {
+        Debug.Log("Attack pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         Heroes attackedHero;
         if (heroWithTurn.GetIsEnemy()) {
             attackedHero = MouseClick.instance.GetSelectedHero();
+            Debug.Log("Found AttackedHero " + attackedHero.ToString());
         }
         else {
             attackedHero = MouseClick.instance.GetSelectedEnemy();
+            Debug.Log("Found AttackedHero "+attackedHero.ToString());
         }
         if (attackedHero != null && attackedHero != heroWithTurn) {
             Debug.Log("Can Perform Attack!");
@@ -130,7 +133,7 @@ public class UI_Manager : MonoBehaviour
         TurnSystem.Instance.turnBasedOnDice.Clear();
         TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
 
-        foreach (Heroes character in GameManager.Instance.aliveCharacters) {
+        foreach (Heroes character in GameManager.Instance.aliveHeroes) {
             //Debug.Log("Class: " + character.ToString());
             int diceValue = Dice.instance.RollDice();
             character.diceValue = diceValue;
