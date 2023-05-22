@@ -108,6 +108,7 @@ public class TurnSystem : MonoBehaviour {
         Debug.Log("i = "+i);
         Debug.Log("Count+1 "+ this.playingCharacters.Count);
         if (i >= this.playingCharacters.Count -1) { // have to change round
+            roundNumber++;
             OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {
                 roundNum = roundNumber
             });

@@ -61,6 +61,12 @@ public class UI_Manager : MonoBehaviour
     private void Start() {
         GameManager.Instance.SetCurrentState(GameManager.State.FreeRoam);
         MouseClick.instance.OnHeroSelectAction += MouseClick_OnHeroSelectAction;
+        TurnSystem.Instance.OnRoundEnded += TurnSystem_OnRoundEnded;
+    }
+
+    /* event that arrives when game round changes */
+    private void TurnSystem_OnRoundEnded(object sender, TurnSystem.OnRoundEndedEventArgs e) {
+        this.gameRound.text = e.roundNum.ToString();
     }
 
     private void MouseClick_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
