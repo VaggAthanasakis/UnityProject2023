@@ -64,16 +64,14 @@ public class GridPathSystem {
         return height;
     }
 
-    public List<GridPosition> FindPath(GridPosition startPosition, GridPosition endPosition) {
+    /* combatSearch is true if we search for combat mode */
+    public List<GridPosition> FindPath(GridPosition startPosition, GridPosition endPosition, bool combatSearch) {
         List<PathNode> openList = new List<PathNode>();
         List<PathNode> closedList = new List<PathNode>();
 
         PathNode startNode = GetPathNode(startPosition);
         PathNode endNode = GetPathNode(endPosition);
-        Debug.Log("Inside Find Path");
-        Debug.Log("StartPosition "+startPosition);
-        Debug.Log("EndPosition "+endPosition);
-        if (!endNode.IsWalkable() && !GameManager.Instance.isCheckingForCombat) {
+        if (!endNode.IsWalkable() && !combatSearch) {
             Debug.Log("Cannot Move There!");
             return null;
         }
@@ -102,7 +100,12 @@ public class GridPathSystem {
             if (currentNode == endNode) {
                 /*  */
                 startNode.SetIsWalkable(true);
-                endNode.SetIsWalkable(false);
+                if (combatSearch) {
+                    endNode.SetIsWalkable(true);
+                }
+                else {
+                    endNode.SetIsWalkable(false);
+                }
                 Debug.Log("Returning 1");
                 return CalculatePath(startNode, endNode);
             }
@@ -114,7 +117,7 @@ public class GridPathSystem {
                 if (closedList.Contains(neighbourNode))
                     continue;
              
-                if (!neighbourNode.IsWalkable()) {
+                if (!neighbourNode.IsWalkable() && !combatSearch) {
                     closedList.Add(neighbourNode);
                     continue;
                 }

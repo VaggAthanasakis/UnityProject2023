@@ -409,9 +409,10 @@ public class Heroes : MonoBehaviour {
                 if (currentPositionIndex >= positionList.Count) {
                     //ÅÍÄ
                     // at targetPoint
+                    Debug.Log("Heroes : "+ targetPosition);
+                    GameManager.Instance.CheckForCombatMode();
                     positionList.Clear();
                     currentPositionIndex = 0;
-                    GameManager.Instance.CheckForCombatMode(targetPosition, this);
                     this.SetIsWalking(false);
                 }
             }

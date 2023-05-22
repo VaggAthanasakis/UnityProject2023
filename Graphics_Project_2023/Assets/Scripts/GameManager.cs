@@ -6,8 +6,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    //private Heroes heroWithTurn = null;
-
     /******/
     private List<Heroes> heroesPrefabs = new List<Heroes>();
     private List<Heroes> enemiesPrefabs = new List<Heroes>();
@@ -231,41 +229,18 @@ public class GameManager : MonoBehaviour
 
     /* Now we will check if during the movement, the hero comes close to an enemy
      * if yes, then the game state changes to combatMode */
-    public bool CheckForCombatMode(Vector3 targetPosition, Heroes walkingHero1) {
+    /* We calculate the distance between the end position of the hero that is moving
+     * with the position of all the enemies. If that distance is less than the combat mode
+     * range, then we switch to combat mode */
+    public bool CheckForCombatMode() {
+        int distance;
         /* if we are already, return */
         if (currentState == State.CombatMode) return false;
 
-        /* at first we find, if it exists, the walking hero */
-        /*Heroes walkingHero = null;
-        foreach (Heroes hero in aliveHeroes) {
-            if (!hero.GetIsWalking()) { continue; } // If this one is not moving, check the next one
-            else {
-                walkingHero = hero;
-            }
-        }
-        /* Check if someone is walking */
-        if (walkingHero1 == null) return false;
-
-        isCheckingForCombat = true;
-        /* If there is someone walking check if he is at combat range eith an enemy*/
-        //GridPosition walkingHeroGridPos = PathFinding.Instance.GetGridPosition(targetPosition);
-        GridPosition walkingHeroTargetPos = PathFinding.Instance.GetGridPosition(targetPosition);
+        /* If there is someone walking check if he is at combat range with an enemy*/
         foreach (Heroes enemy in aliveEnemies) {
-            Debug.Log(enemy.ToString());
-            GridPosition enemyGridPos = PathFinding.Instance.GetGridPosition(enemy.transform.position);
-            Debug.Log("Hero Pos "+walkingHeroTargetPos);
-            Debug.Log("Enemy Pos "+enemyGridPos);
-            List<GridPosition>  gridPosList = PathFinding.Instance.Grid().FindPath(walkingHeroTargetPos, enemyGridPos);
-
-            if (gridPosList == null) {
-                Debug.Log("Empty List");
-                continue;
-            }
-            /* Check If they are not in range of combat */
-            //if (gridPosList.Count - 1 > enterCombatModeRange) continue;
-            int distance = gridPosList.Count - 1;
-            Debug.Log("NOT    Empty List");
-            Debug.Log("count "+ distance);
+            distance = PathFinding.Instance.CalculateDistanceByGrid(enemy);
+            //Debug.Log("count "+ distance);
             /* If they are, enter combat mode */
             if (distance <= enterCombatModeRange) {
                 Debug.Log("ENTERING COMBAT MODE!!!!!!");
@@ -277,7 +252,6 @@ public class GameManager : MonoBehaviour
             }
  
         }
-        isCheckingForCombat = false;
         return false;
     }
 

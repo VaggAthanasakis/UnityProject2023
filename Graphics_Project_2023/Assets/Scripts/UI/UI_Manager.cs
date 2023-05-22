@@ -11,12 +11,14 @@ public class UI_Manager : MonoBehaviour
     /* Text for game state */
     private string freeRoam = "Free Roam";
     private string combatMode = "Combat Mode";
+    private string victory = "Victory";
     private string gameOver = "Game Over";
 
     /* Text for state info */
     private string freeRoamInfo = "At This State You Can Move Around Freely Discovering The Environment";
     private string combatModeInfo = "Try To Kill All The Enemies";
- 
+    //private string victoryInfo = "Victory";
+    //private string defeatInfo = "Defeat";
 
     [SerializeField] GameObject actionButtons;
     [SerializeField] GameObject DiceButton;
@@ -168,6 +170,10 @@ public class UI_Manager : MonoBehaviour
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.GameOver) {
             this.gameState.text = gameOver;
         }
+        else if (GameManager.Instance.GetCurrentState() == GameManager.State.Victory) {
+            this.gameState.text = victory;
+        }
+ 
     }
 
 

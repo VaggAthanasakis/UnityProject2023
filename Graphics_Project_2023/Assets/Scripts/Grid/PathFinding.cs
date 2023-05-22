@@ -13,9 +13,11 @@ public class PathFinding : MonoBehaviour {
 
     private GridPathSystem gridPathSystem;
     private Vector3 selectedHeroStartingPosition;
-    private GridPosition startGridPosition;
+    public GridPosition startGridPosition;
     private Heroes selectedHero;
     private Heroes heroWithTurn;
+
+    GridPosition prevMousePosition;
 
     private void Awake() {
         if (Instance != null) {
@@ -87,6 +89,9 @@ public class PathFinding : MonoBehaviour {
             gridPathPositionList = null;
 
             GridPosition mouseGridPosition = PathFinding.Instance.GetGridPosition(MouseClick.GetPosition());
+            
+            this.prevMousePosition = mouseGridPosition;
+            
             if (selectedHero != null) {
                 if (selectedHero.currentPositionIndex == 0) {
                     startGridPosition = PathFinding.Instance.GetGridPosition(selectedHero.transform.position);       
@@ -100,7 +105,8 @@ public class PathFinding : MonoBehaviour {
             }
 
             /* Find the path that the player must follow */
-            gridPathPositionList = gridPathSystem.FindPath(startGridPosition, mouseGridPosition);
+            gridPathPositionList = gridPathSystem.FindPath(startGridPosition, mouseGridPosition, false);
+            //Debug.Log(gridPathPositionList.Count);
 
             if (gridPathPositionList != null) {
                 GridPosition end = gridPathPositionList[gridPathPositionList.Count-1];
@@ -144,5 +150,67 @@ public class PathFinding : MonoBehaviour {
             //startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
         }
     }
+
+    public int CalculateDistanceByGrid(Heroes enemyHero) {
+        //Debug.Log("Inside Calculate");
+        List<GridPosition> positionList = null;
+
+        //GridPosition targetGridPosition = PathFinding.Instance.GetGridPosition(targetPosition);
+        GridPosition startGridPosition = PathFinding.Instance.GetGridPosition(enemyHero.transform.position);
+        /*if (walkingHero != null) {
+            if (walkingHero.currentPositionIndex == 0) {
+                startGridPosition = PathFinding.Instance.GetGridPosition(walkingHero.transform.position);
+            }
+        }*/
+
+        /* Find the path that the player must follow */
+        positionList = gridPathSystem.FindPath(startGridPosition, prevMousePosition,true);
+        this.prevMousePosition = new GridPosition();
+        if (positionList == null) {
+            Debug.Log("NULLLLLLLLLLLLLLLLLLLLLLLLL");
+        }
+        //Debug.Log("PositionList.Count "+positionList.Count);
+
+        if (gridPathPositionList != null) {
+            GridPosition end = positionList[positionList.Count - 1];
+            GridPosition start = positionList[0];
+            PathNode startNode = gridPathSystem.GetPathNode(start);
+            PathNode endNode = gridPathSystem.GetPathNode(end);
+
+        }
+
+        //temporary unit position list
+        List<Vector3> heroPositionsList = new List<Vector3>();
+
+        for (int i = 0; i < positionList.Count - 1; i++) {
+            //fill the list
+            heroPositionsList.Add(gridPathSystem.GetWorldPosition(positionList[i]));
+
+            if (i == gridPathPositionList.Count - 2)
+                heroPositionsList.Add(gridPathSystem.GetWorldPosition(positionList[i + 1]));
+
+            Debug.DrawLine(
+                gridPathSystem.GetWorldPosition(positionList[i]),
+                gridPathSystem.GetWorldPosition(positionList[i + 1]),
+                Color.red,
+                10f
+            );
+        }
+        int dist = heroPositionsList.Count - 1;
+        Debug.Log("Count From Path: "+ dist);
+        return heroPositionsList.Count-1;
+
+
+       /*
+        if (selectedHero.GetIsSelected() && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+            // Debug.Log("========================== list: "+heroPositionsList.Count);
+            selectedHero.SetPositionsList(heroPositionsList);
+        }
+        else if (heroWithTurn != null && heroWithTurn.GetIsPlayersTurn() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            heroWithTurn.SetPositionsList(heroPositionsList);
+        }*/
+
+    }
+
 
 }
