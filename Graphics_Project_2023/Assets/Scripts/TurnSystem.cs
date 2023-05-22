@@ -117,61 +117,6 @@ public class TurnSystem : MonoBehaviour {
     }
 
 
-    /*
-    public void NextTurn() { // den exei xrhsimopoihthei akoma
-         Check if the round has ended 
-        Debug.Log("Turn Number "+turnNumber);
-        Debug.Log("PlayingCharacter.Count "+ GameManager.Instance.aliveCharacters.Count);
-        Debug.Log("NumOfChara... "+numOfCharactersAtRoundStart);
-
-        //if (turnNumber >= numOfCharactersAtRoundStart || turnNumber == this.playingCharacters.Count) {
-        if (turnNumber >= numOfCharactersAtRoundStart) {
-             fire the event of round end 
-            Debug.Log("Round " + roundNumber + " Ended");
-            roundNumber++;
-            turnNumber = 1;
-
-            OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {
-                roundNum = roundNumber
-            });
-
-        }
-        else {
-            
-
-            
-            this.playingCharacters[turnNumber - 1].SetIsPlayersTurn(false); // previous character loses turn
-             Have to check if the next character has been killed previously in the round 
-            int k = 0;
-            for (int i = turnNumber + 1; i < this.playingCharacters.Count; i++) {
-                if (turnNumber + k >= this.numOfCharactersAtRoundStart) {
-                    // All Players Have Play
-                    Debug.Log("All Players Have Play");
-                    OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {
-                        roundNum = roundNumber
-                    });
-                    return;
-                }
-                else if (this.playingCharacters[turnNumber + k] != null && !this.playingCharacters[turnNumber + k].GetIsDead()) {
-                    this.playingCharacters[turnNumber + k].SetIsPlayersTurn(true);
-                }
-                else {
-                    k++;
-                }
-            }
-
-
-            int test1 = turnNumber - 1 + k;
-            Debug.Log("[turnNUmber -1 +k] " + test1);
-            Debug.Log("playingCharacters.Count " + playingCharacters.Count);
-            OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
-                heroWithTurn = this.playingCharacters[turnNumber + k]
-            });
-            turnNumber++;
-            Debug.Log("Next Turn: " + turnNumber);
-        }
-    }
-        */
     public int GetTurnNumber() {
         return this.turnNumber;
     }

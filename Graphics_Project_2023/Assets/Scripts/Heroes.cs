@@ -343,16 +343,12 @@ public class Heroes : MonoBehaviour {
         this.SetIsDead(true);
         this.SetCurrentHealthPoints(0);
         GameManager.Instance.aliveCharacters.Remove(this); // remove the character for the game
-        GameManager.Instance.aliveCharactersINT--;
-        //TurnSystem.Instance.playingCharacters.Remove(this);
 
         if (isEnemy) {
             GameManager.Instance.aliveEnemies.Remove(this);
-            GameManager.Instance.aliveEnemiesINT--;
         }
         else {
             GameManager.Instance.aliveHeroes.Remove(this);
-            GameManager.Instance.aliveHeroesINT--;
         }
         Destroy(this.gameObject, 5f);
 
