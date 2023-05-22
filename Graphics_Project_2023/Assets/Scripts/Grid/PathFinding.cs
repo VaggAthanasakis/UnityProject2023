@@ -151,25 +151,19 @@ public class PathFinding : MonoBehaviour {
         }
     }
 
-    public int CalculateDistanceByGrid(Heroes enemyHero) {
-        //Debug.Log("Inside Calculate");
+    public int CalculateDistanceByGrid(Vector3 targetPosition,Heroes enemyHero) {
         List<GridPosition> positionList = null;
 
-        //GridPosition targetGridPosition = PathFinding.Instance.GetGridPosition(targetPosition);
+        GridPosition targetGridPosition = PathFinding.Instance.GetGridPosition(targetPosition);
         GridPosition startGridPosition = PathFinding.Instance.GetGridPosition(enemyHero.transform.position);
-        /*if (walkingHero != null) {
-            if (walkingHero.currentPositionIndex == 0) {
-                startGridPosition = PathFinding.Instance.GetGridPosition(walkingHero.transform.position);
-            }
-        }*/
 
         /* Find the path that the player must follow */
-        positionList = gridPathSystem.FindPath(startGridPosition, prevMousePosition,true);
+        positionList = gridPathSystem.FindPath(startGridPosition, targetGridPosition, true);
         this.prevMousePosition = new GridPosition();
         if (positionList == null) {
             Debug.Log("NULLLLLLLLLLLLLLLLLLLLLLLLL");
+            return -1;
         }
-        //Debug.Log("PositionList.Count "+positionList.Count);
 
         if (gridPathPositionList != null) {
             GridPosition end = positionList[positionList.Count - 1];
@@ -197,18 +191,7 @@ public class PathFinding : MonoBehaviour {
             );
         }
         int dist = heroPositionsList.Count - 1;
-        Debug.Log("Count From Path: "+ dist);
         return heroPositionsList.Count-1;
-
-
-       /*
-        if (selectedHero.GetIsSelected() && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
-            // Debug.Log("========================== list: "+heroPositionsList.Count);
-            selectedHero.SetPositionsList(heroPositionsList);
-        }
-        else if (heroWithTurn != null && heroWithTurn.GetIsPlayersTurn() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            heroWithTurn.SetPositionsList(heroPositionsList);
-        }*/
 
     }
 

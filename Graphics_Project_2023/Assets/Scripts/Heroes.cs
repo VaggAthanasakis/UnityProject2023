@@ -372,7 +372,6 @@ public class Heroes : MonoBehaviour {
     public void Move(Vector3 target) {
         if (this.GetIsSelected()) {
             this.targetPosition = target;
-            //TakeDamage(5);
         }
     }
     protected void PerformMove() {
@@ -392,35 +391,47 @@ public class Heroes : MonoBehaviour {
                 return;
             }
             targetPosition = positionList[currentPositionIndex];
-            //GameManager.Instance.CheckForCombatMode(targetPosition, this);
             moveDirection = (targetPosition - transform.position).normalized;
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
 
+            if (GameManager.Instance.CheckForCombatMode(targetPosition)) {
+                this.positionList.Clear();
+                this.SetIsWalking(false);
+                currentPositionIndex = 0;
+                setNoWalkableNodeAtHeroPosition();
+                return;
+            }
+            
             if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance) {
                 float moveSpeed = 4f;
                 transform.position += moveDirection * moveSpeed * Time.deltaTime;
                 this.SetIsWalking(true);
-                // GameManager.Instance.CheckForCombatMode();
             }
             else {
-                //GameManager.Instance.CheckForCombatMode();
                 this.SetIsWalking(true);
                 currentPositionIndex++;
                 if (currentPositionIndex >= positionList.Count) {
                     //ÅÍÄ
                     // at targetPoint
                     Debug.Log("Heroes : "+ targetPosition);
-                    GameManager.Instance.CheckForCombatMode();
                     positionList.Clear();
                     currentPositionIndex = 0;
                     this.SetIsWalking(false);
+                    setNoWalkableNodeAtHeroPosition();
                 }
             }
         }
-        
-
+       
 
     }
+
+    /* Set the node that the hero is currently at as NoWalkable */
+    private void setNoWalkableNodeAtHeroPosition() {
+        GridPosition heroGridPos = PathFinding.Instance.GetGridPosition(this.transform.position);
+        PathNode heroNode = PathFinding.Instance.Grid().GetPathNode(heroGridPos);
+        heroNode.SetIsWalkable(false);
+    }
+
     /* Set the path that the hero must follow in order to move */
     public void SetPositionsList(List<Vector3> pathGridPositions) {
         /* When we are at combat mode, we check if the position we want to move to can be reached with the hero's moveRange amount
@@ -441,7 +452,6 @@ public class Heroes : MonoBehaviour {
 
     public void SetIdle() {
         isWalking = false;
-        //isSelected = false;
         isDead = false;
         isAttacking = false;
         isHealing = false;

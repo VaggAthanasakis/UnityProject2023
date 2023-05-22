@@ -229,28 +229,24 @@ public class GameManager : MonoBehaviour
 
     /* Now we will check if during the movement, the hero comes close to an enemy
      * if yes, then the game state changes to combatMode */
-    /* We calculate the distance between the end position of the hero that is moving
+    /* We calculate the distance between the current position of the hero who is moving
      * with the position of all the enemies. If that distance is less than the combat mode
-     * range, then we switch to combat mode */
-    public bool CheckForCombatMode() {
+     * range, with at least an enemy, then we switch to combat mode */
+    public bool CheckForCombatMode(Vector3 targetPosition) {
         int distance;
         /* if we are already, return */
         if (currentState == State.CombatMode) return false;
 
         /* If there is someone walking check if he is at combat range with an enemy*/
         foreach (Heroes enemy in aliveEnemies) {
-            distance = PathFinding.Instance.CalculateDistanceByGrid(enemy);
-            //Debug.Log("count "+ distance);
+            distance = PathFinding.Instance.CalculateDistanceByGrid(targetPosition,enemy);
             /* If they are, enter combat mode */
             if (distance <= enterCombatModeRange) {
-                Debug.Log("ENTERING COMBAT MODE!!!!!!");
-                //walkingHero.SetPositionsList();
                 isCheckingForCombat = false;
                 currentState = GameManager.State.CombatMode;
                 isCheckingForCombat = false;
                 return true;
             }
- 
         }
         return false;
     }

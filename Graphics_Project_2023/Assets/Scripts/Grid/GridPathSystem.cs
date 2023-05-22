@@ -106,7 +106,7 @@ public class GridPathSystem {
                 else {
                     endNode.SetIsWalkable(false);
                 }
-                Debug.Log("Returning 1");
+                //Debug.Log("Returning 1");
                 return CalculatePath(startNode, endNode);
             }
 
@@ -142,9 +142,7 @@ public class GridPathSystem {
                 }
             }
         }
-        //No path found
-        //Debug.Log("No path Found");
-        Debug.Log("Returning 2");
+
         return null;
     }
 

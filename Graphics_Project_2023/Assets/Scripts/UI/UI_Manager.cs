@@ -17,8 +17,8 @@ public class UI_Manager : MonoBehaviour
     /* Text for state info */
     private string freeRoamInfo = "At This State You Can Move Around Freely Discovering The Environment";
     private string combatModeInfo = "Try To Kill All The Enemies";
-    //private string victoryInfo = "Victory";
-    //private string defeatInfo = "Defeat";
+    private string victoryInfo = "You Killed All The Enemies!";
+    private string defeatInfo = "Enemies Killed All Your Heroes..";
 
     [SerializeField] GameObject actionButtons;
     [SerializeField] GameObject DiceButton;
@@ -96,14 +96,11 @@ public class UI_Manager : MonoBehaviour
         Heroes attackedHero;
         if (heroWithTurn.GetIsEnemy()) {
             attackedHero = MouseClick.instance.GetSelectedHero();
-            Debug.Log("Found AttackedHero " + attackedHero.ToString());
         }
         else {
             attackedHero = MouseClick.instance.GetSelectedEnemy();
-            Debug.Log("Found AttackedHero "+attackedHero.ToString());
         }
         if (attackedHero != null && attackedHero != heroWithTurn) {
-            Debug.Log("Can Perform Attack!");
             heroWithTurn.PerformAttack(attackedHero);
             // IF HERO CANNOT FURTHER MOVE
             TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
@@ -144,14 +141,12 @@ public class UI_Manager : MonoBehaviour
         TurnSystem.Instance.turnBasedOnDice.Clear();
         
         TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
-        Debug.Log("PlayingCharacters.Count from ui" + GameManager.Instance.aliveCharacters.Count);
        
         foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();
             Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
             character.diceValue = diceValue;
             TurnSystem.Instance.turnBasedOnDice.Add(diceValue);
-            //Debug.Log("Dice Value: " + diceValue);
         }
         TurnSystem.Instance.CharactersSortByDicePlay();
 
@@ -169,9 +164,11 @@ public class UI_Manager : MonoBehaviour
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.GameOver) {
             this.gameState.text = gameOver;
+            this.stateInfo.text = defeatInfo;
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.Victory) {
             this.gameState.text = victory;
+            this.stateInfo.text = victoryInfo;
         }
  
     }
