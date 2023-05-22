@@ -102,6 +102,9 @@ public class UI_Manager : MonoBehaviour
             gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
             gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
         }
+        else if(attackedHero == null) {
+            Debug.Log("ATTACKED HERO NULL");           
+        }
 
         /* AUTA THA MPOUN OTAN KANO TO AI
 
@@ -131,8 +134,10 @@ public class UI_Manager : MonoBehaviour
         this.roundInfoPanel.SetActive(true);
 
         TurnSystem.Instance.turnBasedOnDice.Clear();
-        //TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
-
+        
+        TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
+        Debug.Log("PlayingCharacters.Count from ui" + GameManager.Instance.aliveCharacters.Count);
+       
         foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();
             Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);

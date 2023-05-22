@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     public List<Heroes> aliveCharacters;  // list with both heroes and enemies
     public List<Heroes> aliveHeroes;  // list with heroes
-    private List<Heroes> aliveEnemies; // list with the alive enemies
+    public List<Heroes> aliveEnemies; // list with the alive enemies
 
     private List<string> heroesFromCharacterSelectionScene = new List<string>();
 
@@ -23,6 +23,11 @@ public class GameManager : MonoBehaviour
     private int enterCombatModeRange = 3;
     public bool isCheckingForCombat = false;
     private int gameRound = 1;
+
+    public int aliveCharactersINT;
+    public int aliveHeroesINT;
+    public int aliveEnemiesINT;
+
 
     /* Heroes Prefabs */
     [SerializeField] Heroes fighterPrefab;
@@ -89,6 +94,7 @@ public class GameManager : MonoBehaviour
 
     /* This event arrives when the round ends */
     private void TurnSystem_OnRoundEnded(object sender, TurnSystem.OnRoundEndedEventArgs e) {
+        Debug.Log("ROUND ENDED!");
         TurnSystem.Instance.ResetTurnNumber();
         ResetCharactersMoveRange();
         SetAliveCharactersAtTurnSystem();
@@ -160,21 +166,29 @@ public class GameManager : MonoBehaviour
                     Fighter fighter = (Fighter)Instantiate(fighterPrefab,new Vector3(xWorldPos, 0,1), Quaternion.identity);
                     this.aliveCharacters.Add(fighter);
                     this.aliveHeroes.Add(fighter);
+                    this.aliveCharactersINT++;
+                    this.aliveHeroesINT++;
                 }
                 else if (heroString.Equals(Ranger.HERO_CLASS)) {
                     Ranger ranger = (Ranger)Instantiate(rangerPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
                     this.aliveCharacters.Add(ranger);
                     this.aliveHeroes.Add(ranger);
+                    this.aliveCharactersINT++;
+                    this.aliveHeroesINT++;
                 }
                 else if (heroString.Equals(Mage.HERO_CLASS)) {
                     Mage mage = (Mage)Instantiate(magePrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
                     this.aliveCharacters.Add(mage);
                     this.aliveHeroes.Add(mage);
+                    this.aliveCharactersINT++;
+                    this.aliveHeroesINT++;
                 }
                 else if (heroString.Equals(Priest.HERO_CLASS)) {
                     Priest priest = (Priest)Instantiate(priestPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
                     this.aliveCharacters.Add(priest);
                     this.aliveHeroes.Add(priest);
+                    this.aliveCharactersINT++;
+                    this.aliveHeroesINT++;
                 }
                 xWorldPos++;
             } 
@@ -187,6 +201,8 @@ public class GameManager : MonoBehaviour
         this.aliveCharacters.Add(enemyRanger);
         this.aliveEnemies.Add(enemyFighter);
         this.aliveEnemies.Add(enemyRanger);
+        this.aliveCharactersINT += 2;
+        this.aliveEnemiesINT += 2;
         /*foreach (Heroes hero in aliveCharacters) {
             Debug.Log("Enemy: "+hero.GetIsEnemy());
         }*/
@@ -194,6 +210,10 @@ public class GameManager : MonoBehaviour
 
     private void SetAliveCharactersAtTurnSystem() {
         TurnSystem.Instance.SetPlayingCharacters(this.aliveCharacters);
+    }
+
+    public void SetPlayingCharacters(List<Heroes> playingCharacters) {
+        this.aliveCharacters = playingCharacters;
     }
 
     private void GameObjectsInstantiation() {

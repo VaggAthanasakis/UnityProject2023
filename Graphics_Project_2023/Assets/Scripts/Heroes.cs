@@ -71,6 +71,10 @@ public class Heroes : MonoBehaviour {
     // then we leave the selected visual activated
     // else we diactivate it */
     private void Instance_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
+
+        if (this.GetIsDead() || this == null) { return; }
+        
+
         if ((Heroes)e.selectedHero == this && this.GetIsEnemy()) {
             this.SetIsSelected(true);
             SelectedHeroVisual();
@@ -87,7 +91,7 @@ public class Heroes : MonoBehaviour {
                 SelectedHeroVisual();
                 Debug.Log("Selected " + this.ToString());
             }
-            else {
+            else {             
                 this.SetIsSelected(false);
                 SelectedHeroVisual();
             }
@@ -98,6 +102,7 @@ public class Heroes : MonoBehaviour {
             SelectedHeroVisual();
         }
         else {
+            Debug.Log("Eror Here (OnHeroSelection) for Player: " + this.ToString());
             this.SetIsSelected(false);
             SelectedHeroVisual();
         }
@@ -122,6 +127,9 @@ public class Heroes : MonoBehaviour {
             Debug.Log("This Players Turn: "+this.ToString());
         }
         else {
+            if (this.GetIsDead() || this == null) { return; }
+
+            //Debug.Log("Eror Here (OnTurnChanged) for Player: "+this.ToString());
             this.SetIsPlayersTurn(false);
             this.SetIsSelected(false);
             SelectedHeroVisual();
@@ -302,7 +310,6 @@ public class Heroes : MonoBehaviour {
 
     /* Methods */
     public void TakeDamage(int damageAmount, Heroes otherHero) {
-        Debug.Log("Other Hero "+otherHero);
         int newHealth = this.GetCurrentHealthPoints() - damageAmount;
         if (newHealth < 0) {
             newHealth = 0;
@@ -336,6 +343,17 @@ public class Heroes : MonoBehaviour {
         this.SetIsDead(true);
         this.SetCurrentHealthPoints(0);
         GameManager.Instance.aliveCharacters.Remove(this); // remove the character for the game
+        GameManager.Instance.aliveCharactersINT--;
+        //TurnSystem.Instance.playingCharacters.Remove(this);
+
+        if (isEnemy) {
+            GameManager.Instance.aliveEnemies.Remove(this);
+            GameManager.Instance.aliveEnemiesINT--;
+        }
+        else {
+            GameManager.Instance.aliveHeroes.Remove(this);
+            GameManager.Instance.aliveHeroesINT--;
+        }
         Destroy(this.gameObject, 5f);
 
     }
