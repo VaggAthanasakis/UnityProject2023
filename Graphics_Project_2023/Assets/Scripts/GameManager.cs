@@ -57,12 +57,13 @@ public class GameManager : MonoBehaviour
 
 
     public Heroes GetHeroWithTurn() {
-        foreach (Heroes hero in aliveCharacters) {
+        return TurnSystem.Instance.GetHeroWithTurn();
+        /*foreach (Heroes hero in aliveCharacters) {
             if (hero.GetIsPlayersTurn()) {
                 return hero;
             }
         }
-        return null;
+        return null;*/
     }
 
     private void Awake() {

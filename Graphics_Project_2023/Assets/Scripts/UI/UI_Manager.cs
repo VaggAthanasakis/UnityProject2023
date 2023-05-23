@@ -148,7 +148,7 @@ public class UI_Manager : MonoBehaviour
 
         TurnSystem.Instance.turnBasedOnDice.Clear();
         
-        //TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
+        TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
        
         foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();

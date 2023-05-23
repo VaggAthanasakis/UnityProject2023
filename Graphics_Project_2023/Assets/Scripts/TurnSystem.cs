@@ -22,6 +22,7 @@ public class TurnSystem : MonoBehaviour {
     private int turnNumber = 1;
     private int roundNumber = 1;
 
+    private Heroes heroWithTurn;
     private int numOfCharactersAtRoundStart;
     //private bool isHeroTurn = true;
     public List<Heroes> playingCharacters = new List<Heroes>();
@@ -38,6 +39,10 @@ public class TurnSystem : MonoBehaviour {
         Instance = this;
     }
 
+    public Heroes GetHeroWithTurn() {
+        return this.heroWithTurn;
+    }
+
     public void SetPlayingCharacters(List<Heroes> playingCharacters) {
         this.playingCharacters = playingCharacters;
         this.numOfCharactersAtRoundStart = playingCharacters.Count;
@@ -49,13 +54,6 @@ public class TurnSystem : MonoBehaviour {
 
     /* This Method Sorts The Characters List Based On The Turn */
     public List<Heroes> CharactersSortByDicePlay() {
-        Debug.Log("SOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-        Debug.Log("AT CharactersSortByDicePlay");
-        foreach (Heroes hero in playingCharacters) {
-            Debug.Log(hero.ToString());
-        }
-        Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
 
         turnBasedOnDice.Sort();
         turnBasedOnDice.Reverse();
@@ -73,38 +71,36 @@ public class TurnSystem : MonoBehaviour {
                 }
             }    
         }
+        Debug.Log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+        foreach (Heroes hero in playingCharacters) {
+            Debug.Log(hero.ToString());
+        }
+        Debug.Log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+
         this.playingCharacters = tmpTurnPlay;
+
+        Debug.Log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+        foreach (Heroes hero in playingCharacters) {
+            Debug.Log(hero.ToString());
+        }
+        Debug.Log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
 
         for (int j = 0; j< this.playingCharacters.Count; j++) {
             if (this.playingCharacters[j] != null) {
                 this.playingCharacters[j].SetIsPlayersTurn(true);
                 Debug.Log("Player's turn: " + this.playingCharacters[j].ToString());
+                this.heroWithTurn = this.playingCharacters[j];
                 OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
                     heroWithTurn = this.playingCharacters[j]
                 });
                 break;
             }
         }
-        Debug.Log("SOSSSSSSSSSSSSSSSSSSSSSSSSSSS++++++++++++++++++++SSSSSSSSSSSSSSSSSS");
-        Debug.Log("AT CharactersSortByDicePlay");
-        foreach (Heroes hero in playingCharacters) {
-            Debug.Log(hero.ToString());
-        }
-        Debug.Log("+++++++++++++++++++++++++SOS+++++++++++++++++++++++++++");
-
-
+ 
         return this.playingCharacters;
     }
 
     public void NextTurn() {
-
-        Debug.Log("=============================================");
-        foreach (Heroes hero in this.playingCharacters) {
-            //Debug.Log("======================================");
-            Debug.Log(hero.ToString());
-            //Debug.Log("======================================");
-        }
-        Debug.Log("=============================================");
 
         /* find player with turn previously */
         int indexOfHeroWithTurn = 0;
@@ -122,6 +118,7 @@ public class TurnSystem : MonoBehaviour {
             if (this.playingCharacters[indexOfHeroWithTurn + k1] != null && !this.playingCharacters[indexOfHeroWithTurn + k1].GetIsDead()) {
                 this.playingCharacters[indexOfHeroWithTurn + k1].SetIsPlayersTurn(true);
                 Debug.Log("Current Turn " + this.playingCharacters[indexOfHeroWithTurn + k1] + " with k1= " + k1);
+                this.heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1];
                 OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
                     heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1]
                 });
