@@ -129,10 +129,18 @@ public class UI_Manager : MonoBehaviour
 
     public void Buttom_Heal() {
         Debug.Log("Heal Button Pushed!");
-        // IF HERO CANNOT FURTHER MOVE
-        TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
-        gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-        gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
+        if (heroWithTurn.heroClass != Mage.HERO_CLASS && heroWithTurn.heroClass != Priest.HERO_CLASS) { return; }
+
+        Heroes heroToHeal = MouseClick.instance.GetSelectedHero();
+        /* If we have selected an other hero to heal */
+        if (heroToHeal != null && heroToHeal != heroWithTurn && heroWithTurn.GetIsEnemy() == heroToHeal.GetIsEnemy()) {
+            heroWithTurn.PerformHeal(heroToHeal);
+            // IF HERO CANNOT FURTHER MOVE
+            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        }
     }
 
     public void DicePlay() {
@@ -140,7 +148,7 @@ public class UI_Manager : MonoBehaviour
 
         TurnSystem.Instance.turnBasedOnDice.Clear();
         
-        TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
+        //TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
        
         foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();

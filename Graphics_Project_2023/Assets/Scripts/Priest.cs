@@ -30,8 +30,9 @@ public class Priest : Heroes {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam || GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             PerformMove();
         }
-        
-        
+        base.AnimationsDurationControll();
+
+
     }
     /* Getters */
     public int GetCharisma() {
@@ -67,11 +68,15 @@ public class Priest : Heroes {
         this.InitializeHeroStatistics();
 
     }
-    
-    
+    /* Calculates the heal amount that the hero will produce */
+    public override void HealAmountCalculation() {
+        int healAmount = diceValue + this.GetCharisma(); //MPOREI NA TO ALLAJO
+        this.SetIsHealing(true);
+        this.SetCurrentHealAmount(healAmount);
+    }
 
- 
-  
+
+
 
 
 }

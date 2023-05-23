@@ -49,22 +49,31 @@ public class TurnSystem : MonoBehaviour {
 
     /* This Method Sorts The Characters List Based On The Turn */
     public List<Heroes> CharactersSortByDicePlay() {
+        Debug.Log("SOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+        Debug.Log("AT CharactersSortByDicePlay");
+        foreach (Heroes hero in playingCharacters) {
+            Debug.Log(hero.ToString());
+        }
+        Debug.Log("++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
 
         turnBasedOnDice.Sort();
         turnBasedOnDice.Reverse();
         tmpTurnPlay.Clear();
-        Debug.Log("TurnBasedOnDice.Count "+turnBasedOnDice.Count);
+        //Debug.Log("TurnBasedOnDice.Count "+turnBasedOnDice.Count);
         for (int i = 0; i < turnBasedOnDice.Count; i++) {
             foreach (Heroes hero in playingCharacters) {
-                if (hero.diceValue == turnBasedOnDice[i])
-                    tmpTurnPlay.Add(hero);
-            }
-            
+                if (hero == null) {
+                    continue;
+                }
+                if (turnBasedOnDice != null && hero.diceValue == turnBasedOnDice[i]) {
+                    if (!tmpTurnPlay.Contains(hero)) { // if the hero is already there because of duplicate dice value with some
+                        tmpTurnPlay.Add(hero);         // other hero, then do not add it again
+                    }
+                }
+            }    
         }
-        Debug.Log("PlayingCharacters.Count " + playingCharacters.Count);
         this.playingCharacters = tmpTurnPlay;
-        Debug.Log("PlayingCharacters.Count " + playingCharacters.Count);
-        
 
         for (int j = 0; j< this.playingCharacters.Count; j++) {
             if (this.playingCharacters[j] != null) {
@@ -76,10 +85,27 @@ public class TurnSystem : MonoBehaviour {
                 break;
             }
         }
+        Debug.Log("SOSSSSSSSSSSSSSSSSSSSSSSSSSSS++++++++++++++++++++SSSSSSSSSSSSSSSSSS");
+        Debug.Log("AT CharactersSortByDicePlay");
+        foreach (Heroes hero in playingCharacters) {
+            Debug.Log(hero.ToString());
+        }
+        Debug.Log("+++++++++++++++++++++++++SOS+++++++++++++++++++++++++++");
+
+
         return this.playingCharacters;
     }
 
     public void NextTurn() {
+
+        Debug.Log("=============================================");
+        foreach (Heroes hero in this.playingCharacters) {
+            //Debug.Log("======================================");
+            Debug.Log(hero.ToString());
+            //Debug.Log("======================================");
+        }
+        Debug.Log("=============================================");
+
         /* find player with turn previously */
         int indexOfHeroWithTurn = 0;
         foreach (Heroes hadTurnHero in this.playingCharacters) {
@@ -103,10 +129,11 @@ public class TurnSystem : MonoBehaviour {
             }
             else {
                 k1++;
-            }
+            }       
         }
-        Debug.Log("i = "+i);
-        Debug.Log("Count+1 "+ this.playingCharacters.Count);
+        turnNumber++;
+        // Debug.Log("i = "+i);
+        // Debug.Log("Count+1 "+ this.playingCharacters.Count);
         if (i >= this.playingCharacters.Count -1) { // have to change round
             roundNumber++;
             OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {

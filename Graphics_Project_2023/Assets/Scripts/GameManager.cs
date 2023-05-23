@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("ROUND ENDED!");
         TurnSystem.Instance.ResetTurnNumber();
         ResetCharactersMoveRange();
-        SetAliveCharactersAtTurnSystem();
+        //SetAliveCharactersAtTurnSystem();
         gameRound++;
     }
 
@@ -106,6 +106,7 @@ public class GameManager : MonoBehaviour
                 CheckIfGameEnded();
                 break;
             case State.Victory:
+                UI_Manager.Instance.SetStateInfo();
                 break;
             case State.GameOver:
                 UI_Manager.Instance.SetStateInfo();
@@ -155,6 +156,13 @@ public class GameManager : MonoBehaviour
 
         if (currentState == GameManager.State.FreeRoam) {
             /* Create Heroes */
+            Debug.Log("/////////////////////////////////////////");
+            foreach (string heroString in listOfHeroes) {
+                Debug.Log(heroString);
+            }
+            Debug.Log("/////////////////////////////////////////");
+
+
             foreach (string heroString in listOfHeroes) {
                 if (heroString.Equals(Fighter.HERO_CLASS)) {
                     Fighter fighter = (Fighter)Instantiate(fighterPrefab,new Vector3(xWorldPos, 0,1), Quaternion.identity);

@@ -30,6 +30,7 @@ public class Heroes : MonoBehaviour {
     protected GridPosition gridPosition;
     public int currentPositionIndex;
     protected int currentAttackAmount;
+    protected int currentHealAmount;
     protected List<Vector3> positionList = new List<Vector3>();
 
     /* Useful Variables  */
@@ -43,11 +44,11 @@ public class Heroes : MonoBehaviour {
     /* Useful Variables For Animations */
     protected int getHitAnimationsCounter = 0;
     protected int attackingAnimationsCounter = 0;
-
+    protected int healingAnimationCounter = 0;
     /**********************/
     protected virtual void Awake() {
         targetPosition = this.transform.position;
-        
+
     }
 
     protected virtual void Start() {
@@ -57,7 +58,7 @@ public class Heroes : MonoBehaviour {
 
         gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
         currentPositionIndex = 0;
-        //PathFinding.Instance.AddUnitAtGridPosition(gridPosition, this.gameObject.GetComponent<Unit>());
+        TakeDamage(5,null);
     }
 
 
@@ -73,7 +74,7 @@ public class Heroes : MonoBehaviour {
     private void Instance_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
 
         if (this.GetIsDead() || this == null) { return; }
-        
+
 
         if ((Heroes)e.selectedHero == this && this.GetIsEnemy()) {
             this.SetIsSelected(true);
@@ -86,15 +87,15 @@ public class Heroes : MonoBehaviour {
             Debug.Log("Selected " + this.ToString());
         }
         else if ((Heroes)e.selectedHero == this && !this.GetIsEnemy() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            if (isPlayersTurn) {
+            //if (isPlayersTurn) {
                 this.SetIsSelected(true);
                 SelectedHeroVisual();
                 Debug.Log("Selected " + this.ToString());
-            }
-            else {             
+            //}
+            /*else {
                 this.SetIsSelected(false);
                 SelectedHeroVisual();
-            }
+            }*/
         }
 
         else if ((Heroes)e.selectedHero != this && this.GetIsSelected() && e.selectedHero.GetIsEnemy() != this.GetIsEnemy()) {
@@ -102,7 +103,7 @@ public class Heroes : MonoBehaviour {
             SelectedHeroVisual();
         }
         else {
-            Debug.Log("Eror Here (OnHeroSelection) for Player: " + this.ToString());
+            //Debug.Log("Eror Here (OnHeroSelection) for Player: " + this.ToString());
             this.SetIsSelected(false);
             SelectedHeroVisual();
         }
@@ -124,7 +125,7 @@ public class Heroes : MonoBehaviour {
             this.SetIsPlayersTurn(true);
             this.SetIsSelected(true);
             SelectedHeroVisual();
-            Debug.Log("This Players Turn: "+this.ToString());
+            Debug.Log("This Players Turn: " + this.ToString());
         }
         else {
             if (this.GetIsDead() || this == null) { return; }
@@ -147,11 +148,11 @@ public class Heroes : MonoBehaviour {
     /**************************************************************/
 
 
-  
+
 
     /* Generate Getters */
     public int GetNumOfAttributes() {
-        return this.numOfAttributes; 
+        return this.numOfAttributes;
     }
     public int GetHealthPoints() {
         return this.healthPoints;
@@ -218,6 +219,9 @@ public class Heroes : MonoBehaviour {
     }
     public int GetRemainingMoveRange() {
         return this.remainingMoveRange;
+    }
+    public int GetCurrentHealAmount() {
+        return this.currentHealAmount;
     }
 
     /* Generate Setters */
@@ -288,6 +292,9 @@ public class Heroes : MonoBehaviour {
     public void SetRemainingMoveRange(int value) {
         this.remainingMoveRange = value;
     }
+    public void SetCurrentHealAmount(int value) {
+        this.currentHealAmount = value;
+    }
 
     /* Increase Experience Points By One */
     public void IncreaseExperiencePoints() {
@@ -301,6 +308,13 @@ public class Heroes : MonoBehaviour {
     public class OnHealthChangedEventArgs : EventArgs {
         public float healthNormalized;
     }
+
+    /* Event that is fired when the hero is moving in combat mode to inform the UI step bar */
+    public event EventHandler<OnRemainingMoveRangeChangedEventArgs> OnRemainingMoveRangeChanged;
+    public class OnRemainingMoveRangeChangedEventArgs : EventArgs {
+        public float remainingSteps;
+    }
+
 
     /* Firing this event when the hero level up */
     public EventHandler OnHeroLevelChanged;
@@ -328,12 +342,12 @@ public class Heroes : MonoBehaviour {
         else {
             this.SetGetsHit(true);
             this.SetIsDead(false);
-        }
-        
+        }  
      
     }
 
     public void killHero() {
+        float destroyObjectDelay = 5f;
         /* Have to make the node in which the character died Walkable */
         Vector3 killPosition = this.transform.position;
         GridPosition killPosionAtGrid = PathFinding.Instance.GetGridPosition(killPosition);
@@ -350,11 +364,11 @@ public class Heroes : MonoBehaviour {
         else {
             GameManager.Instance.aliveHeroes.Remove(this);
         }
-        Destroy(this.gameObject, 5f);
+        Destroy(this.gameObject, destroyObjectDelay);
 
     }
 
-    public void GetHeal(int healAmount) {
+    public void GetHeal(int healAmount, Heroes otherHero) {
         int newHealth = this.GetCurrentHealthPoints() + healAmount;
         if (newHealth > this.GetHealthPoints()) {
             this.SetCurrentHealthPoints(this.GetHealthPoints());
@@ -413,7 +427,6 @@ public class Heroes : MonoBehaviour {
                 if (currentPositionIndex >= positionList.Count) {
                     //ÅÍÄ
                     // at targetPoint
-                    Debug.Log("Heroes : "+ targetPosition);
                     positionList.Clear();
                     currentPositionIndex = 0;
                     this.SetIsWalking(false);
@@ -443,10 +456,15 @@ public class Heroes : MonoBehaviour {
         }
         if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             this.remainingMoveRange -= pathGridPositions.Count - 1;
+            float remainingRange = (float)(this.remainingMoveRange) / this.moveRange;
+            /* Fire the event to Inform the UI Step Bar */
+            OnRemainingMoveRangeChanged?.Invoke(this, new OnRemainingMoveRangeChangedEventArgs {
+                remainingSteps = remainingRange
+            });
         }
         foreach (Vector3 pathPosition in pathGridPositions)
             positionList.Add(pathPosition);
-        Debug.Log("target: "+pathGridPositions[pathGridPositions.Count - 1].ToString());
+        //Debug.Log("target: "+pathGridPositions[pathGridPositions.Count - 1].ToString());
         //GameManager.Instance.CheckForCombatMode(pathGridPositions[pathGridPositions.Count-1], this);
     }
 
@@ -470,7 +488,8 @@ public class Heroes : MonoBehaviour {
     }
 
     public void SelectedHeroVisual() {
-        isHeroSelected.SetActive(this.isSelected);
+        if (this.isDead || this == null) { return; }
+        isHeroSelected.SetActive(this.isSelected || this.isPlayersTurn);
     }
 
     /* Method That Points The Character To The Interacted Hero */
@@ -515,6 +534,30 @@ public class Heroes : MonoBehaviour {
         }
 
     }
+
+    public virtual void HealAmountCalculation() { }
+    /* This Function is called when this hero wants to heal another hero */
+    public void PerformHeal(Heroes heroToHeal) {
+        if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+        if (heroToHeal.GetIsEnemy() == this.GetIsEnemy()) { // we want to have the same GetIsEnemy()
+            if (diceValue == 1) {
+                this.SetIsHealing(false);
+                Debug.Log("Unsuccessfull Heal!");
+                return;
+            }
+            HealAmountCalculation();
+            PointAtTheInteractedHero(heroToHeal);
+            heroToHeal.GetHeal(this.GetCurrentHealAmount(),this);
+            this.IncreaseExperiencePoints();
+            FirstLevelUp();
+        }
+    }
+
+
+
+
+
+
     protected virtual void SetHeroFeatures() { }
 
     /* This method will be implemented by each hero in order to have custom implementations */
@@ -542,7 +585,9 @@ public class Heroes : MonoBehaviour {
     protected void AnimationsDurationControll() {
         int animationHitDuration = 2;
         int animationsAttackingDuration = 100;
+        int animationHealingDuration = 2;
 
+        /* if the hero gets hit */
         if (this.GetGetsHit()) {
             this.getHitAnimationsCounter++;
             if (getHitAnimationsCounter >= animationHitDuration) {
@@ -550,7 +595,7 @@ public class Heroes : MonoBehaviour {
                 this.getHitAnimationsCounter = 0;
             }
         }
-
+        /* If the hero is attacking */
         if (this.GetIsAttacking()) {
             this.attackingAnimationsCounter++;
             if (attackingAnimationsCounter >= animationsAttackingDuration) {
@@ -558,6 +603,16 @@ public class Heroes : MonoBehaviour {
                 this.attackingAnimationsCounter = 0;
             }
         }
+        /* If the hero is healing */
+        if (this.GetIsHealing()) {
+            this.healingAnimationCounter++;
+            if (healingAnimationCounter >= animationHealingDuration) {
+                this.SetIsHealing(false);
+                this.healingAnimationCounter = 0;
+            }
+        
+        }
+
     }
 
 

@@ -34,6 +34,7 @@ public class Mage : Heroes {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam || GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             PerformMove();
         }
+        base.AnimationsDurationControll();
     }
 
     /* Getters*/
@@ -79,11 +80,16 @@ public class Mage : Heroes {
         /* Initialize Hero's Statistics */
         this.InitializeHeroStatistics();
     }
-    
 
-    
-   
-    
-    
+    /* Calculates the heal amount that the hero will produce */
+    public override void HealAmountCalculation() {
+        int healAmount = diceValue + this.GetIntelligence(); //MPOREI NA TO ALLAJO
+        this.SetIsHealing(true);
+        this.SetCurrentHealAmount(healAmount);
+    }
+
+
+
+
 
 }
