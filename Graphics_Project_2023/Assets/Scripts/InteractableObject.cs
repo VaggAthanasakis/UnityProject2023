@@ -1,16 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class InteractableObject : MonoBehaviour {
 
     [SerializeField] GameObject interactableObject;
     [SerializeField] string objectType;
-    private Type currentType;
     [SerializeField] GameObject objectInsideChest;
     [SerializeField] GameObject selectedChestVisual;
 
+    public string mysteryBoxAction;
+
+    private Type currentType;
+
     public bool isSelected = false;
+    public bool isOpen = false;
     public enum Type { 
         Chest,
         Door,  
@@ -50,22 +56,35 @@ public class InteractableObject : MonoBehaviour {
         }
     }
 
-    /* This method is called when a character interacts with the object */
-    public void Interact() {
-        /* If the object is a Chest */
-        if (currentType == Type.Chest) {
-
-        }
-        /* If the object is a Door */
-        else if (currentType == Type.Door) { 
-        
-        
-        }
-    }
-
     private void SelectedObjectVisual() {
         selectedChestVisual.SetActive(isSelected);
+   
     }
+    /* This function is called in order to open the mystery box
+     * if we can open it, return true else false */
+    public bool ChestOpen(Heroes heroInteracted) {
+        int interactableDistance = 30;
+        int distance =  PathFinding.Instance.CalculateSimpleDistance(this.interactableObject.transform.position,heroInteracted.transform.position);
+      
+        Debug.Log("Distance "+distance);
+        /* Check if the hero is far away */
+        if (distance > interactableDistance) {
+            Debug.Log("Hero Far Away");
+            return false;
+        }
 
+        this.isOpen = true;
+        int randomNumber = Random.Range(1, 11);
+        /* 60% heal, 40% damage */
+        if (randomNumber < 7) { // then heal else damage
+            mysteryBoxAction = "HEAL";
+            heroInteracted.GetHeal(randomNumber,null);
+        }
+        else {
+            mysteryBoxAction = "DAMAGE";
+            heroInteracted.TakeDamage(randomNumber-2,null);
+        }
+        return true;
+    }
 
 }

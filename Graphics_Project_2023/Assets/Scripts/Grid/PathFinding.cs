@@ -196,5 +196,23 @@ public class PathFinding : MonoBehaviour {
 
     }
 
+    public int CalculateSimpleDistance(Vector3 positionA, Vector3 positionB) {
+        int MOVE_STRAIGHT_COST = 10;
+        int MOVE_DIAGONAL_COST = 14;
+        GridPosition gridPositionA = PathFinding.Instance.Grid().GetGridPosition(positionA);
+        GridPosition gridPositionB = PathFinding.Instance.Grid().GetGridPosition(positionB);
+        
+        GridPosition gridPositionDistance = (gridPositionA - gridPositionB);
+
+        /*int distance = Mathf.Abs(gridPositionDistance.x) + Mathf.Abs(gridPositionDistance.z);
+        return distance * MOVE_STRAIGHT_COST;*/
+
+        int xDistance = Mathf.Abs(gridPositionDistance.x);
+        int zDistance = Mathf.Abs(gridPositionDistance.z);
+        int remaining = Mathf.Abs(xDistance - zDistance);
+
+        return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT_COST * remaining;
+
+    }
 
 }

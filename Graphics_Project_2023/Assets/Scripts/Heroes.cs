@@ -501,7 +501,14 @@ public class Heroes : MonoBehaviour {
         if (direction != Vector3.zero) {
             this.transform.rotation = Quaternion.LookRotation(direction);
         }
+    }
 
+    /* Method That Points The Character To The Interacted Object */
+    public void PointAtTheInteractedObject(GameObject InteractedObject) {
+        Vector3 direction = InteractedObject.transform.position - this.transform.position;
+        if (direction != Vector3.zero) {
+            this.transform.rotation = Quaternion.LookRotation(direction);
+        }
     }
 
     /* Calculate the attack damage amount of the attack action */
@@ -618,12 +625,23 @@ public class Heroes : MonoBehaviour {
 
     }
 
-    public void ObjectInteract() {
+    /* This Function is called when the character interacts with interactable objects */
+    public bool ObjectInteract() {
         InteractableObject objectToInteract = MouseClick.instance.GetSelectedInteractableObject();
         if (objectToInteract != null) {
             // write code to happen after the open button pushed
             Debug.Log("Pushed to interact!");
-        }
-    }
+            /* Check What Interactable Object We Have */
+            if (objectToInteract.GetObjectType() == InteractableObject.Type.Chest) {
+                return objectToInteract.ChestOpen(this);
+            }
+            else if (objectToInteract.GetObjectType() == InteractableObject.Type.Door) {
+                return false;
+            }
 
+            return false;
+
+        }
+        return false;
+    }
 }
