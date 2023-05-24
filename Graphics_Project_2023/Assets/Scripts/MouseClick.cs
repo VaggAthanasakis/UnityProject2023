@@ -17,6 +17,7 @@ public class MouseClick : MonoBehaviour {
 
     private Heroes selectedHero = null;
     private Heroes selectedEnemy = null;
+    private Heroes pointedHero = null;
     private InteractableObject selectedObject = null;
 
     public Heroes GetSelectedHero() {
@@ -76,10 +77,17 @@ public class MouseClick : MonoBehaviour {
             //Debug.Log("1.Pointig on a hero");
             if (raycastHit.transform.TryGetComponent<Heroes>(out Heroes pointedHero)) {
                 //Debug.Log("2.Pointig on a hero");
+                this.pointedHero = pointedHero;
                 OnHeroPointingAction?.Invoke(this, new OnHeroPointingActionEventArgs {
                     pointedHero = pointedHero
                 });
             }
+        }
+        else {
+            this.pointedHero = null;
+            OnHeroPointingAction?.Invoke(this, new OnHeroPointingActionEventArgs {
+                pointedHero = null
+            });
         }
 
     }

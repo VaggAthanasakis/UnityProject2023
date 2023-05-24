@@ -22,7 +22,7 @@ public class Fighter : Heroes {
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
-
+        HeroAttributesToString();
         /*gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
         PathFinding.Instance.AddUnitAtGridPosition(gridPosition,this.gameObject.GetComponent<Unit>());
         currentPositionIndex = 0;
@@ -78,11 +78,13 @@ public class Fighter : Heroes {
             int damageAmount = diceValue + this.GetStrength();
             this.SetIsAttacking(true);
             this.SetCurrentAttackAmount(damageAmount);   
-        } 
-    
+        }
 
-
-      
+    /*************/
+    public override void HeroAttributesToString() {
+        base.attributesToString = "Strength: "+this.GetStrength()+"\nArmor Class: "+this.GetArmorClass()+"\nMove Range: "+this.GetMoveRange()+"\n";
     }
+
+}
 
 

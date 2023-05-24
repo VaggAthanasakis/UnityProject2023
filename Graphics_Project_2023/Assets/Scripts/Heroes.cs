@@ -38,8 +38,11 @@ public class Heroes : MonoBehaviour {
     private int experiencePoints;
     private int numOfKills;
     private int numOfHeals;
+    private bool isPointedByMouse;
     public string heroClass;
     public int diceValue;
+
+    public string attributesToString; 
 
     /* Useful Variables For Animations */
     protected int getHitAnimationsCounter = 0;
@@ -113,7 +116,11 @@ public class Heroes : MonoBehaviour {
     private void MouseClick_OnHeroPointigAction(object sender, MouseClick.OnHeroPointingActionEventArgs e) {
         //Debug.Log("Pointig On A Mage!");
         if (e.pointedHero != null && e.pointedHero == this) {
-            //Debug.Log(e.pointedHero.ToString());
+            this.isPointedByMouse = true;
+
+        }
+        else {
+            this.isPointedByMouse = false;
         }
     }
 
@@ -222,6 +229,10 @@ public class Heroes : MonoBehaviour {
     public int GetCurrentHealAmount() {
         return this.currentHealAmount;
     }
+    public bool IsPointedByMouse() {
+        return this.isPointedByMouse;
+    }
+
 
     /* Generate Setters */
     public void SetNumOfAttributes(int numOfAttributes) {
@@ -292,6 +303,9 @@ public class Heroes : MonoBehaviour {
     }
     public void SetCurrentHealAmount(int value) {
         this.currentHealAmount = value;
+    }
+    public void SetIsPointedByMouse(bool b) {
+        this.isPointedByMouse = b;
     }
 
     /* Increase Experience Points By One */
@@ -488,6 +502,9 @@ public class Heroes : MonoBehaviour {
         return "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Kills: " + this.GetNumOfKills() + "\nHero Heals: " + this.GetNumOfHeals();
     }
 
+    /* Get Heroes Attributes To String */
+    public virtual void HeroAttributesToString() { }
+
     /* Activate the selected visual when is hero's turn or when selected */
     public void SelectedHeroVisual() {
         if (this.isDead || this == null) { return; }
@@ -643,4 +660,8 @@ public class Heroes : MonoBehaviour {
         }
         return false;
     }
+
+    
+
+
 }

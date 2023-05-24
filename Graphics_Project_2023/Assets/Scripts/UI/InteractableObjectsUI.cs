@@ -15,8 +15,6 @@ public class InteractableObjectsUI : MonoBehaviour {
     private string damageString = "DAMAGE";
     public string actionInsideMysteryBox;
 
-    /* Animator */
-    private Animator animator;
 
     private void Awake() {
         this.buttonOpen.SetActive(false);

@@ -84,7 +84,12 @@ public class InteractableObject : MonoBehaviour {
             mysteryBoxAction = "DAMAGE";
             heroInteracted.TakeDamage(randomNumber-2,null);
         }
+        UI_Manager.Instance.selectedObjectPanel.SetActive(false);
         return true;
     }
 
+    /* Info about the interactable game object */
+    public string InteractableObjectToString() {
+        return "This Box Contain Either A Heal Potion Or Poison That Will Hurm Your Hero! Open it Wisely";
+    }
 }

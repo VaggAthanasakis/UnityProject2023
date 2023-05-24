@@ -34,7 +34,7 @@ public class UI_Manager : MonoBehaviour
     private Heroes selectedHero = null;
 
     /* Body Selected Object Texts And Panel */
-    [SerializeField] private GameObject selectedObjectPanel;
+    [SerializeField] public GameObject selectedObjectPanel;
     [SerializeField] private TextMeshProUGUI SelectedObjectInfoTitle;
     [SerializeField] private TextMeshProUGUI selectedObjectInfo;
     private Heroes selectedObject = null;
@@ -64,6 +64,7 @@ public class UI_Manager : MonoBehaviour
         GameManager.Instance.SetCurrentState(GameManager.State.FreeRoam);
         MouseClick.instance.OnHeroSelectAction += MouseClick_OnHeroSelectAction;
         TurnSystem.Instance.OnRoundEnded += TurnSystem_OnRoundEnded;
+        MouseClick.instance.OnInteractableObjectSelection += MouseClick_OnInteractableObjectSelection;
     }
 
     /* event that arrives when game round changes */
@@ -71,6 +72,7 @@ public class UI_Manager : MonoBehaviour
         this.gameRound.text = e.roundNum.ToString();
     }
 
+    /* When a hero is selected, we display his info */
     private void MouseClick_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
 
         //this.selectedHero = e.selectedHero;
@@ -86,6 +88,15 @@ public class UI_Manager : MonoBehaviour
         else
             this.selectedHeroPanel.SetActive(false);
 
+    }
+
+    /* When an interactable game object is selected, we display his info */
+    private void MouseClick_OnInteractableObjectSelection(object sender, MouseClick.OnInteractableObjectSelectionEventArgs e) {
+        if (e.selectedInteractableObject != null && e.selectedInteractableObject.GetObjectType() == InteractableObject.Type.Chest) {
+            this.SelectedObjectInfoTitle.text = "Mystery Box";
+            this.selectedObjectInfo.text = e.selectedInteractableObject.InteractableObjectToString();
+            this.selectedObjectPanel.SetActive(true);
+        }
     }
 
     /***********************************************************************/
