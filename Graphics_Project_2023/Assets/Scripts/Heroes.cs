@@ -285,7 +285,6 @@ public class Heroes : MonoBehaviour {
     public void SetLevel(int num) {
         this.level = num;
     }
-
     public void SetExperiencePoints(int value) {
         this.experiencePoints = value;
     }
@@ -345,7 +344,7 @@ public class Heroes : MonoBehaviour {
         }  
      
     }
-
+    /* This method is called when hero's currentHelathPoints <=0 */
     public void killHero() {
         float destroyObjectDelay = 5f;
         /* Have to make the node in which the character died Walkable */
@@ -368,6 +367,7 @@ public class Heroes : MonoBehaviour {
 
     }
 
+    /* This method is called when an oneother hero heals this hero */
     public void GetHeal(int healAmount, Heroes otherHero) {
         int newHealth = this.GetCurrentHealthPoints() + healAmount;
         if (newHealth > this.GetHealthPoints()) {
@@ -388,6 +388,7 @@ public class Heroes : MonoBehaviour {
             this.targetPosition = target;
         }
     }
+    /* This method is called when the hero wants to move */
     protected void PerformMove() {
         float stoppingDistance = 0.05f;
         float rotateSpeed = 15f;
@@ -455,7 +456,7 @@ public class Heroes : MonoBehaviour {
             return;
         }
         if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            this.remainingMoveRange -= pathGridPositions.Count - 1;
+            this.remainingMoveRange -= pathGridPositions.Count - 1; // decrease the current move range 
             float remainingRange = (float)(this.remainingMoveRange) / this.moveRange;
             /* Fire the event to Inform the UI Step Bar */
             OnRemainingMoveRangeChanged?.Invoke(this, new OnRemainingMoveRangeChangedEventArgs {
@@ -464,8 +465,7 @@ public class Heroes : MonoBehaviour {
         }
         foreach (Vector3 pathPosition in pathGridPositions)
             positionList.Add(pathPosition);
-        //Debug.Log("target: "+pathGridPositions[pathGridPositions.Count - 1].ToString());
-        //GameManager.Instance.CheckForCombatMode(pathGridPositions[pathGridPositions.Count-1], this);
+       
     }
 
     public void SetIdle() {
@@ -476,6 +476,7 @@ public class Heroes : MonoBehaviour {
         getsHit = false;
     }
 
+    /* Initialize hero's statistic values */
     protected void InitializeHeroStatistics() {
         this.SetNumOfHeals(0);
         this.SetNumOfKills(0);
@@ -483,10 +484,12 @@ public class Heroes : MonoBehaviour {
         this.experiencePoints = 0;
     }
 
+    /* Get hero's statistscs to string */
     public String HeroStatisticsToString() {
         return "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Kills: " + this.GetNumOfKills() + "\nHero Heals: " + this.GetNumOfHeals();
     }
 
+    /* Activate the selected visual when is hero's turn or when selected */
     public void SelectedHeroVisual() {
         if (this.isDead || this == null) { return; }
         isHeroSelected.SetActive(this.isSelected || this.isPlayersTurn);
@@ -501,9 +504,10 @@ public class Heroes : MonoBehaviour {
 
     }
 
-    //public virtual void Interact() { }
+    /* Calculate the attack damage amount of the attack action */
     public virtual void AttackAmountCalculation() { }
 
+    /* Permorms the attack action */
     public virtual void PerformAttack(Heroes heroToAttack) {
         /* If we are not in combat mode, return */
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
@@ -526,7 +530,7 @@ public class Heroes : MonoBehaviour {
                     this.SetNumOfKills(this.GetNumOfKills() + 1);
                     this.IncreaseExperiencePoints();
                 }
-                FirstLevelUp();
+                FirstLevelUp(); // check if the hero can level up
             }
             else {
                 Debug.Log("Unsuccessful Due To Armor > DamageAmount");
@@ -535,7 +539,9 @@ public class Heroes : MonoBehaviour {
 
     }
 
+    /* Calculate the heal amount of the heal action */
     public virtual void HealAmountCalculation() { }
+
     /* This Function is called when this hero wants to heal another hero */
     public void PerformHeal(Heroes heroToHeal) {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
@@ -553,11 +559,7 @@ public class Heroes : MonoBehaviour {
         }
     }
 
-
-
-
-
-
+    /* Method that set the hero's attributes */
     protected virtual void SetHeroFeatures() { }
 
     /* This method will be implemented by each hero in order to have custom implementations */
@@ -581,7 +583,8 @@ public class Heroes : MonoBehaviour {
         }
     }
 
-
+    /* This method controlls the animations of the characters in order to be performed 
+     * a spesific amount of times by changing the state of each hero back to idle after an action */
     protected void AnimationsDurationControll() {
         int animationHitDuration = 2;
         int animationsAttackingDuration = 100;
@@ -615,6 +618,12 @@ public class Heroes : MonoBehaviour {
 
     }
 
-
+    public void ObjectInteract() {
+        InteractableObject objectToInteract = MouseClick.instance.GetSelectedInteractableObject();
+        if (objectToInteract != null) {
+            // write code to happen after the open button pushed
+            Debug.Log("Pushed to interact!");
+        }
+    }
 
 }

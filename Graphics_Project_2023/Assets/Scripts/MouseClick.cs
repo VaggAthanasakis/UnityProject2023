@@ -11,11 +11,13 @@ public class MouseClick : MonoBehaviour {
 
     [SerializeField] private LayerMask planeLayerMask;
     [SerializeField] private LayerMask heroLayerMask;
+    [SerializeField] private LayerMask interactableObjectsLayerMask;
     [SerializeField] private Transform mouseIndicator;
 
 
     private Heroes selectedHero = null;
     private Heroes selectedEnemy = null;
+    private InteractableObject selectedObject = null;
 
     public Heroes GetSelectedHero() {
         return this.selectedHero;
@@ -24,11 +26,20 @@ public class MouseClick : MonoBehaviour {
     public Heroes GetSelectedEnemy() {
         return this.selectedEnemy;
     }
+    public InteractableObject GetSelectedInteractableObject() {
+        return this.selectedObject;
+    }
 
     /* Hero Selection Event */
     public event EventHandler<OnHeroSelectActionEventArgs> OnHeroSelectAction; // event that occurs when a player is selected
     public class OnHeroSelectActionEventArgs : EventArgs {
         public Heroes selectedHero;
+    }
+
+    /* Object Selection Event */
+    public event EventHandler<OnInteractableObjectSelectionEventArgs> OnInteractableObjectSelection;
+    public class OnInteractableObjectSelectionEventArgs : EventArgs {
+        public InteractableObject selectedInteractableObject;
     }
 
     /* Object Pointed Event */
@@ -40,20 +51,22 @@ public class MouseClick : MonoBehaviour {
     /*****************************************************************************/
     private void Awake() {
         instance = this;
-    } 
+    }
 
     private void Update() {
         MouseSelectHero();
         MousePointingHero();
+        SelectInteractableObject();
 
     }
-    public static Vector3 GetPosition() { 
+    public static Vector3 GetPosition() {
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, instance.planeLayerMask);
         return raycastHit.point;
     }
 
+    /* Check if we point at hero */
     private void MousePointingHero() {
         //mouseIndicator.position = GetPosition();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -71,6 +84,7 @@ public class MouseClick : MonoBehaviour {
 
     }
 
+    /* Check if we select a hero */
     private void MouseSelectHero() {
         mouseIndicator.position = GetPosition();
         //if (EventSystem.current.IsPointerOverGameObject()) return;
@@ -89,17 +103,17 @@ public class MouseClick : MonoBehaviour {
                 if (raycastHit.transform.TryGetComponent(out Heroes selectedHero)) { // if we have selected a hero
                     if (this.selectedHero != selectedHero && !selectedHero.GetIsEnemy()) {
                         this.selectedHero = selectedHero;
-                        Debug.Log("Selected Hero: "+selectedHero);
+                        Debug.Log("Selected Hero: " + selectedHero);
                         OnHeroSelectAction?.Invoke(this, new OnHeroSelectActionEventArgs {
                             selectedHero = selectedHero
                         });
                     }
-                    else if(this.selectedEnemy != selectedHero && selectedHero.GetIsEnemy()) {
+                    else if (this.selectedEnemy != selectedHero && selectedHero.GetIsEnemy()) {
                         this.selectedEnemy = selectedHero;
                         Debug.Log("Selected Enemy: " + selectedEnemy);
                         OnHeroSelectAction?.Invoke(this, new OnHeroSelectActionEventArgs {
                             selectedHero = selectedEnemy
-                        }) ;
+                        });
                     }
                 }
             }
@@ -107,12 +121,30 @@ public class MouseClick : MonoBehaviour {
         //Debug.Log("SELECTED ENEMY: "+this.GetSelectedEnemy());
     }
 
+    private void SelectInteractableObject() {
+        mouseIndicator.position = GetPosition();
+        if (Input.GetMouseButtonDown(0)) {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-   
- }
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, instance.interactableObjectsLayerMask)) { // if we select a hero                
+                Debug.Log(raycastHit.transform);
+                if (raycastHit.transform.TryGetComponent(out InteractableObject selectedObject)) {
+                    this.selectedObject = selectedObject;
+                    OnInteractableObjectSelection?.Invoke(this, new OnInteractableObjectSelectionEventArgs {
+                        selectedInteractableObject = selectedObject
+                    });
+                }
+                else {
+                    //this.selectedObject = null;
+                }
+            }
 
 
+        }
+    }
 
+
+}
 
 
 

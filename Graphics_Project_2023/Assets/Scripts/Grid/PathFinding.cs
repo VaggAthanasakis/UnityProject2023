@@ -76,7 +76,7 @@ public class PathFinding : MonoBehaviour {
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         /* if we have press the mouse button and we do not point to a hero */
-        if (Input.GetMouseButtonDown(0) && !Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, heroesLayerMask)) {
+        if (Input.GetMouseButtonDown(0) && !Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, heroesLayerMask) && !Physics.Raycast(ray, out RaycastHit raycastHit2, float.MaxValue,gameObjectsLayerMask)) {
 
             /* Check if we point at a UI gameObject. If yes then do not move */
             GameObject selected = EventSystem.current.currentSelectedGameObject;

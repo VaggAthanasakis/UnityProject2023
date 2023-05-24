@@ -3847,8 +3847,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e47296009ad6774fba6fd7361b7ec40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnedCharacters: []
   aliveCharacters: []
+  aliveHeroes: []
+  aliveEnemies: []
+  isCheckingForCombat: 0
   fighterPrefab: {fileID: 9214027794346882399, guid: 8eb5ec7e3ee4d7c42a8e37f2ea768aab, type: 3}
   magePrefab: {fileID: 1404089536925092990, guid: 9cb57cea9669f364caa83c08709c51a6, type: 3}
   rangerPrefab: {fileID: 2738748548033036449, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}

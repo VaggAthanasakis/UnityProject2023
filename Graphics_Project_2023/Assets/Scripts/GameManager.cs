@@ -212,7 +212,7 @@ public class GameManager : MonoBehaviour
         SetNoWalkableAreaAtObjectInstantiation(cubeObject);
     }
 
-    private void SetNoWalkableAreaAtObjectInstantiation(GameObject gameObject) {
+    public void SetNoWalkableAreaAtObjectInstantiation(GameObject gameObject) {
         Renderer renderer = gameObject.GetComponent<Renderer>();
         Bounds bounds = renderer.bounds;
         Vector3 size = bounds.size;
@@ -223,8 +223,8 @@ public class GameManager : MonoBehaviour
         /*Debug.Log("Size X: "+width);
         Debug.Log("Size Z: "+depth);*/
 
-        for (int i=-width; i<=width; i++) {
-            for (int j = -depth; j <= depth; j++) {
+        for (int i=-width; i<=width-1; i++) {
+            for (int j = -depth; j <= depth-1; j++) {
                 //GridPosition tmpGridPosition = PathFinding.Instance.GetGridPosition(new Vector3(i, 0, j));
                 Vector3 startingGameObjectPosition = gameObject.transform.position;
                 GridPosition StartingGameObjectGridPosition = PathFinding.Instance.GetGridPosition(startingGameObjectPosition + new Vector3(i, 0, j));// +  //tmpGridPosition;

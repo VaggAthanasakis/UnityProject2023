@@ -71,19 +71,6 @@ public class TurnSystem : MonoBehaviour {
                 }
             }    
         }
-        Debug.Log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-        foreach (Heroes hero in playingCharacters) {
-            Debug.Log(hero.ToString());
-        }
-        Debug.Log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-
-        this.playingCharacters = tmpTurnPlay;
-
-        Debug.Log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-        foreach (Heroes hero in playingCharacters) {
-            Debug.Log(hero.ToString());
-        }
-        Debug.Log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
 
         for (int j = 0; j< this.playingCharacters.Count; j++) {
             if (this.playingCharacters[j] != null) {
