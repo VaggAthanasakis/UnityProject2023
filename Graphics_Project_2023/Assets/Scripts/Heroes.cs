@@ -58,7 +58,6 @@ public class Heroes : MonoBehaviour {
 
         gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
         currentPositionIndex = 0;
-        TakeDamage(5,null);
     }
 
 
