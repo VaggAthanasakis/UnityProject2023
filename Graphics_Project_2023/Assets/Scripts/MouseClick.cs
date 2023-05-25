@@ -78,6 +78,7 @@ public class MouseClick : MonoBehaviour {
             if (raycastHit.transform.TryGetComponent<Heroes>(out Heroes pointedHero)) {
                 //Debug.Log("2.Pointig on a hero");
                 this.pointedHero = pointedHero;
+                this.pointedHero.SetIsPointedByMouse(true);
                 OnHeroPointingAction?.Invoke(this, new OnHeroPointingActionEventArgs {
                     pointedHero = pointedHero
                 });
