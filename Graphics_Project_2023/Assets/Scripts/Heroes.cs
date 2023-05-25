@@ -23,6 +23,7 @@ public class Heroes : MonoBehaviour {
     private bool isAttacking = false;
     private bool isHealing = false;
     private bool getsHit = false;
+    private bool isBegging = false;
     private int currentHealthPoints;
     private int remainingMoveRange;
 
@@ -30,6 +31,7 @@ public class Heroes : MonoBehaviour {
     protected GridPosition gridPosition;
     public int currentPositionIndex;
     protected int currentAttackAmount;
+    protected int currentNegotiateValue;
     protected int currentHealAmount;
     protected List<Vector3> positionList = new List<Vector3>();
 
@@ -38,6 +40,7 @@ public class Heroes : MonoBehaviour {
     private int experiencePoints;
     private int numOfKills;
     private int numOfHeals;
+    private int numOfBegs;
     private bool isPointedByMouse;
     public string heroClass;
     public int diceValue;
@@ -48,6 +51,7 @@ public class Heroes : MonoBehaviour {
     protected int getHitAnimationsCounter = 0;
     protected int attackingAnimationsCounter = 0;
     protected int healingAnimationCounter = 0;
+    protected int beggingAnimationCounter = 0;
     /**********************/
     protected virtual void Awake() {
         targetPosition = this.transform.position;
@@ -232,7 +236,15 @@ public class Heroes : MonoBehaviour {
     public bool IsPointedByMouse() {
         return this.isPointedByMouse;
     }
-
+    public bool GetIsBegging() {
+        return this.isBegging;
+    }
+    public int GetCurrentNegotiateValue() { 
+        return this.currentNegotiateValue;
+    }
+    public int GetNumOfBegs() {
+        return this.numOfBegs;
+    }
 
     /* Generate Setters */
     public void SetNumOfAttributes(int numOfAttributes) {
@@ -306,6 +318,15 @@ public class Heroes : MonoBehaviour {
     }
     public void SetIsPointedByMouse(bool b) {
         this.isPointedByMouse = b;
+    }
+    public void SetIsBegging(bool b) {
+        this.isBegging = b; 
+    }
+    public void SetCurrentNegotiateValue(int value) {
+        this.currentNegotiateValue = value;
+    }
+    public void SetNumOfBegs(int value) {
+        this.numOfBegs = value;
     }
 
     /* Increase Experience Points By One */
@@ -527,6 +548,77 @@ public class Heroes : MonoBehaviour {
         }
     }
 
+    /* Method that set the hero's attributes */
+    protected virtual void SetHeroFeatures() { }
+
+    /* This method will be implemented by each hero in order to have custom implementations */
+    protected virtual void LevelUp() { }
+
+    /* At the first level up, we increase the health, the dexterity and the constitution of the hero */
+    /* It happens if the hero has at least 2 experience points */
+    public void FirstLevelUp() {
+        if (this.GetLevel() == 1 && this.GetExperiencePoints() <= 2) {
+            this.currentHealthPoints += 5;
+            this.healthPoints += 5;
+            this.dexterity += 2;
+            this.constitution += 2;
+            this.level++;
+            Debug.Log("Level Up");
+            this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
+        }
+        else {
+            LevelUp();
+            this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    /* This method controlls the animations of the characters in order to be performed 
+     * a spesific amount of times by changing the state of each hero back to idle after an action */
+    protected void AnimationsDurationControll() {
+        int animationHitDuration = 2;
+        int animationsAttackingDuration = 100;
+        int animationHealingDuration = 2;
+        int animationBeggingDuration = 2;
+
+        /* if the hero gets hit */
+        if (this.GetGetsHit()) {
+            this.getHitAnimationsCounter++;
+            if (getHitAnimationsCounter >= animationHitDuration) {
+                this.SetGetsHit(false);
+                this.getHitAnimationsCounter = 0;
+            }
+        }
+        /* If the hero is attacking */
+        if (this.GetIsAttacking()) {
+            this.attackingAnimationsCounter++;
+            if (attackingAnimationsCounter >= animationsAttackingDuration) {
+                this.SetIsAttacking(false);
+                this.attackingAnimationsCounter = 0;
+            }
+        }
+        /* If the hero is healing */
+        if (this.GetIsHealing()) {
+            this.healingAnimationCounter++;
+            if (healingAnimationCounter >= animationHealingDuration) {
+                this.SetIsHealing(false);
+                this.healingAnimationCounter = 0;
+            }
+        
+        }
+        /* If the hero is begging */
+        if (this.GetIsBegging()) {
+            this.beggingAnimationCounter++;
+            if (beggingAnimationCounter >= animationBeggingDuration) {
+                this.SetIsBegging(false);
+                this.beggingAnimationCounter = 0;
+            }
+        }
+
+    }
+
+    /*****  HERO ACTIONS ****/
+
+    /********** ATTACK ACTION ******/
     /* Calculate the attack damage amount of the attack action */
     public virtual void AttackAmountCalculation() { }
 
@@ -562,6 +654,7 @@ public class Heroes : MonoBehaviour {
 
     }
 
+    /****** HEAL ACTION *******/
     /* Calculate the heal amount of the heal action */
     public virtual void HealAmountCalculation() { }
 
@@ -576,72 +669,14 @@ public class Heroes : MonoBehaviour {
             }
             HealAmountCalculation();
             PointAtTheInteractedHero(heroToHeal);
-            heroToHeal.GetHeal(this.GetCurrentHealAmount(),this);
+            heroToHeal.GetHeal(this.GetCurrentHealAmount(), this);
             this.IncreaseExperiencePoints();
             FirstLevelUp();
         }
     }
 
-    /* Method that set the hero's attributes */
-    protected virtual void SetHeroFeatures() { }
-
-    /* This method will be implemented by each hero in order to have custom implementations */
-    protected virtual void LevelUp() { }
-
-    /* At the first level up, we increase the health, the dexterity and the constitution of the hero */
-    /* It happens if the hero has at least 2 experience points */
-    public void FirstLevelUp() {
-        if (this.GetLevel() == 1 && this.GetExperiencePoints() <= 2) {
-            this.currentHealthPoints += 5;
-            this.healthPoints += 5;
-            this.dexterity += 2;
-            this.constitution += 2;
-            this.level++;
-            Debug.Log("Level Up");
-            this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
-        }
-        else {
-            LevelUp();
-            this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
-    /* This method controlls the animations of the characters in order to be performed 
-     * a spesific amount of times by changing the state of each hero back to idle after an action */
-    protected void AnimationsDurationControll() {
-        int animationHitDuration = 2;
-        int animationsAttackingDuration = 100;
-        int animationHealingDuration = 2;
-
-        /* if the hero gets hit */
-        if (this.GetGetsHit()) {
-            this.getHitAnimationsCounter++;
-            if (getHitAnimationsCounter >= animationHitDuration) {
-                this.SetGetsHit(false);
-                this.getHitAnimationsCounter = 0;
-            }
-        }
-        /* If the hero is attacking */
-        if (this.GetIsAttacking()) {
-            this.attackingAnimationsCounter++;
-            if (attackingAnimationsCounter >= animationsAttackingDuration) {
-                this.SetIsAttacking(false);
-                this.attackingAnimationsCounter = 0;
-            }
-        }
-        /* If the hero is healing */
-        if (this.GetIsHealing()) {
-            this.healingAnimationCounter++;
-            if (healingAnimationCounter >= animationHealingDuration) {
-                this.SetIsHealing(false);
-                this.healingAnimationCounter = 0;
-            }
-        
-        }
-
-    }
-
-    /* This Function is called when the character interacts with interactable objects */
+    /********** OBJECT INTERACT ACTION **********/
+    /* This function is called when the character interacts with interactable objects */
     public bool ObjectInteract() {
         InteractableObject objectToInteract = MouseClick.instance.GetSelectedInteractableObject();
         if (objectToInteract != null) {
@@ -654,14 +689,62 @@ public class Heroes : MonoBehaviour {
             else if (objectToInteract.GetObjectType() == InteractableObject.Type.Door) {
                 return false;
             }
-
             return false;
-
         }
         return false;
     }
 
-    
+    /********** CAST SPELL ************/
+    /* This function is called when the hero (Mage or Priest) want to cast a spell
+     * */
+    public void CastSpell() {
+        if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+
+
+    }
+
+    /******** ACTION BEG ********/
+    public virtual void NegotiateAmount() { }
+
+    /* This function is called when the hero want to beg an enemy to come by his side */
+    public void Beg(Heroes enemyHero) {
+        int begOffset = 3;
+        /* If the game is not in combat mode, then return */
+        /* If this hero is not a priest, then return since only he can use this action  */
+        if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) { return; }
+        if (this.heroClass != Priest.HERO_CLASS || this.GetIsEnemy() == enemyHero.GetIsEnemy()) { return; }
+        if (diceValue == 1) {
+            this.SetIsBegging(false);
+            Debug.Log("Unsuccessfull Beg!");
+            return;
+        }
+        NegotiateAmount();
+        PointAtTheInteractedHero(enemyHero);
+        if (enemyHero.GetArmorClass() < this.GetCurrentNegotiateValue() + begOffset) {
+            Debug.Log("Successful Beg");
+            if (enemyHero.GetIsEnemy()) {
+                enemyHero.SetIsEnemy(!enemyHero.GetIsEnemy());
+                GameManager.Instance.aliveEnemies.Remove(enemyHero);
+                GameManager.Instance.aliveHeroes.Add(enemyHero);
+            }
+            else {
+                enemyHero.SetIsEnemy(!enemyHero.GetIsEnemy());
+                GameManager.Instance.aliveHeroes.Remove(enemyHero);
+                GameManager.Instance.aliveEnemies.Add(enemyHero);
+            }
+
+            this.SetNumOfBegs(this.GetNumOfBegs() + 1);
+            this.IncreaseExperiencePoints();
+            FirstLevelUp();
+        }
+        else {
+            this.isBegging = false;
+            Debug.Log("Unsuccessful Beg");
+        }
+        
+    }
+
+
 
 
 }

@@ -74,7 +74,6 @@ public class UI_Manager : MonoBehaviour
 
     /* When a hero is selected, we display his info */
     private void MouseClick_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
-
         //this.selectedHero = e.selectedHero;
         if (e.selectedHero != null && !e.selectedHero.GetIsEnemy()) {
             this.selectedHero = e.selectedHero;
@@ -156,11 +155,8 @@ public class UI_Manager : MonoBehaviour
 
     public void DicePlay() {
         this.roundInfoPanel.SetActive(true);
-
         TurnSystem.Instance.turnBasedOnDice.Clear();
-        
-        TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round
-       
+        TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round 
         foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();
             Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
@@ -168,8 +164,21 @@ public class UI_Manager : MonoBehaviour
             TurnSystem.Instance.turnBasedOnDice.Add(diceValue);
         }
         TurnSystem.Instance.CharactersSortByDicePlay();
-
     }
+
+    /**/
+    public void Button_BegEnemy() {
+        Debug.Log("Buttom Beg Enemy Pushed");
+        Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
+        Heroes enemyToBeg = MouseClick.instance.GetSelectedEnemy();
+
+        if (heroWithTurn.heroClass != Priest.HERO_CLASS || heroWithTurn.GetIsEnemy() == enemyToBeg.GetIsEnemy()) { return; }
+        heroWithTurn.Beg(enemyToBeg);
+        TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+        gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+        gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+    }
+
 
     /***********************************************************************/
     public void SetStateInfo() {

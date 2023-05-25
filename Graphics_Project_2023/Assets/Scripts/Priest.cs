@@ -79,6 +79,10 @@ public class Priest : Heroes {
         base.attributesToString = "Charisma: " + this.GetCharisma() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
     }
 
-
+    public override void NegotiateAmount() {
+        int amount = diceValue + this.GetCharisma();
+        this.SetIsBegging(true);
+        this.SetCurrentNegotiateValue(amount);
+    }
 
 }

@@ -36,16 +36,9 @@ public class HeroAttributesUI : MonoBehaviour {
             }
 
         }
-        else {
+        else if(e.pointedHero != null){
             this.gameObjectCanvas.SetActive(false);
         }
-    }
-
-    private void PointedHeroVisuals() {
-        if (hero.IsPointedByMouse()) { 
-            
-        }
-    
     }
 
 
