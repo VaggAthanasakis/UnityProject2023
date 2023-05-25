@@ -20,9 +20,7 @@ public class Mage : Heroes {
     // Start is called before the first frame update
     protected override void Start() { 
         base.Start();
-        
-
-        
+        HeroAttributesToString();
         /*gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
         PathFinding.Instance.AddUnitAtGridPosition(gridPosition,this.gameObject.GetComponent<Unit>());
         currentPositionIndex = 0;
@@ -88,7 +86,9 @@ public class Mage : Heroes {
         this.SetCurrentHealAmount(healAmount);
     }
 
-
+    public override void HeroAttributesToString() {
+        base.attributesToString = "Strength: " + this.GetStrength() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
+    }
 
 
 

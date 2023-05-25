@@ -16,6 +16,12 @@ public class Ranger : Heroes {
         SetHeroFeatures();
     }
 
+    /* Start */
+    protected override void Start() {
+        base.Start();
+        HeroAttributesToString();
+    }
+
     // Update is called once per frame
     private void Update() {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam || GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
@@ -83,6 +89,10 @@ public class Ranger : Heroes {
 
     }
 
+
+    public override void HeroAttributesToString() {
+        base.attributesToString = "Strength: " + this.GetStrength() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
+    }
 
 
 
