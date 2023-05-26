@@ -72,6 +72,7 @@ public class Ranger : Heroes {
         this.SetCurrentAttackAmount(damageAmount);
     }
 
+    /* function that is called when the hero levels up */
     protected override void LevelUp() {
         base.LevelUp(); // mporei na mhn xreiazetai
         /* if we reach here, the hero has level > 1 AND experience points > 2 */
@@ -82,8 +83,11 @@ public class Ranger : Heroes {
             /// code for level up
             this.SetLevel(this.GetLevel()+1);
         }
+        /* Case Upgrade To Level 4 */
         else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
             // code for level up
+            /* At this level the character is allowed to perform 2 main actions at the same turn */
+            this.numOfAllowedActions++;
             this.SetLevel(this.GetLevel() + 1);
         }
 

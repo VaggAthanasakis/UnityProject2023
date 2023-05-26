@@ -113,7 +113,7 @@ public class UI_Manager : MonoBehaviour
         if (attackedHero != null && attackedHero != heroWithTurn) {
             heroWithTurn.PerformAttack(attackedHero);
             // IF HERO CANNOT FURTHER MOVE
-            if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+            if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
                 TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
                 gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
                 gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
@@ -148,8 +148,8 @@ public class UI_Manager : MonoBehaviour
         /* If we have selected an other hero to heal */
         if (heroToHeal != null && heroToHeal != heroWithTurn && heroWithTurn.GetIsEnemy() == heroToHeal.GetIsEnemy()) {
             heroWithTurn.PerformHeal(heroToHeal);
-            // IF HERO CANNOT FURTHER MOVE
-            if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+            /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
+            if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
                 TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
                 gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
                 gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
@@ -186,7 +186,8 @@ public class UI_Manager : MonoBehaviour
 
         if (heroWithTurn.heroClass != Priest.HERO_CLASS || heroWithTurn.GetIsEnemy() == enemyToBeg.GetIsEnemy()) { return; }
         heroWithTurn.Beg(enemyToBeg);
-        if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+        /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
+        if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
             TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
             gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
             gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
@@ -195,12 +196,13 @@ public class UI_Manager : MonoBehaviour
 
     /* Button for cast spelling */
     public void Button_CastSpell() {
-        Debug.Log("Buttom Beg Enemy Pushed");
+        Debug.Log("Buttom Cast Spell Pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
 
         if (heroWithTurn.heroClass != Priest.HERO_CLASS && heroWithTurn.heroClass != Mage.HERO_CLASS) { return; }
         heroWithTurn.CastSpell();
-        if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+        /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
+        if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
             TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
             gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
             gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
@@ -212,7 +214,8 @@ public class UI_Manager : MonoBehaviour
         Debug.Log("Button Dash Pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         heroWithTurn.Dash();
-        if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+        /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
+        if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
             TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
             gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
             gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();

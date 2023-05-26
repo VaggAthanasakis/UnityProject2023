@@ -75,6 +75,27 @@ public class Priest : Heroes {
         this.SetCurrentHealAmount(healAmount);
     }
 
+    /* function that is called when the hero levels up */
+    protected override void LevelUp() {
+        base.LevelUp(); // mporei na mhn xreiazetai
+        /* if we reach here, the hero has level > 1 AND experience points > 2 */
+
+        /* Case Upgrade To Level 3 */
+        /* We level up if the hero has 4 experience points */
+        if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
+            /// code for level up
+            this.SetLevel(this.GetLevel() + 1);
+        }
+        /* Case Upgrade To Level 4 */
+        else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
+            // code for level up
+            /* At this level the character is allowed to perform 2 main actions at the same turn */
+            this.numOfAllowedActions++;
+            this.SetLevel(this.GetLevel() + 1);
+        }
+
+    }
+
     public override void HeroAttributesToString() {
         base.attributesToString = "Charisma: " + this.GetCharisma() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
     }

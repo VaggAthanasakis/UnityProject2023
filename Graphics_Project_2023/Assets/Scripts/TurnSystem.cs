@@ -55,12 +55,6 @@ public class TurnSystem : MonoBehaviour {
     /* This Method Sorts The Characters List Based On The Turn */
     public List<Heroes> CharactersSortByDicePlay() {
 
-        foreach (int integer in turnBasedOnDice) {
-            Debug.Log("Value: "+integer);
-            
-        }
-        Debug.Log("=======================");
-
         turnBasedOnDice.Sort();
         turnBasedOnDice.Reverse();
         tmpTurnPlay.Clear();
@@ -89,15 +83,6 @@ public class TurnSystem : MonoBehaviour {
                 break;
             }
         }
-        foreach (int integer in turnBasedOnDice) {
-            Debug.Log("Value: " + integer);
-
-        }
-        Debug.Log("=======================");
-
-        foreach (Heroes hero in playingCharacters) {
-            Debug.Log("Hero "+hero+" dice "+hero.diceValue);
-        }
         return this.playingCharacters;
     }
 
@@ -108,6 +93,7 @@ public class TurnSystem : MonoBehaviour {
         foreach (Heroes hadTurnHero in this.playingCharacters) {
             if (hadTurnHero.GetIsPlayersTurn()) {
                 Debug.Log("Previous Turn: "+hadTurnHero.ToString());
+                hadTurnHero.performedActions = 0;
                 break;
             }
             indexOfHeroWithTurn++;

@@ -45,6 +45,8 @@ public class Heroes : MonoBehaviour {
     private bool isPointedByMouse;
     public string heroClass;
     public int diceValue;
+    public int performedActions = 0;
+    public int numOfAllowedActions = 1;
 
     public string attributesToString; 
 
@@ -67,6 +69,7 @@ public class Heroes : MonoBehaviour {
 
         gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
         currentPositionIndex = 0;
+        setNoWalkableNodeAtHeroPosition();
     }
 
 
@@ -649,12 +652,22 @@ public class Heroes : MonoBehaviour {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
 
         if (heroToAttack.GetIsEnemy() != this.GetIsEnemy()) {
-            if (diceValue == 1) {
+            this.performedActions++; // increase the number of permoemed actionsof the hero
+            if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
                 this.SetIsAttacking(false);
                 Debug.Log("Unsuccessfull Attack!");
                 return;
             }
-            AttackAmountCalculation();
+            /* if the other hero is out of range */
+            int distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position,heroToAttack.transform.position);
+            int distance_normalized = distance / 10; // because distance is 10x in comparison to attack range
+            if (distance_normalized > this.attackRange) {
+                Debug.Log("Other Hero Out Of Range");
+                this.SetIsAttacking(false);
+                return;
+            }
+
+            AttackAmountCalculation(); // calculate the attack amount
             PointAtTheInteractedHero(heroToAttack);
             if (heroToAttack.GetArmorClass() < this.GetCurrentAttackAmount()) {
                 Debug.Log("Successfull Attack");
@@ -683,11 +696,21 @@ public class Heroes : MonoBehaviour {
     public void PerformHeal(Heroes heroToHeal) {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
         if (heroToHeal.GetIsEnemy() == this.GetIsEnemy()) { // we want to have the same GetIsEnemy()
-            if (diceValue == 1) {
+            this.performedActions++; // increase the number of permoemed actionsof the hero
+            if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
                 this.SetIsHealing(false);
                 Debug.Log("Unsuccessfull Heal!");
                 return;
             }
+            /* if the other hero is out of range */
+            int distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, heroToHeal.transform.position);
+            int distance_normalized = distance / 10; // because distance is 10x in comparison to attack range
+            if (distance_normalized > this.attackRange) {
+                Debug.Log("Other Hero Out Of Range");
+                this.SetIsAttacking(false);
+                return;
+            }
+
             HealAmountCalculation();
             PointAtTheInteractedHero(heroToHeal);
             heroToHeal.GetHeal(this.GetCurrentHealAmount(), this);
@@ -725,7 +748,8 @@ public class Heroes : MonoBehaviour {
     public void CastSpell() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
         if (this.heroClass != Priest.HERO_CLASS && this.heroClass != Mage.HERO_CLASS) { return; }
-        if (diceValue == 1) {
+        this.performedActions++; // increase the number of permoemed actionsof the hero
+        if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             //this.SetIsBegging(false);
             Debug.Log("Unsuccessfull Spell Cast!");
             return;
@@ -769,11 +793,22 @@ public class Heroes : MonoBehaviour {
         /* If this hero is not a priest, then return since only he can use this action  */
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) { return; }
         if (this.heroClass != Priest.HERO_CLASS || this.GetIsEnemy() == enemyHero.GetIsEnemy()) { return; }
-        if (diceValue == 1) {
+        this.performedActions++; // increase the number of permoemed actionsof the hero
+        if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             this.SetIsBegging(false);
             Debug.Log("Unsuccessfull Beg!");
             return;
         }
+
+        /* if the other hero is out of range */
+        int distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, enemyHero.transform.position);
+        int distance_normalized = distance / 10; // because distance is 10x in comparison to attack range
+        if (distance_normalized > this.attackRange) {
+            Debug.Log("Other Hero Out Of Range");
+            this.SetIsAttacking(false);
+            return;
+        }
+
         NegotiateAmount();
         PointAtTheInteractedHero(enemyHero);
         if (enemyHero.GetArmorClass() < this.GetCurrentNegotiateValue() + begOffset) {
@@ -804,12 +839,16 @@ public class Heroes : MonoBehaviour {
     /* This function allows the hero to move twice the distance he normally could in a round */
     public void Dash() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
-        if (diceValue == 1) {
+        this.performedActions++; // increase the number of permoemed actions of the hero
+        if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             //this.SetIsBegging(false);
             Debug.Log("Unsuccessfull Spell Cast!");
             return;
         }
         this.remainingMoveRange = 2 * this.moveRange;
+        OnRemainingMoveRangeChanged?.Invoke(this, new OnRemainingMoveRangeChangedEventArgs {
+            remainingSteps = this.remainingMoveRange
+        });
     }
 
 }

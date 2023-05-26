@@ -73,7 +73,9 @@ public class PathFinding : MonoBehaviour {
     }
 
     private void MoveHero() {
-
+        if ((heroWithTurn == null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || selectedHero == null && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+            return;
+        }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         /* if we have press the mouse button and we do not point to a hero */
         if (Input.GetMouseButtonDown(0) && !Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, heroesLayerMask) && !Physics.Raycast(ray, out RaycastHit raycastHit2, float.MaxValue,gameObjectsLayerMask)) {
@@ -93,13 +95,13 @@ public class PathFinding : MonoBehaviour {
             
             this.prevMousePosition = mouseGridPosition;
             
-            if (selectedHero != null) {
+            if (selectedHero != null && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
                 if (selectedHero.currentPositionIndex == 0) {
                     startGridPosition = PathFinding.Instance.GetGridPosition(selectedHero.transform.position);       
                 }
-            }
+            } 
 
-            if (heroWithTurn != null) {
+            if (heroWithTurn != null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
                 if (heroWithTurn.currentPositionIndex == 0) {
                     startGridPosition = PathFinding.Instance.GetGridPosition(heroWithTurn.transform.position);
                 }
