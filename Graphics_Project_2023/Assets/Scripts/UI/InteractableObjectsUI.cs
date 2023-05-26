@@ -41,12 +41,11 @@ public class InteractableObjectsUI : MonoBehaviour {
 
         Heroes heroToOpenIt = MouseClick.instance.GetSelectedHero();
         if (heroToOpenIt != null) {
-            this.interactable.isOpen = true;
             heroToOpenIt.PointAtTheInteractedObject(this.interactable.gameObject);
             /* If the hero cannot interact, return */
             if (!heroToOpenIt.ObjectInteract()) { return; }
-
             /* else */
+            this.interactable.isOpen = true;
             this.buttonOpen.SetActive(false);
             this.actionPanel.SetActive(true);
             if (interactable.mysteryBoxAction == healString) {

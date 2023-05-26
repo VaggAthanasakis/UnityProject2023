@@ -499,6 +499,10 @@ public class Heroes : MonoBehaviour {
         }
         if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             this.remainingMoveRange -= pathGridPositions.Count - 1; // decrease the current move range 
+            /* If there are no remaining steps, next turn */
+            /*if (this.remain) { 
+            
+            }*/
             float remainingRange = (float)(this.remainingMoveRange) / this.moveRange;
             /* Fire the event to Inform the UI Step Bar */
             OnRemainingMoveRangeChanged?.Invoke(this, new OnRemainingMoveRangeChangedEventArgs {
@@ -687,6 +691,10 @@ public class Heroes : MonoBehaviour {
             HealAmountCalculation();
             PointAtTheInteractedHero(heroToHeal);
             heroToHeal.GetHeal(this.GetCurrentHealAmount(), this);
+            /* if hero has max health, do not get xp points */
+            if (heroToHeal.GetCurrentHealthPoints() == heroToHeal.healthPoints) {
+                return;
+            }
             this.IncreaseExperiencePoints();
             FirstLevelUp();
         }
