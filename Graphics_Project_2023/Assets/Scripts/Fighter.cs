@@ -70,15 +70,14 @@ public class Fighter : Heroes {
 
         /* Initialize Hero's Statistics */
         this.InitializeHeroStatistics();
-        
-
+      
     }
     /* Calculates the damage amount of the attack. damageAmount = dice + main attribute */
     public override void AttackAmountCalculation() {
             int damageAmount = diceValue + this.GetStrength();
             this.SetIsAttacking(true);
             this.SetCurrentAttackAmount(damageAmount);   
-        }
+    }
 
     /*************/
     public override void HeroAttributesToString() {

@@ -24,6 +24,7 @@ public class Heroes : MonoBehaviour {
     private bool isHealing = false;
     private bool getsHit = false;
     private bool isBegging = false;
+    private bool isCastSpelling = false;
     private int currentHealthPoints;
     private int remainingMoveRange;
 
@@ -52,6 +53,7 @@ public class Heroes : MonoBehaviour {
     protected int attackingAnimationsCounter = 0;
     protected int healingAnimationCounter = 0;
     protected int beggingAnimationCounter = 0;
+    protected int castSpellingAnimationCounter = 0;
     /**********************/
     protected virtual void Awake() {
         targetPosition = this.transform.position;
@@ -245,6 +247,9 @@ public class Heroes : MonoBehaviour {
     public int GetNumOfBegs() {
         return this.numOfBegs;
     }
+    public bool GetIsCastSpelling() {
+        return this.isCastSpelling;
+    }
 
     /* Generate Setters */
     public void SetNumOfAttributes(int numOfAttributes) {
@@ -328,7 +333,10 @@ public class Heroes : MonoBehaviour {
     public void SetNumOfBegs(int value) {
         this.numOfBegs = value;
     }
-
+    public void SetIsCastSpelling(bool b) {
+        this.isCastSpelling = b;
+    }
+    
     /* Increase Experience Points By One */
     public void IncreaseExperiencePoints() {
         this.experiencePoints++;
@@ -579,6 +587,7 @@ public class Heroes : MonoBehaviour {
         int animationsAttackingDuration = 100;
         int animationHealingDuration = 2;
         int animationBeggingDuration = 2;
+        int animationCastSpellingDuration = 3;
 
         /* if the hero gets hit */
         if (this.GetGetsHit()) {
@@ -603,7 +612,6 @@ public class Heroes : MonoBehaviour {
                 this.SetIsHealing(false);
                 this.healingAnimationCounter = 0;
             }
-        
         }
         /* If the hero is begging */
         if (this.GetIsBegging()) {
@@ -612,6 +620,15 @@ public class Heroes : MonoBehaviour {
                 this.SetIsBegging(false);
                 this.beggingAnimationCounter = 0;
             }
+        }
+        /* if the hero cast a spell */
+        if (this.isCastSpelling) {
+            this.castSpellingAnimationCounter++;
+            if (castSpellingAnimationCounter >= animationCastSpellingDuration) {
+                this.SetIsCastSpelling(false);
+                this.castSpellingAnimationCounter = 0;
+            }
+
         }
 
     }
@@ -696,11 +713,42 @@ public class Heroes : MonoBehaviour {
 
     /********** CAST SPELL ************/
     /* This function is called when the hero (Mage or Priest) want to cast a spell
-     * */
+     * The Spell will randomly either heal all the heroes or damage all the enemies */
     public void CastSpell() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
-
-
+        if (this.heroClass != Priest.HERO_CLASS && this.heroClass != Mage.HERO_CLASS) { return; }
+        if (diceValue == 1) {
+            //this.SetIsBegging(false);
+            Debug.Log("Unsuccessfull Spell Cast!");
+            return;
+        }
+        int randNumber = UnityEngine.Random.Range(1,11);
+        /* Heal All Heroes */
+        if (randNumber <= 5) {
+            if (!this.GetIsEnemy()) {
+                foreach (Heroes hero in GameManager.Instance.aliveHeroes) {
+                    this.PerformHeal(hero);
+                }
+            }
+            else if (this.GetIsEnemy()) {
+                foreach (Heroes hero in GameManager.Instance.aliveEnemies) {
+                    this.PerformHeal(hero);
+                }
+            }
+        }
+        /* Attack all enemies */
+        else if (randNumber > 5) {
+            if (!this.GetIsEnemy()) {
+                foreach (Heroes hero in GameManager.Instance.aliveEnemies) {
+                    this.PerformAttack(hero);
+                }
+            }
+            else if (this.GetIsEnemy()) {
+                foreach (Heroes hero in GameManager.Instance.aliveHeroes) {
+                    this.PerformAttack(hero);
+                }
+            }
+        }
     }
 
     /******** ACTION BEG ********/
@@ -708,7 +756,7 @@ public class Heroes : MonoBehaviour {
 
     /* This function is called when the hero want to beg an enemy to come by his side */
     public void Beg(Heroes enemyHero) {
-        int begOffset = 3;
+        int begOffset = 4;
         /* If the game is not in combat mode, then return */
         /* If this hero is not a priest, then return since only he can use this action  */
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) { return; }
@@ -744,7 +792,16 @@ public class Heroes : MonoBehaviour {
         
     }
 
-
-
+    /*********** DASH ACTION ***************/
+    /* This function allows the hero to move twice the distance he normally could in a round */
+    public void Dash() {
+        if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+        if (diceValue == 1) {
+            //this.SetIsBegging(false);
+            Debug.Log("Unsuccessfull Spell Cast!");
+            return;
+        }
+        this.remainingMoveRange = 2 * this.moveRange;
+    }
 
 }

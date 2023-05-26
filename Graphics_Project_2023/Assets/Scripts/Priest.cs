@@ -85,4 +85,11 @@ public class Priest : Heroes {
         this.SetCurrentNegotiateValue(amount);
     }
 
+    /* Calculates the damage amount of the attack. damageAmount = dice + main attribute */
+    public override void AttackAmountCalculation() {
+        int damageAmount = diceValue + this.charisma - 3;
+        this.SetIsCastSpelling(true);
+        this.SetCurrentAttackAmount(damageAmount);
+    }
+
 }

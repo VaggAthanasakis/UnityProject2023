@@ -90,6 +90,12 @@ public class Mage : Heroes {
         base.attributesToString = "Strength: " + this.GetStrength() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
     }
 
+    /* Calculates the damage amount of the attack. damageAmount = dice + main attribute */
+    public override void AttackAmountCalculation() {
+        int damageAmount = diceValue + this.intelligence - 3;
+        this.SetIsCastSpelling(true);
+        this.SetCurrentAttackAmount(damageAmount);
+    }
 
 
 }

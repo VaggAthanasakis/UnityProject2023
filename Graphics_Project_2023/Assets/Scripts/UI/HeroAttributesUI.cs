@@ -28,15 +28,18 @@ public class HeroAttributesUI : MonoBehaviour {
 
     /* Event that arrives when the hero is pointed */
     private void MouseClick_OnHeroPointingAction(object sender, MouseClick.OnHeroPointingActionEventArgs e) {
-        if (e.pointedHero != null && e.pointedHero == this.hero) {
+
+        if (this == null) {
+            return;
+        }
+        else if (e.pointedHero != null && e.pointedHero == this.hero) {
             if (!this.gameObjectCanvas.activeSelf) { // if it is not already active     
                 this.gameObjectCanvas.SetActive(true);
                 this.attributesInfo.text = e.pointedHero.attributesToString;
                 //Debug.Log("SHOULD HAVE OPENED");
             }
-
         }
-        else if(e.pointedHero != null){
+        else if (e.pointedHero != this || !e.pointedHero.GetIsDead()) {
             this.gameObjectCanvas.SetActive(false);
         }
     }

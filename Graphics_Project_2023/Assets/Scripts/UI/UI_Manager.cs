@@ -113,9 +113,11 @@ public class UI_Manager : MonoBehaviour
         if (attackedHero != null && attackedHero != heroWithTurn) {
             heroWithTurn.PerformAttack(attackedHero);
             // IF HERO CANNOT FURTHER MOVE
-            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
-            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+            if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+                TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+            }
         }
         else if(attackedHero == null) {
             Debug.Log("ATTACKED HERO NULL");           
@@ -147,13 +149,15 @@ public class UI_Manager : MonoBehaviour
         if (heroToHeal != null && heroToHeal != heroWithTurn && heroWithTurn.GetIsEnemy() == heroToHeal.GetIsEnemy()) {
             heroWithTurn.PerformHeal(heroToHeal);
             // IF HERO CANNOT FURTHER MOVE
-            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
-            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+            if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+                TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+            }
         }
     }
 
-    public void DicePlay() {
+    public void Button_DicePlay() {
         this.roundInfoPanel.SetActive(true);
         TurnSystem.Instance.turnBasedOnDice.Clear();
         TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round 
@@ -166,7 +170,15 @@ public class UI_Manager : MonoBehaviour
         TurnSystem.Instance.CharactersSortByDicePlay();
     }
 
-    /**/
+    /* If the player has remaining move range but do not want to use it, should press this button */
+    public void Button_NextTurn() {
+        Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
+        TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+        gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+        gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+    }
+
+    /* button for enemy beg */
     public void Button_BegEnemy() {
         Debug.Log("Buttom Beg Enemy Pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
@@ -174,11 +186,38 @@ public class UI_Manager : MonoBehaviour
 
         if (heroWithTurn.heroClass != Priest.HERO_CLASS || heroWithTurn.GetIsEnemy() == enemyToBeg.GetIsEnemy()) { return; }
         heroWithTurn.Beg(enemyToBeg);
-        TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
-        gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-        gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        }
     }
 
+    /* Button for cast spelling */
+    public void Button_CastSpell() {
+        Debug.Log("Buttom Beg Enemy Pushed");
+        Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
+
+        if (heroWithTurn.heroClass != Priest.HERO_CLASS && heroWithTurn.heroClass != Mage.HERO_CLASS) { return; }
+        heroWithTurn.CastSpell();
+        if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        }
+    }
+
+    /* Button for Dash action */
+    public void Button_Dash() {
+        Debug.Log("Button Dash Pushed");
+        Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
+        heroWithTurn.Dash();
+        if (heroWithTurn.GetRemainingMoveRange() <= 0) {
+            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+        }
+    }
 
     /***********************************************************************/
     public void SetStateInfo() {

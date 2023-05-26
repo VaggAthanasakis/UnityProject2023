@@ -11,6 +11,7 @@ public class HeroesAnimator : MonoBehaviour {
     private const string IS_ATTACKING = "isAttacking";
     private const string GETS_HIT = "getsHit";
     private const string IS_BEGGING = "isBegging";
+    private const string IS_CASTSPELLING = "isCastSpelling";
     
     [SerializeField] private Heroes hero;
     private Animator animator;
@@ -24,6 +25,7 @@ public class HeroesAnimator : MonoBehaviour {
         animator.SetBool(IS_ATTACKING, hero.GetIsAttacking());
         animator.SetBool(GETS_HIT, hero.GetGetsHit());
         animator.SetBool(IS_BEGGING, hero.GetIsBegging());
+        animator.SetBool(IS_CASTSPELLING, hero.GetIsCastSpelling());
         
     }
 
@@ -35,6 +37,7 @@ public class HeroesAnimator : MonoBehaviour {
         animator.SetBool(IS_ATTACKING, hero.GetIsAttacking());
         animator.SetBool(GETS_HIT, hero.GetGetsHit());
         animator.SetBool(IS_BEGGING, hero.GetIsBegging());
+        animator.SetBool(IS_CASTSPELLING, hero.GetIsCastSpelling());
     }
 
 
