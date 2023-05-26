@@ -661,6 +661,7 @@ public class Heroes : MonoBehaviour {
             /* if the other hero is out of range */
             int distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position,heroToAttack.transform.position);
             int distance_normalized = distance / 10; // because distance is 10x in comparison to attack range
+            Debug.Log("DISTANCE "+distance_normalized);
             if (distance_normalized > this.attackRange) {
                 Debug.Log("Other Hero Out Of Range");
                 this.SetIsAttacking(false);
