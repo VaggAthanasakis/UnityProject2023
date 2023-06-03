@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class UI_Manager : MonoBehaviour
-{
+public class UI_Manager : MonoBehaviour {
     public static UI_Manager Instance { get; private set; }
-
+   
     /* Text for game state */
     private string freeRoam = "Free Roam";
     private string combatMode = "Combat Mode";
@@ -20,8 +19,17 @@ public class UI_Manager : MonoBehaviour
     private string victoryInfo = "You Killed All The Enemies!";
     private string defeatInfo = "Enemies Killed All Your Heroes..";
 
+    /* Actions/Turn System Panel */
+    [SerializeField] GameObject footerBarInfo;
     [SerializeField] GameObject actionButtons;
-    [SerializeField] GameObject DiceButton;
+    [SerializeField] GameObject gameTurnButtons;
+    [SerializeField] GameObject nextTurnButton;
+    [SerializeField] public GameObject diceButton;
+
+    /* Game Info Panel */
+    [SerializeField] public GameObject gameInfo;
+    [SerializeField] public TextMeshProUGUI gameInfoText;
+    private int gameInfoVisualTimer = 100;
 
     /* Header Texts */
     [SerializeField] TextMeshProUGUI gameState;
@@ -45,13 +53,13 @@ public class UI_Manager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameTurn;
 
 
-
     private void Awake() {
         Instance = this;
-
+        this.gameInfo.SetActive(false);
         // this.gameState.text = freeRoam;
-        this.actionButtons.SetActive(true);
-        this.DiceButton.SetActive(true);
+        this.actionButtons.SetActive(false);
+        this.diceButton.SetActive(true);
+        this.nextTurnButton.SetActive(false);
         this.selectedHeroPanel.SetActive(false);
         this.selectedObjectPanel.SetActive(false);
         this.roundInfoPanel.SetActive(false); // PREPEI NA TO KANO NA ANAVEI OTAN COMBAT
@@ -65,6 +73,17 @@ public class UI_Manager : MonoBehaviour
         MouseClick.instance.OnHeroSelectAction += MouseClick_OnHeroSelectAction;
         TurnSystem.Instance.OnRoundEnded += TurnSystem_OnRoundEnded;
         MouseClick.instance.OnInteractableObjectSelection += MouseClick_OnInteractableObjectSelection;
+    }
+
+    private void Update() {
+        /* If the gameInfo panel is active for some frames, then diactivate it */
+        if (this.gameInfo.activeSelf == true && this.gameInfoVisualTimer <= 0) {
+            this.gameInfo.SetActive(false);
+            this.gameInfoVisualTimer = 100;
+        }
+        else if(this.gameInfo.activeSelf == true && this.gameInfoVisualTimer > 0) {
+            this.gameInfoVisualTimer -= 1;
+        }
     }
 
     /* event that arrives when game round changes */
@@ -157,6 +176,7 @@ public class UI_Manager : MonoBehaviour
         }
     }
 
+    /* Button for playing the dice for all the characters */
     public void Button_DicePlay() {
         this.roundInfoPanel.SetActive(true);
         TurnSystem.Instance.turnBasedOnDice.Clear();
@@ -168,6 +188,7 @@ public class UI_Manager : MonoBehaviour
             TurnSystem.Instance.turnBasedOnDice.Add(diceValue);
         }
         TurnSystem.Instance.CharactersSortByDicePlay();
+        this.diceButton.SetActive(false);
     }
 
     /* If the player has remaining move range but do not want to use it, should press this button */
@@ -227,22 +248,37 @@ public class UI_Manager : MonoBehaviour
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             this.gameState.text = freeRoam;
             this.stateInfo.text = freeRoamInfo;
+            SetActionButtonsPanelActive(false);
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             this.gameState.text = combatMode;
             this.stateInfo.text = combatModeInfo;
+            SetActionButtonsPanelActive(true);
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.GameOver) {
             this.gameState.text = gameOver;
             this.stateInfo.text = defeatInfo;
+            SetActionButtonsPanelActive(false);
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.Victory) {
             this.gameState.text = victory;
             this.stateInfo.text = victoryInfo;
+            SetActionButtonsPanelActive(false);
         }
  
     }
 
+    /* This method sets the panel with the turn and action buttons  active/non-active  */
+    private void SetActionButtonsPanelActive(bool b) {
+        this.actionButtons.SetActive(b);
+        this.footerBarInfo.SetActive(b);
+        this.gameTurnButtons.SetActive(b);
+        this.nextTurnButton.SetActive(b);
+    }
 
-
+    /* Set the info for the gameInfo panel */
+    public void SetGameInfo(string info) {
+        this.gameInfo.SetActive(true);
+        this.gameInfoText.text = info;
+    }
 }

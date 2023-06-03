@@ -424,6 +424,7 @@ public class Heroes : MonoBehaviour {
         OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
             healthNormalized = (float)(this.GetCurrentHealthPoints()) / this.GetHealthPoints()
         });
+        UI_Manager.Instance.SetGameInfo("Successful Heal");
         Debug.Log("Heal");
     }
 
@@ -498,6 +499,7 @@ public class Heroes : MonoBehaviour {
         if (pathGridPositions.Count - 1 > this.remainingMoveRange && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             Debug.Log(pathGridPositions.Count - 1 + " > " + this.remainingMoveRange);
             Debug.Log("Hero cannot move that far!");
+            UI_Manager.Instance.SetGameInfo("Hero Cannot Move That Far!");
             return;
         }
         if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
@@ -579,6 +581,7 @@ public class Heroes : MonoBehaviour {
             this.constitution += 2;
             this.level++;
             Debug.Log("Level Up");
+            UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = "+this.level);
             this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
         }
         else {
@@ -656,6 +659,7 @@ public class Heroes : MonoBehaviour {
             if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
                 this.SetIsAttacking(false);
                 Debug.Log("Unsuccessfull Attack!");
+                UI_Manager.Instance.SetGameInfo("Unsuccessfull Attack!");
                 return;
             }
             /* if the other hero is out of range */
@@ -664,6 +668,7 @@ public class Heroes : MonoBehaviour {
             Debug.Log("DISTANCE "+distance_normalized);
             if (distance_normalized > this.attackRange) {
                 Debug.Log("Other Hero Out Of Range");
+                UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range!");
                 this.SetIsAttacking(false);
                 return;
             }
@@ -672,6 +677,7 @@ public class Heroes : MonoBehaviour {
             PointAtTheInteractedHero(heroToAttack);
             if (heroToAttack.GetArmorClass() < this.GetCurrentAttackAmount()) {
                 Debug.Log("Successfull Attack");
+                UI_Manager.Instance.SetGameInfo("Successfull Attack!");
                 heroToAttack.TakeDamage(this.GetCurrentAttackAmount(), this);
                 this.IncreaseExperiencePoints();
                 if (heroToAttack.GetIsDead()) {
@@ -684,6 +690,7 @@ public class Heroes : MonoBehaviour {
             }
             else {
                 Debug.Log("Unsuccessful Due To Armor > DamageAmount");
+                UI_Manager.Instance.SetGameInfo("Unsuccessfull Attack Due To Hero Armor");
             }
         }
 
@@ -701,6 +708,7 @@ public class Heroes : MonoBehaviour {
             if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
                 this.SetIsHealing(false);
                 Debug.Log("Unsuccessfull Heal!");
+                UI_Manager.Instance.SetGameInfo("Unsuccessfull Heal!");
                 return;
             }
             /* if the other hero is out of range */
@@ -708,6 +716,7 @@ public class Heroes : MonoBehaviour {
             int distance_normalized = distance / 10; // because distance is 10x in comparison to attack range
             if (distance_normalized > this.attackRange) {
                 Debug.Log("Other Hero Out Of Range");
+                UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range!");
                 this.SetIsAttacking(false);
                 return;
             }
@@ -731,6 +740,7 @@ public class Heroes : MonoBehaviour {
         if (objectToInteract != null) {
             // write code to happen after the open button pushed
             Debug.Log("Pushed to interact!");
+           
             /* Check What Interactable Object We Have */
             if (objectToInteract.GetObjectType() == InteractableObject.Type.Chest) {
                 return objectToInteract.ChestOpen(this);
@@ -753,6 +763,8 @@ public class Heroes : MonoBehaviour {
         if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             //this.SetIsBegging(false);
             Debug.Log("Unsuccessfull Spell Cast!");
+            UI_Manager.Instance.SetGameInfo("Unsuccessfull Spell Cast!");
+
             return;
         }
         int randNumber = UnityEngine.Random.Range(1,11);
@@ -798,6 +810,8 @@ public class Heroes : MonoBehaviour {
         if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             this.SetIsBegging(false);
             Debug.Log("Unsuccessfull Beg!");
+            UI_Manager.Instance.SetGameInfo("Unsuccessfull Beg!");
+
             return;
         }
 
@@ -806,6 +820,7 @@ public class Heroes : MonoBehaviour {
         int distance_normalized = distance / 10; // because distance is 10x in comparison to attack range
         if (distance_normalized > this.attackRange) {
             Debug.Log("Other Hero Out Of Range");
+            UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range");
             this.SetIsAttacking(false);
             return;
         }
@@ -814,6 +829,8 @@ public class Heroes : MonoBehaviour {
         PointAtTheInteractedHero(enemyHero);
         if (enemyHero.GetArmorClass() < this.GetCurrentNegotiateValue() + begOffset) {
             Debug.Log("Successful Beg");
+            UI_Manager.Instance.SetGameInfo("Successfull Beg!");
+
             if (enemyHero.GetIsEnemy()) {
                 enemyHero.SetIsEnemy(!enemyHero.GetIsEnemy());
                 GameManager.Instance.aliveEnemies.Remove(enemyHero);
@@ -832,6 +849,7 @@ public class Heroes : MonoBehaviour {
         else {
             this.isBegging = false;
             Debug.Log("Unsuccessful Beg");
+            UI_Manager.Instance.SetGameInfo("Unsuccessfull Beg!");
         }
         
     }
@@ -844,6 +862,7 @@ public class Heroes : MonoBehaviour {
         if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             //this.SetIsBegging(false);
             Debug.Log("Unsuccessfull Spell Cast!");
+            UI_Manager.Instance.SetGameInfo("Unsuccessfull Spell Cast!");
             return;
         }
         this.remainingMoveRange = 2 * this.moveRange;
