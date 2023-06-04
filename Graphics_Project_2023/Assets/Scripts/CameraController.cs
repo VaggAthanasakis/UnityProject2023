@@ -4,85 +4,110 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    [SerializeField] Transform cameraTransform;
+    private bool dragPanMoveActive;
+    private Vector2 lastMousePosition;
+    [SerializeField] private bool useEdgeScrolling = false;
 
-    public float movementSpeed;
-    public float movementTime;
-
-    public Vector3 newPosition;
-
-    public Vector3 dragStartPosition;
-    public Vector3 dragCurrentPosition;
-    public Vector3 zoomAmount;
-    public Vector3 newZoom;
-    public Vector3 rotateStartPosition;
-    public Vector3 rotateCurrentPosition;
-    private Quaternion newRotation;
-
-    // Start is called before the first frame update
-    void Start() {
-        //this.newPosition = transform.position;
-        //this.newRotation = transform.rotation;
-        //newZoom = cameraTransform.localPosition; // local in order to stay relative to the rig
+    private void Update() {
+        HandleCameraRotation();
+        HandleCameraMovement();
+        HandleCameraMovementDragPan();
+        HandleCameraMovementEdgeScrolling();
     }
 
-    // Update is called once per frame
-    void Update() {
-        HandleMoventInput();
-        HandleMouseInput();
-        /* Potition the camera */
-       // transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementSpeed);
-        //HandleMoventInput();
+    private void HandleCameraMovement() {
+        Vector3 inputDirection = new Vector3(0, 0, 0);
+
+        if (Input.GetKey(KeyCode.W)) inputDirection.z = 1f;
+        if (Input.GetKey(KeyCode.S)) inputDirection.z = -1f;
+        if (Input.GetKey(KeyCode.A)) inputDirection.x = -1f;
+        if (Input.GetKey(KeyCode.D)) inputDirection.x = 1f;
+
+        // move direction based on the object rotation (transform.forward)
+        // we use .z because we are at 3d environment
+        Vector3 moveDirection = transform.forward * inputDirection.z + transform.right * inputDirection.x;
+        float moveSpeed = 20f;
+        transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
 
-    private void HandleMouseInput() {
-        /* Fix the Camera in order to zoom */
-        if (Input.mouseScrollDelta.y != 0) {
-            newZoom = Input.mouseScrollDelta.y * zoomAmount;
-        }
-        /* Position the camera where we want with the right click */
-        if (Input.GetMouseButtonDown(1)) {
-            Plane plane = new Plane(Vector3.up,Vector3.zero);
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    private void HandleCameraMovementEdgeScrolling() {
+        if (useEdgeScrolling) {
+            Vector3 inputDirection = new Vector3(0, 0, 0);
+            /* Handle edge scrolling */
+            int edgeScrollSize = 10;
 
-            float entry;
-            if (plane.Raycast(ray,out entry)) {
-                dragStartPosition = ray.GetPoint(entry);   
+            if (Input.mousePosition.x < edgeScrollSize) { // if the mouse is at the left side -> move left
+                inputDirection.x = -1f;
             }
-        }
-        // If the mouse button is still pushed 
-        if (Input.GetMouseButtonDown(1)) {
-            Plane plane = new Plane(Vector3.up, Vector3.zero);
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            float entry;
-            if (plane.Raycast(ray, out entry)) {
-                Debug.Log("Here");
-                dragCurrentPosition = ray.GetPoint(entry);
-                this.newPosition = transform.position + dragStartPosition - dragCurrentPosition;
+            if (Input.mousePosition.y < edgeScrollSize) { // if the mouse is at the buttom -> move down
+                inputDirection.z = -1f;
             }
+            if (Input.mousePosition.x > Screen.width - edgeScrollSize) { // if the mouse is at the right side -> move right
+                inputDirection.x = 1f;
+            }
+            if (Input.mousePosition.y < Screen.height - edgeScrollSize) { // if the mouse is at the top -> move up
+                inputDirection.z = 1f;
+            }
+
+            // move direction based on the object rotation (transform.forward)
+            // we use .z because we are at 3d environment
+            Vector3 moveDirection = transform.forward * inputDirection.z + transform.right * inputDirection.x;
+            float moveSpeed = 20f;
+            transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        }
+    }
+
+
+    private void HandleCameraMovementDragPan() {
+        Vector3 inputDirection = new Vector3(0, 0, 0);
+        /* mouse drag camera move with right click */
+        if (Input.GetMouseButtonDown(1)) {
+            dragPanMoveActive = true;
+            lastMousePosition = Input.mousePosition; //store the start position of the drag
+        }
+        if (Input.GetMouseButtonUp(1)) {
+            dragPanMoveActive = false;
         }
 
-        /* Rotate the camera using the middle mouse button */
-        if (Input.GetMouseButtonDown(2)) {
-            rotateStartPosition = Input.mousePosition;
-        }
-        //if the middle mouse button is still pushed
-        if (Input.GetMouseButtonDown(2)) {
-            rotateCurrentPosition = Input.mousePosition;
-            Vector3 difference = rotateStartPosition - rotateCurrentPosition;
-            rotateStartPosition = rotateCurrentPosition;
-            newRotation *= Quaternion.Euler(Vector3.up * (-difference.x / 5f));
+        if (dragPanMoveActive) {
+            Vector2 mouseMovementDelta = (Vector2)Input.mousePosition - lastMousePosition; // How much the mouse moved in the last frame
 
+            float dragPanSpeed = 0.02f;
+            inputDirection.x = -mouseMovementDelta.x * dragPanSpeed;
+            inputDirection.z = -mouseMovementDelta.y * dragPanSpeed;
+            Debug.Log(mouseMovementDelta);
+            lastMousePosition = Input.mousePosition;
         }
+
+        // move direction based on the object rotation (transform.forward)
+        // we use .z because we are at 3d environment
+        Vector3 moveDirection = transform.forward * inputDirection.z + transform.right * inputDirection.x;
+        float moveSpeed = 20f;
+        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+
 
     }
 
 
-   private void HandleMoventInput() {
-        transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
-        cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, Time.deltaTime * movementTime);
+
+    /* Handle camera rotation */
+    private void HandleCameraRotation() {
+        // the camera is always  behind this gameobject, so if we want rotaton we just rotate this gameobject
+        float rotateDirection = 0f;
+        float rotateSpeed = 100f;
+
+        if (Input.GetKey(KeyCode.Q)) {
+            rotateDirection = 1f;
+        }
+        if (Input.GetKey(KeyCode.E)) {
+            rotateDirection = -1f;
+        }
+
+        transform.eulerAngles += new Vector3(0, rotateDirection * rotateSpeed * Time.deltaTime,0);
+
     }
+
+    
+
 
 }
