@@ -1,18 +1,21 @@
  using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 public class CameraController : MonoBehaviour {
 
     private bool dragPanMoveActive;
     private Vector2 lastMousePosition;
-    [SerializeField] private bool useEdgeScrolling = false;
+    private float targetFieldOfView = 50;
+    private float fieldOfViewMax = 50;
+    private float fieldOfViewMin = 10;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
     private void Update() {
         HandleCameraRotation();
         HandleCameraMovement();
         HandleCameraMovementDragPan();
-        HandleCameraMovementEdgeScrolling();
+        HandleCameraZoom();
     }
 
     private void HandleCameraMovement() {
@@ -29,34 +32,6 @@ public class CameraController : MonoBehaviour {
         float moveSpeed = 20f;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
-
-    private void HandleCameraMovementEdgeScrolling() {
-        if (useEdgeScrolling) {
-            Vector3 inputDirection = new Vector3(0, 0, 0);
-            /* Handle edge scrolling */
-            int edgeScrollSize = 10;
-
-            if (Input.mousePosition.x < edgeScrollSize) { // if the mouse is at the left side -> move left
-                inputDirection.x = -1f;
-            }
-            if (Input.mousePosition.y < edgeScrollSize) { // if the mouse is at the buttom -> move down
-                inputDirection.z = -1f;
-            }
-            if (Input.mousePosition.x > Screen.width - edgeScrollSize) { // if the mouse is at the right side -> move right
-                inputDirection.x = 1f;
-            }
-            if (Input.mousePosition.y < Screen.height - edgeScrollSize) { // if the mouse is at the top -> move up
-                inputDirection.z = 1f;
-            }
-
-            // move direction based on the object rotation (transform.forward)
-            // we use .z because we are at 3d environment
-            Vector3 moveDirection = transform.forward * inputDirection.z + transform.right * inputDirection.x;
-            float moveSpeed = 20f;
-            transform.position += moveDirection * moveSpeed * Time.deltaTime;
-        }
-    }
-
 
     private void HandleCameraMovementDragPan() {
         Vector3 inputDirection = new Vector3(0, 0, 0);
@@ -84,11 +59,7 @@ public class CameraController : MonoBehaviour {
         Vector3 moveDirection = transform.forward * inputDirection.z + transform.right * inputDirection.x;
         float moveSpeed = 20f;
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-
     }
-
-
 
     /* Handle camera rotation */
     private void HandleCameraRotation() {
@@ -107,7 +78,17 @@ public class CameraController : MonoBehaviour {
 
     }
 
-    
-
+    /* Handle camera zoom  using the mouse scroll */
+    private void HandleCameraZoom() {
+        if (Input.mouseScrollDelta.y > 0 && targetFieldOfView >= fieldOfViewMin) { // zoom in
+            targetFieldOfView -= 5;
+        }
+        if (Input.mouseScrollDelta.y < 0 && targetFieldOfView <= fieldOfViewMax) { // zoom out
+            targetFieldOfView += 5;
+        }
+        // apply the zoom smoothly
+        float zoomSpeed = 10f;
+        virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView,targetFieldOfView,Time.deltaTime * zoomSpeed);
+    }
 
 }
