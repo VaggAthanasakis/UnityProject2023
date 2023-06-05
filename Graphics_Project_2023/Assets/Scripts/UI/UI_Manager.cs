@@ -26,6 +26,13 @@ public class UI_Manager : MonoBehaviour {
     [SerializeField] GameObject nextTurnButton;
     [SerializeField] public GameObject diceButton;
 
+    /* Action Buttons */
+    [SerializeField] GameObject attackButton;
+    [SerializeField] GameObject healButton;
+    [SerializeField] GameObject begEnemyButton;
+    [SerializeField] GameObject castSpellButton;
+    [SerializeField] GameObject dashButton;
+
     /* Game Info Panel */
     [SerializeField] public GameObject gameInfo;
     [SerializeField] public TextMeshProUGUI gameInfoText;
@@ -49,8 +56,8 @@ public class UI_Manager : MonoBehaviour {
 
     /* Body Game Round And Turn Texts */
     [SerializeField] private GameObject roundInfoPanel;
-    [SerializeField] private TextMeshProUGUI gameRound;
-    [SerializeField] private TextMeshProUGUI gameTurn;
+    [SerializeField] public TextMeshProUGUI gameRound;
+    [SerializeField] public TextMeshProUGUI gameTurn;
 
 
     private void Awake() {
@@ -73,8 +80,10 @@ public class UI_Manager : MonoBehaviour {
         MouseClick.instance.OnHeroSelectAction += MouseClick_OnHeroSelectAction;
         TurnSystem.Instance.OnRoundEnded += TurnSystem_OnRoundEnded;
         MouseClick.instance.OnInteractableObjectSelection += MouseClick_OnInteractableObjectSelection;
+        TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
     }
 
+ 
     private void Update() {
         /* If the gameInfo panel is active for some frames, then diactivate it */
         if (this.gameInfo.activeSelf == true && this.gameInfoVisualTimer <= 0) {
@@ -131,7 +140,6 @@ public class UI_Manager : MonoBehaviour {
         }
         if (attackedHero != null && attackedHero != heroWithTurn) {
             heroWithTurn.PerformAttack(attackedHero);
-            // IF HERO CANNOT FURTHER MOVE
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
                 TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
                 gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
@@ -155,7 +163,6 @@ public class UI_Manager : MonoBehaviour {
             gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
         }
         */
-
     }
 
     public void Buttom_Heal() {
@@ -253,7 +260,9 @@ public class UI_Manager : MonoBehaviour {
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             this.gameState.text = combatMode;
             this.stateInfo.text = combatModeInfo;
-            SetActionButtonsPanelActive(true);
+            //SetActionButtonsPanelActive(true);
+            this.footerBarInfo.SetActive(true);
+            this.gameTurnButtons.SetActive(true);
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.GameOver) {
             this.gameState.text = gameOver;
@@ -270,11 +279,48 @@ public class UI_Manager : MonoBehaviour {
 
     /* This method sets the panel with the turn and action buttons  active/non-active  */
     private void SetActionButtonsPanelActive(bool b) {
-        this.actionButtons.SetActive(b);
-        this.footerBarInfo.SetActive(b);
-        this.gameTurnButtons.SetActive(b);
-        this.nextTurnButton.SetActive(b);
+            this.actionButtons.SetActive(b);
+            this.footerBarInfo.SetActive(b);
+            this.gameTurnButtons.SetActive(b);
+            this.nextTurnButton.SetActive(b);
+
     }
+    /* Activate the proper action buttons based on the current hero who has turn */
+    private void TurnSystem_OnTurnChanged(object sender, TurnSystem.OnTurnChangedEventArgs e) {
+        if (!e.heroWithTurn.GetIsEnemy()) {
+            SetActionButtonsPanelActive(true);
+            if (e.heroWithTurn.GetActionsList().Contains("Attack")) {
+                this.attackButton.SetActive(true);
+            }
+            else
+                this.attackButton.SetActive(false);
+            if (e.heroWithTurn.GetActionsList().Contains("Heal")) {
+                this.healButton.SetActive(true);
+            }
+            else
+                this.healButton.SetActive(false);
+            if (e.heroWithTurn.GetActionsList().Contains("BegEnemy")) {
+                this.begEnemyButton.SetActive(true);
+            }
+            else
+                this.begEnemyButton.SetActive(false);
+            if (e.heroWithTurn.GetActionsList().Contains("CastSpell")) {
+                this.castSpellButton.SetActive(true);
+            }
+            else
+                this.castSpellButton.SetActive(false);
+            if (e.heroWithTurn.GetActionsList().Contains("Dash")) {
+                this.dashButton.SetActive(true);
+            }
+            else
+                this.dashButton.SetActive(false);
+        }
+        else {
+            SetActionButtonsPanelActive(false);
+        }
+    }
+
+
 
     /* Set the info for the gameInfo panel */
     public void SetGameInfo(string info) {

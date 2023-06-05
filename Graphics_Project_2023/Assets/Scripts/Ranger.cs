@@ -14,6 +14,7 @@ public class Ranger : Heroes {
         this.SetNumOfAttributes(3);
         //targetPosition = this.transform.position;
         SetHeroFeatures();
+        AddAction("Attack");
     }
 
     /* Start */

@@ -15,6 +15,9 @@ public class Mage : Heroes {
         this.SetNumOfAttributes(4);
         //targetPosition = this.transform.position;
         SetHeroFeatures();
+        AddAction("Heal");
+        AddAction("CastSpell");
+
     }
 
     // Start is called before the first frame update

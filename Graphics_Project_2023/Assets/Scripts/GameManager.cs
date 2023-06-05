@@ -157,12 +157,9 @@ public class GameManager : MonoBehaviour
 
         if (currentState == GameManager.State.FreeRoam) {
             /* Create Heroes */
-            Debug.Log("/////////////////////////////////////////");
             foreach (string heroString in listOfHeroes) {
                 Debug.Log(heroString);
             }
-            Debug.Log("/////////////////////////////////////////");
-
 
             foreach (string heroString in listOfHeroes) {
                 if (heroString.Equals(Fighter.HERO_CLASS)) {
@@ -193,10 +190,13 @@ public class GameManager : MonoBehaviour
         /* Create Enemies */
         Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(2,0,9), Quaternion.identity);
         Ranger enemyRanger = (Ranger)Instantiate(enemyRangerPrefab,new Vector3(4,0,9), Quaternion.identity);
+        Priest enemyPriest = (Priest)Instantiate(enemyPriestPrefab, new Vector3(5,0,7), Quaternion.identity);
         this.aliveCharacters.Add(enemyFighter);
         this.aliveCharacters.Add(enemyRanger);
+        this.aliveCharacters.Add(enemyPriest);
         this.aliveEnemies.Add(enemyFighter);
         this.aliveEnemies.Add(enemyRanger);
+        this.aliveEnemies.Add(enemyPriest);
     }
 
     private void SetAliveCharactersAtTurnSystem() {

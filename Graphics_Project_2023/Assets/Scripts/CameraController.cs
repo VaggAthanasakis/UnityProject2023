@@ -50,7 +50,7 @@ public class CameraController : MonoBehaviour {
             float dragPanSpeed = 0.02f;
             inputDirection.x = -mouseMovementDelta.x * dragPanSpeed;
             inputDirection.z = -mouseMovementDelta.y * dragPanSpeed;
-            Debug.Log(mouseMovementDelta);
+            //Debug.Log(mouseMovementDelta);
             lastMousePosition = Input.mousePosition;
         }
 

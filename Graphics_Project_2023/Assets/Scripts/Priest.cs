@@ -13,6 +13,10 @@ public class Priest : Heroes {
         this.SetNumOfAttributes(3);
         //targetPosition = this.transform.position;
         SetHeroFeatures();
+        AddAction("Heal");
+        AddAction("BegEnemy");
+        AddAction("CastSpell");
+        //AddAction("");
     }
 
     // Start is called before the first frame update

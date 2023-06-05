@@ -73,6 +73,7 @@ public class GridPathSystem {
         PathNode endNode = GetPathNode(endPosition);
         if (!endNode.IsWalkable() && !combatSearch) {
             Debug.Log("Cannot Move There!");
+            UI_Manager.Instance.SetGameInfo("Cannot Move There!");
             return null;
         }
 

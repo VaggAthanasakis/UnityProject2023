@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class Heroes : MonoBehaviour {
 
@@ -56,10 +57,14 @@ public class Heroes : MonoBehaviour {
     protected int healingAnimationCounter = 0;
     protected int beggingAnimationCounter = 0;
     protected int castSpellingAnimationCounter = 0;
+
+    // List with actions
+    private List<string> actions = new List<string>();
+  
     /**********************/
     protected virtual void Awake() {
         targetPosition = this.transform.position;
-
+        AddAction("Dash");
     }
 
     protected virtual void Start() {
@@ -141,6 +146,9 @@ public class Heroes : MonoBehaviour {
             this.SetIsSelected(true);
             SelectedHeroVisual();
             Debug.Log("This Players Turn: " + this.ToString());
+            if (this.isEnemy) {
+                EnemyAIAction();
+            }
         }
         else {
             if (this.GetIsDead() || this == null) { return; }
@@ -252,6 +260,9 @@ public class Heroes : MonoBehaviour {
     }
     public bool GetIsCastSpelling() {
         return this.isCastSpelling;
+    }
+    public List<string> GetActionsList() {
+        return this.actions;
     }
 
     /* Generate Setters */
@@ -455,7 +466,7 @@ public class Heroes : MonoBehaviour {
             moveDirection = (targetPosition - transform.position).normalized;
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
 
-            if (GameManager.Instance.CheckForCombatMode(targetPosition)) {
+            if (GameManager.Instance.CheckForCombatMode(targetPosition) && !this.isEnemy) {
                 this.positionList.Clear();
                 this.SetIsWalking(false);
                 currentPositionIndex = 0;
@@ -646,6 +657,12 @@ public class Heroes : MonoBehaviour {
     /*****  HERO ACTIONS ****/
 
     /********** ATTACK ACTION ******/
+
+    /*** Add action to hero ***/
+    public void AddAction(string action) {
+        this.actions.Add(action);
+    }
+
     /* Calculate the attack damage amount of the attack action */
     public virtual void AttackAmountCalculation() { }
 
@@ -870,5 +887,161 @@ public class Heroes : MonoBehaviour {
             remainingSteps = this.remainingMoveRange
         });
     }
+
+
+
+    /*********** Enemy AI Behaviour ************/
+    public void EnemyAIAction() {
+        /* If this hero is an enemy and has turn and we are at combat mode */
+        if (this.isEnemy && this.isPlayersTurn && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            Heroes closerEnemy = null, closerHero = null;
+            int closerEnemyDistance = int.MaxValue, closerHeroDistance = int.MaxValue;
+            /* Calculate distance to every hero on the board close to this.hero */
+            Dictionary<Heroes, int> hashMap_distanceToEnemies = new Dictionary<Heroes, int>();
+            Dictionary<Heroes, int> hashMap_distanceToHeroes = new Dictionary<Heroes, int>();
+            
+            /* Calculate the distance to every enemy */
+            List<Heroes> aliveEnemies = GameManager.Instance.aliveEnemies;
+            foreach (Heroes enemy in aliveEnemies) {
+                int distance;
+                distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position,enemy.transform.position);
+                Debug.Log("DistanceToEnemy"+ distance/10);
+                hashMap_distanceToEnemies.Add(enemy,distance/10);
+            }
+
+            /* Find the enemy that is closer to this enemy */
+            foreach (KeyValuePair<Heroes, int> pair in hashMap_distanceToEnemies) {
+                if (pair.Value < closerEnemyDistance) {
+                    closerEnemy = pair.Key;
+                    closerEnemyDistance = pair.Value;
+                }
+            }
+            /* Calculate the distance to every hero */
+            List<Heroes> aliveHeroes = GameManager.Instance.aliveHeroes;
+            foreach (Heroes hero in aliveHeroes) {
+                int distance;
+                distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, hero.transform.position);
+                Debug.Log("DistanceToHero" + distance/10);
+                hashMap_distanceToHeroes.Add(hero, distance/10);
+            }
+
+            /* Find the enemy that is closer to this enemy */
+            foreach (KeyValuePair<Heroes, int> pair in hashMap_distanceToHeroes) {
+                if (pair.Value < closerHeroDistance) {
+                    closerHero = pair.Key;
+                    closerHeroDistance = pair.Value;
+                }
+            }
+
+            // Now we know the closer hero and the closer enemy
+
+            /* if we are at range of actions -> permorm action, else move towards target */
+            // First check if the this enemy is a fighter or a ranger and if the distance is < attack range
+            if ((this.heroClass.Equals("Fighter") || this.heroClass.Equals("Ranger")) && closerHeroDistance <= this.attackRange) {
+                Debug.Log("Enemy AI Attacking!");
+                // now attack the hero who is closer
+                this.PerformAttack(closerHero);
+                //Debug.Log(this+"");
+                // move away from enemy..
+                /* next turn... */
+                TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+            }
+            /* If this hero is a mage */
+            else if (this.heroClass.Equals("Mage")) {
+                // if an ally, is close and needs healing, -> heal
+                if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealAmount() < closerEnemy.GetHealthPoints()) {
+                    this.PerformHeal(closerEnemy);
+                    Debug.Log(this + " Heal");
+                    // move away from enemy..
+                    /* next turn... */
+                    TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                }
+                else {
+                    // else either cast a spell or do nothing (Dash)
+                    int k = UnityEngine.Random.Range(1, 11);
+                    if (k < 6) {
+                        // cast spell
+                        this.CastSpell();
+                        Debug.Log(this + " CastSpell");
+                        // move away from enemy..
+                        /* next turn... */
+                        TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                        UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                        UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                    }
+                }
+            }
+            /* If this hero is a priest */
+            else if (this.heroClass.Equals("Priest")) {
+                int k = UnityEngine.Random.Range(1, 11);
+                // if there is an hero near, try beg him
+                if (closerHeroDistance <= this.attackRange) {
+                    this.Beg(closerHero);
+                    Debug.Log(this + " Beg");
+                    // move away from enemy..
+                    /* next turn... */
+                    TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                }
+                // else, heal 
+                else if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealthPoints() < closerEnemy.GetHealthPoints()) {
+                    this.PerformHeal(closerEnemy);
+                    Debug.Log(this + " Heal");
+                    // move away from enemy..
+                    /* next turn... */
+                    TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                }
+                // else spell cast or do nothing (Dash)
+                else if (k < 6) {
+                    this.CastSpell();
+                    Debug.Log(this + " Cast spell");
+                    // move away from enemy..
+                    /* next turn... */
+                    TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                }
+            
+            }
+            /* if hero is out of range -> try to approach target */
+            else {
+                // Perform Dash Action and try to approach enemy or hero
+                this.Dash();
+                Debug.Log(this + " Dash");
+                // move away from enemy..
+                /* next turn... */
+                TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+            }
+        }
+        /* else return */
+        else {
+            Debug.Log("Either not enemy or not hero's turn or not combat mode!");
+        }
+
+    
+    }
+
+    /* function that is called to move the enemy AI characters */
+    private void MoveEnemyAI(Heroes heroToFollow) {
+        /* at first, we find the heroToFollow pathnode that is in front of him */
+        Vector3 heroPos = heroToFollow.transform.forward;
+        Vector3 tmp = new Vector3(heroPos.x,heroPos.y,heroPos.z + 1);
+
+        // convert it to gridPosition;
+        GridPosition heroFront =  PathFinding.Instance.GetGridPosition(tmp);
+        GridPosition thisHeroPos = PathFinding.Instance.GetGridPosition(this.transform.position);
+        
+        //PathFinding.Instance.Grid().FindPath();
+    }
+
 
 }

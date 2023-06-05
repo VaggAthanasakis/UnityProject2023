@@ -8,15 +8,13 @@ public class Fighter : Heroes {
     // main attribute
     private int strength;
     public const string HERO_CLASS = "Fighter";
-
-    /*   */
-
     /* Awake(), Start(), Update() */
     protected override void Awake() {
         base.Awake();
         this.SetNumOfAttributes(3);
         //targetPosition = this.transform.position;
         SetHeroFeatures();
+        AddAction("Attack");
     }
 
     // Start is called before the first frame update
