@@ -7,6 +7,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1159538205321389974, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
+      propertyPath: m_Name
+      value: BarEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1646310482575282204, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
+      propertyPath: HeroBarImage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1646310482575282204, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
+      propertyPath: EnemyBarImage
+      value: 
+      objectReference: {fileID: 7475042159990930760}
+    - target: {fileID: 1770072837804122146, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1926436387196379640, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
       propertyPath: m_Name
       value: RangerEnemy
@@ -81,3 +97,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
+--- !u!114 &7475042159990930760 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9072249149323832322, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
+  m_PrefabInstance: {fileID: 1899311459546599754}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

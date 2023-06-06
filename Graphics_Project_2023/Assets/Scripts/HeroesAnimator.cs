@@ -12,6 +12,7 @@ public class HeroesAnimator : MonoBehaviour {
     private const string GETS_HIT = "getsHit";
     private const string IS_BEGGING = "isBegging";
     private const string IS_CASTSPELLING = "isCastSpelling";
+    private const string IS_PLAYING_MUSIC = "isPlayingMusic";
     
     [SerializeField] private Heroes hero;
     private Animator animator;
@@ -26,18 +27,19 @@ public class HeroesAnimator : MonoBehaviour {
         animator.SetBool(GETS_HIT, hero.GetGetsHit());
         animator.SetBool(IS_BEGGING, hero.GetIsBegging());
         animator.SetBool(IS_CASTSPELLING, hero.GetIsCastSpelling());
-        
+        animator.SetBool(IS_PLAYING_MUSIC, hero.GetIsPlayingMusic());
     }
 
     private void Update() {
-        animator.SetBool(IS_WALKING, hero.GetIsWalking());  
-        animator.SetBool(IS_DEAD, hero.GetIsDead());
-        animator.SetBool(IS_SELECTED, hero.GetIsSelected());
-        animator.SetBool(IS_HEALING, hero.GetIsHealing());
-        animator.SetBool(IS_ATTACKING, hero.GetIsAttacking());
-        animator.SetBool(GETS_HIT, hero.GetGetsHit());
-        animator.SetBool(IS_BEGGING, hero.GetIsBegging());
-        animator.SetBool(IS_CASTSPELLING, hero.GetIsCastSpelling());
+       animator.SetBool(IS_WALKING, hero.GetIsWalking());  
+       animator.SetBool(IS_DEAD, hero.GetIsDead());
+       animator.SetBool(IS_SELECTED, hero.GetIsSelected());
+       animator.SetBool(IS_HEALING, hero.GetIsHealing());
+       animator.SetBool(IS_ATTACKING, hero.GetIsAttacking());
+       animator.SetBool(GETS_HIT, hero.GetGetsHit());
+       animator.SetBool(IS_BEGGING, hero.GetIsBegging());
+       animator.SetBool(IS_CASTSPELLING, hero.GetIsCastSpelling());
+       animator.SetBool(IS_PLAYING_MUSIC, hero.GetIsPlayingMusic());
     }
 
 

@@ -21,13 +21,17 @@ public class CharacterSelectionUI : MonoBehaviour {
     [SerializeField] TextMeshProUGUI rangerCounterText;
     [SerializeField] TextMeshProUGUI mageCounterText;
     [SerializeField] TextMeshProUGUI priestCounterText;
+    [SerializeField] TextMeshProUGUI musicianCounterText;
+   // [SerializeField] TextMeshProUGUI newCharCounterText;
+
 
     private int fighterCounter = 0;
     private int rangerCounter = 0;
     private int mageCounter = 0;
     private int priestCounter = 0;
+    private int musicianCounter = 0;
+    //private int newcharCounter = 0;
     private int charactersCounter = 0;
-
     /* The Heroes That The User Has Select */
     private void SelectedCharactersToSpawn() {
         for (int i = 0; i < charactersCounter; i++) { // we need to spawn charactersCounter heroes
@@ -47,6 +51,11 @@ public class CharacterSelectionUI : MonoBehaviour {
                 selectedHeroes.Add(Priest.HERO_CLASS);
                 priestCounter--;
             }
+            if (musicianCounter > 0) {
+                selectedHeroes.Add(Musician.HERO_CLASS);
+                musicianCounter--;
+            }
+
         }
     }
 
@@ -135,6 +144,23 @@ public class CharacterSelectionUI : MonoBehaviour {
         if (priestCounter > 0) {
             priestCounter--;
             priestCounterText.text = priestCounter.ToString();
+            charactersCounter--;
+        }
+
+    }
+    /* Add/Remove Musician */
+    public void Button_AddMusician() {
+        if (musicianCounter < 3) {
+            musicianCounter++;
+            musicianCounterText.text = musicianCounter.ToString();
+            charactersCounter++;
+        }
+    }
+
+    public void Button_RemoveMusician() {
+        if (musicianCounter > 0) {
+            musicianCounter--;
+            musicianCounterText.text = musicianCounter.ToString();
             charactersCounter--;
         }
 

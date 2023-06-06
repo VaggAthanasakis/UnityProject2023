@@ -27,12 +27,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] Heroes magePrefab;
     [SerializeField] Heroes rangerPrefab;
     [SerializeField] Heroes priestPrefab;
+    [SerializeField] Heroes musicianPrefab;
 
     /* Enemies Prefabs */
     [SerializeField] Heroes enemyFighterPrefab;
     [SerializeField] Heroes enemyMagePrefab;
     [SerializeField] Heroes enemyRangerPrefab;
     [SerializeField] Heroes enemyPriestPrefab;
+    [SerializeField] Heroes enemyMusicianPrefab;
 
     /* GameObject Prefabs */
     [SerializeField] GameObject cube;
@@ -90,7 +92,7 @@ public class GameManager : MonoBehaviour
     private void TurnSystem_OnRoundEnded(object sender, TurnSystem.OnRoundEndedEventArgs e) {
         Debug.Log("ROUND ENDED!");
         TurnSystem.Instance.ResetTurnNumber();
-        ResetCharactersMoveRange();
+        ResetCharactersFeatures();
         //SetAliveCharactersAtTurnSystem();
         gameRound++;
     }
@@ -129,9 +131,10 @@ public class GameManager : MonoBehaviour
     }
 
     /* Reset Heroes MoveRange */
-    private void ResetCharactersMoveRange() {
+    private void ResetCharactersFeatures() {
         foreach (Heroes hero in aliveCharacters) {
             hero.SetRemainingMoveRange(hero.GetMoveRange());
+            hero.SetCurrentArmorClass(hero.GetArmorClass());
         }
     }
 
@@ -141,12 +144,14 @@ public class GameManager : MonoBehaviour
         this.heroesPrefabs.Add(magePrefab);
         this.heroesPrefabs.Add(rangerPrefab);
         this.heroesPrefabs.Add(priestPrefab);
+        this.heroesPrefabs.Add(musicianPrefab);
 
         /* Fill Enemies Prefab List */
         this.enemiesPrefabs.Add(enemyFighterPrefab);
         this.enemiesPrefabs.Add(enemyMagePrefab);
         this.enemiesPrefabs.Add(enemyRangerPrefab);
         this.enemiesPrefabs.Add(enemyPriestPrefab);
+        this.enemiesPrefabs.Add(enemyMusicianPrefab);
     }
 
     private void HeroesAndEnemiesToSpawn(List<string> listOfHeroes) {
@@ -158,12 +163,12 @@ public class GameManager : MonoBehaviour
         if (currentState == GameManager.State.FreeRoam) {
             /* Create Heroes */
             foreach (string heroString in listOfHeroes) {
-                Debug.Log(heroString);
+                //Debug.Log(heroString);
             }
 
             foreach (string heroString in listOfHeroes) {
                 if (heroString.Equals(Fighter.HERO_CLASS)) {
-                    Fighter fighter = (Fighter)Instantiate(fighterPrefab,new Vector3(xWorldPos, 0,1), Quaternion.identity);
+                    Fighter fighter = (Fighter)Instantiate(fighterPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
                     this.aliveCharacters.Add(fighter);
                     this.aliveHeroes.Add(fighter);
                 }
@@ -183,20 +188,32 @@ public class GameManager : MonoBehaviour
                     this.aliveCharacters.Add(priest);
                     this.aliveHeroes.Add(priest);
                 }
+                else if (heroString.Equals(Musician.HERO_CLASS)) {
+                    Musician musician = (Musician)Instantiate(musicianPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
+                    this.aliveCharacters.Add(musician);
+                    this.aliveHeroes.Add(musician);
+                }
                 xWorldPos++;
             } 
         }
 
         /* Create Enemies */
-        Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(2,0,9), Quaternion.identity);
-        Ranger enemyRanger = (Ranger)Instantiate(enemyRangerPrefab,new Vector3(4,0,9), Quaternion.identity);
-        Priest enemyPriest = (Priest)Instantiate(enemyPriestPrefab, new Vector3(5,0,7), Quaternion.identity);
-        this.aliveCharacters.Add(enemyFighter);
-        this.aliveCharacters.Add(enemyRanger);
-        this.aliveCharacters.Add(enemyPriest);
-        this.aliveEnemies.Add(enemyFighter);
-        this.aliveEnemies.Add(enemyRanger);
-        this.aliveEnemies.Add(enemyPriest);
+        /* Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(2,0,9), Quaternion.identity);
+         Ranger enemyRanger = (Ranger)Instantiate(enemyRangerPrefab,new Vector3(4,0,9), Quaternion.identity);
+         Priest enemyPriest = (Priest)Instantiate(enemyPriestPrefab, new Vector3(5,0,7), Quaternion.identity);
+
+         this.aliveCharacters.Add(enemyFighter);
+         this.aliveCharacters.Add(enemyRanger);
+         this.aliveCharacters.Add(enemyPriest);
+         this.aliveEnemies.Add(enemyFighter);
+         this.aliveEnemies.Add(enemyRanger);
+         this.aliveEnemies.Add(enemyPriest);*/
+        Musician enemyMusician = (Musician)Instantiate(enemyMusicianPrefab, new Vector3(4,0,9), Quaternion.identity);
+        Musician enemyMusician2 = (Musician)Instantiate(enemyMusicianPrefab, new Vector3(5,0,9), Quaternion.identity);
+        this.aliveCharacters.Add(enemyMusician);
+        this.aliveCharacters.Add(enemyMusician2);
+        this.aliveEnemies.Add(enemyMusician);
+        this.aliveEnemies.Add(enemyMusician2);
     }
 
     private void SetAliveCharactersAtTurnSystem() {

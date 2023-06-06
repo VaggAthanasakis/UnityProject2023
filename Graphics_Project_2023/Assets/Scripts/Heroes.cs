@@ -17,6 +17,8 @@ public class Heroes : MonoBehaviour {
     [SerializeField] private bool isEnemy;
     [SerializeField] private bool isPlayersTurn;
     [SerializeField] private GameObject isHeroSelected;
+    [SerializeField] private GameObject isHeroSelected_Enemy;
+
     private bool isWalking = false;
     private bool isSelected = false;
     private bool isDead = false;
@@ -25,7 +27,9 @@ public class Heroes : MonoBehaviour {
     private bool getsHit = false;
     private bool isBegging = false;
     private bool isCastSpelling = false;
+    private bool isPlayingMusic = false;
     private int currentHealthPoints;
+    private int currentArmorClass;
     private int remainingMoveRange;
 
     protected Vector3 targetPosition;
@@ -56,6 +60,7 @@ public class Heroes : MonoBehaviour {
     protected int healingAnimationCounter = 0;
     protected int beggingAnimationCounter = 0;
     protected int castSpellingAnimationCounter = 0;
+    protected int musicPlayingAnimationCounter =0;
 
     // List with actions
     private List<string> actions = new List<string>();
@@ -75,6 +80,7 @@ public class Heroes : MonoBehaviour {
         gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
         currentPositionIndex = 0;
         SetWalkableNodeAtHeroPosition(false);
+        TakeDamage(10, null);
     }
 
 
@@ -211,6 +217,9 @@ public class Heroes : MonoBehaviour {
     public int GetCurrentHealthPoints() {
         return this.currentHealthPoints;
     }
+    public int GetCurrentArmorClass() {
+        return this.currentArmorClass;
+    }
     public bool GetIsEnemy() {
         return this.isEnemy;
     }
@@ -268,6 +277,9 @@ public class Heroes : MonoBehaviour {
     public List<string> GetActionsList() {
         return this.actions;
     }
+    public bool GetIsPlayingMusic() { 
+        return this.isPlayingMusic;
+    }
 
     /* Generate Setters */
     public void SetNumOfAttributes(int numOfAttributes) {
@@ -302,6 +314,9 @@ public class Heroes : MonoBehaviour {
     }
     public void SetCurrentHealthPoints(int curr) {
         this.currentHealthPoints = curr;
+    }
+    public void SetCurrentArmorClass(int curr) {
+        this.currentArmorClass = curr;
     }
     public void SetIsEnemy(bool b) {
         this.isEnemy = b;
@@ -354,6 +369,9 @@ public class Heroes : MonoBehaviour {
     public void SetIsCastSpelling(bool b) {
         this.isCastSpelling = b;
     }
+    public void SetIsPlayingMusic(bool b) {
+        this.isPlayingMusic = b;
+    }
     
     /* Increase Experience Points By One */
     public void IncreaseExperiencePoints() {
@@ -384,7 +402,6 @@ public class Heroes : MonoBehaviour {
             newHealth = 0;
         }
         this.SetCurrentHealthPoints(newHealth);
-        //Debug.Log("Health Normalized: "+((float)this.GetCurrentHealthPoints() / this.GetHealthPoints()));
         OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
             healthNormalized = (float)(this.GetCurrentHealthPoints()) / this.GetHealthPoints()
         });
@@ -396,10 +413,10 @@ public class Heroes : MonoBehaviour {
         else {
             this.SetGetsHit(true);
             this.SetIsDead(false);
-        }  
-     
+        }     
     }
-    /* This method is called when hero's currentHelathPoints <= 0 */
+
+    /* This method is called when hero's currentHealthPoints <= 0 */
     public void killHero() {
         float destroyObjectDelay = 5f;
         /* Have to make the node in which the character died Walkable */
@@ -544,7 +561,14 @@ public class Heroes : MonoBehaviour {
     /* Activate the selected visual when is hero's turn or when selected */
     public void SelectedHeroVisual() {
         if (this.isDead || this == null) { return; }
-        isHeroSelected.SetActive(this.isSelected || this.isPlayersTurn);
+        if (!this.isEnemy) {
+            isHeroSelected.SetActive(this.isSelected || this.isPlayersTurn);
+            isHeroSelected_Enemy.SetActive(false);
+        }
+        else if (this.isEnemy) {
+            isHeroSelected_Enemy.SetActive(this.isSelected || this.isPlayersTurn);
+            isHeroSelected.SetActive(false);
+        }
     }
 
     /* Method That Points The Character To The Interacted Hero */
@@ -596,6 +620,7 @@ public class Heroes : MonoBehaviour {
         int animationHealingDuration = 2;
         int animationBeggingDuration = 2;
         int animationCastSpellingDuration = 3;
+        int animationMusicPlayingDuration = 3;
 
         /* if the hero gets hit */
         if (this.GetGetsHit()) {
@@ -637,6 +662,14 @@ public class Heroes : MonoBehaviour {
                 this.castSpellingAnimationCounter = 0;
             }
 
+        }
+        /* if the hero is musician */
+        if (this.isPlayingMusic) {
+            this.musicPlayingAnimationCounter++;
+            if (musicPlayingAnimationCounter >= animationMusicPlayingDuration) {
+                this.SetIsPlayingMusic(false);
+                this.musicPlayingAnimationCounter = 0;
+            }
         }
 
     }
@@ -684,7 +717,7 @@ public class Heroes : MonoBehaviour {
 
             AttackAmountCalculation(); // calculate the attack amount
             PointAtTheInteractedHero(heroToAttack);
-            if (heroToAttack.GetArmorClass() < this.GetCurrentAttackAmount()) {
+            if (heroToAttack.GetCurrentArmorClass() < this.GetCurrentAttackAmount()) {
                 Debug.Log("Successfull Attack");
                 UI_Manager.Instance.SetGameInfo("Successfull Attack!");
                 heroToAttack.TakeDamage(this.GetCurrentAttackAmount(), this);
@@ -732,7 +765,6 @@ public class Heroes : MonoBehaviour {
                 Debug.Log("Other Hero Out Of Range");
                 UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range!");
                 this.SetIsAttacking(false);
-               // WaitTimeBuffer(300);
                 return;
             }
 
@@ -858,17 +890,19 @@ public class Heroes : MonoBehaviour {
 
         NegotiateAmount();
         PointAtTheInteractedHero(enemyHero);
-        if (enemyHero.GetArmorClass() < this.GetCurrentNegotiateValue() + begOffset) {
+        if (enemyHero.GetCurrentArmorClass() < this.GetCurrentNegotiateValue() + begOffset) {
             Debug.Log("Successful Beg");
             UI_Manager.Instance.SetGameInfo("Successfull Beg!");
 
             if (enemyHero.GetIsEnemy()) {
                 enemyHero.SetIsEnemy(!enemyHero.GetIsEnemy());
+                enemyHero.SelectedHeroVisual();
                 GameManager.Instance.aliveEnemies.Remove(enemyHero);
                 GameManager.Instance.aliveHeroes.Add(enemyHero);
             }
             else {
                 enemyHero.SetIsEnemy(!enemyHero.GetIsEnemy());
+                enemyHero.SelectedHeroVisual();
                 GameManager.Instance.aliveHeroes.Remove(enemyHero);
                 GameManager.Instance.aliveEnemies.Add(enemyHero);
             }
@@ -903,6 +937,55 @@ public class Heroes : MonoBehaviour {
             remainingSteps = this.remainingMoveRange
         });
     }
+
+    /********************* PLAY MUSIC ***********************/
+    /* Musician playes music in order to try his allies not to be able to take damage at all at this round */
+    /* This is possible by increazing the armor class of the ally */
+    /* If he achieves to play loud music, the action is successful */
+
+    public virtual void SoundVolumeCalculation() { } // Calculate the volume of the music
+    public void PlayMusic() {
+        if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+        this.performedActions++; // increase the number of permoemed actions of the hero
+        if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
+            Debug.Log("Max Allowed Actions Performed. Next Turn!");
+            UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+            return;
+        }
+        if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
+            Debug.Log("Unsuccessfull Dash!");
+            UI_Manager.Instance.SetGameInfo("Unsuccessfull Dash!");
+            return;
+        }
+
+        SoundVolumeCalculation(); // store the volume at the attack amount in order not to declare too many variables
+
+        int actionSuccessfulOffset = 20;
+        if (this.GetCurrentAttackAmount() > actionSuccessfulOffset) {
+            // then we can perform the action
+            if (!this.GetIsEnemy()) { // if we have a hero
+                List<Heroes> heroesList = GameManager.Instance.aliveHeroes;
+                foreach (Heroes hero in heroesList) {
+                    hero.currentArmorClass = 2*hero.armorClass; 
+                }
+            }
+            else {                   // else if we have an enemy
+                List<Heroes> enemiesList = GameManager.Instance.aliveEnemies;
+                foreach (Heroes hero in enemiesList) {
+                    hero.currentArmorClass = 2 * hero.armorClass;
+                }
+            }
+            this.IncreaseExperiencePoints();
+            FirstLevelUp();
+        }
+        // Unsuccessful Action
+        else {
+            Debug.Log("Unsuccessful Action. Music Volume Too Low!");
+            UI_Manager.Instance.SetGameInfo("Unsuccessful Action. Music Volume Too Low!");
+        }
+    }
+
+
 
     /*********** Enemy AI Behaviour ************/
     public void EnemyAIAction() {
@@ -959,8 +1042,6 @@ public class Heroes : MonoBehaviour {
                     // now attack the hero who is closer
                     this.PerformAttack(closerHero);
                     StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-                   // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                    //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
                 // else if we are not near an enemy, move towards him and try attack him again
                 else if (closerHeroDistance < 2 * this.attackRange) {
@@ -971,8 +1052,6 @@ public class Heroes : MonoBehaviour {
                     if (closerHeroDistance <= this.attackRange) {
                         this.PerformAttack(closerHero);
                         StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                     else {  // else, we are far far away, move nowards the enemy, then dash and then move again
                         MoveEnemyAI(closerHero);
@@ -980,8 +1059,6 @@ public class Heroes : MonoBehaviour {
                         MoveEnemyAI(closerHero);
                         Debug.Log(this + " Dash");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
-                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                       // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                 }
                 // else dash
@@ -991,8 +1068,6 @@ public class Heroes : MonoBehaviour {
                     MoveEnemyAI(closerHero);
                     Debug.Log(this + " Dash");
                     StartCoroutine(TurnSystem.Instance.NextTurn());
-                   // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                   // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
 
             }
@@ -1003,8 +1078,6 @@ public class Heroes : MonoBehaviour {
                     this.PerformHeal(closerEnemy);
                     Debug.Log(this + " Heal");
                     StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-                   // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                   // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
                 else {
                     // else either cast a spell or do nothing 
@@ -1013,9 +1086,7 @@ public class Heroes : MonoBehaviour {
                         MoveEnemyAI(closerHero); // move towards the enemya and cast spell
                         this.CastSpell();
                         Debug.Log(this + " CastSpell");
-                        StartCoroutine(TurnSystem.Instance.NextTurn()); 
-                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                       // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                        StartCoroutine(TurnSystem.Instance.NextTurn());
                     }
                     else {
                         MoveEnemyAI(closerHero);
@@ -1023,8 +1094,6 @@ public class Heroes : MonoBehaviour {
                         MoveEnemyAI(closerHero);
                         Debug.Log(this + " Dash");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
-                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                       // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                 }
             }
@@ -1035,36 +1104,28 @@ public class Heroes : MonoBehaviour {
                 if (closerHeroDistance <= this.attackRange) {
                     this.Beg(closerHero);
                     Debug.Log(this + " Beg");
-                    StartCoroutine(TurnSystem.Instance.NextTurn()); 
-                    //UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                   // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                    StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 // else, heal 
                 else if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealthPoints() < closerEnemy.GetHealthPoints()) {
                     this.PerformHeal(closerEnemy);
                     Debug.Log(this + " Heal");
-                    StartCoroutine(TurnSystem.Instance.NextTurn()); 
-                    //UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                    //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                    StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 else if (closerHeroDistance > this.attackRange) {
-                    Debug.Log("OLD "+ closerHeroDistance);
+                    Debug.Log("OLD " + closerHeroDistance);
                     closerHeroDistance = MoveEnemyAI(closerHero);
                     Debug.Log("NEW " + closerHeroDistance);
                     if (closerHeroDistance <= this.attackRange) {
                         this.Beg(closerHero);
                         Debug.Log(this + " Beg");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
-                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                     else { // else dash
                         MoveEnemyAI(closerHero);
                         this.Dash();
                         Debug.Log(this + " Dash");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
-                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                 }
                 // else spell cast or do nothing (Dash)
@@ -1072,16 +1133,30 @@ public class Heroes : MonoBehaviour {
                     this.CastSpell();
                     Debug.Log(this + " Cast spell");
                     StartCoroutine(TurnSystem.Instance.NextTurn());
-                    //UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                   // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
+            }
+            /******************************************* If this hero is a MUSICIAN ***********************************/
+            else if (this.heroClass.Equals("Musician")) {
+                int offset = 8;
+                /* If the musician is far away from the closer ally, approach him */
+                if (closerEnemyDistance < offset) {
+                    this.PlayMusic();          // play music
+                    Debug.Log(this + " Play Music");
+                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                }
+                else {
+                    MoveEnemyAI(closerEnemy);  // move him to the closer ally for protection
+                    this.Dash();               // or dash
+                    Debug.Log(this + " Dash");
+                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                }
+
             }
         }
         /* else return */
         else {
             Debug.Log("Either not enemy or not hero's turn or not combat mode!");
         }
-    
     }
 
     /* function that is called to move the enemy AI characters */
@@ -1096,10 +1171,9 @@ public class Heroes : MonoBehaviour {
 
         // check if the hero front is inside the grid
 
-
-        PathFinding.Instance.MoveEnemyAI(heroFront);
+        PathFinding.Instance.FindPathForEnemyAI(heroFront);
         int i = 1;
-        while (!PathFinding.Instance.MoveEnemyAI(heroFront) && i<=3) {
+        while (!PathFinding.Instance.FindPathForEnemyAI(heroFront) && i<=3) {
             Vector3 tmp1 = new Vector3(heroPos.x +i , heroPos.y, heroPos.z + i);
             tmp = tmp1;
             heroFront = PathFinding.Instance.GetGridPosition(tmp);

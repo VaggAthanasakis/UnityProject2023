@@ -53,8 +53,6 @@ public class PathFinding : MonoBehaviour {
         // PREPEI NA TO FTIAXO NA PAIRNEI MONO HERO 
         this.selectedHero = e.selectedHero;
         startGridPosition = PathFinding.Instance.GetGridPosition(selectedHero.transform.position);
-        //Debug.Log("StartGridPath Position: "+startGridPosition);
-        //this.hero.SetIsSelected(true);
     }
 
     //Returns the GridSystem that created
@@ -165,7 +163,7 @@ public class PathFinding : MonoBehaviour {
         }
     }
 
-    public bool MoveEnemyAI(GridPosition endEnemyGridPos) {
+    public bool FindPathForEnemyAI(GridPosition endEnemyGridPos) {
 
         if ((heroWithTurn == null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || !heroWithTurn.GetIsEnemy()) {
             return false;
@@ -173,9 +171,9 @@ public class PathFinding : MonoBehaviour {
         gridPathPositionList = null;
 
         if (heroWithTurn != null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            if (heroWithTurn.currentPositionIndex == 0) {
+            //if (heroWithTurn.currentPositionIndex == 0) {
                 startGridPosition = PathFinding.Instance.GetGridPosition(heroWithTurn.transform.position);
-            }
+           //}
         }
 
         if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode && this.heroWithTurn.GetIsEnemy()) {

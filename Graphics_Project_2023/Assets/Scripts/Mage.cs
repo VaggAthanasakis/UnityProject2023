@@ -76,6 +76,7 @@ public class Mage : Heroes {
         this.SetAttackRange(3);
         this.SetMoveRange(4);
         this.SetCurrentHealthPoints(this.GetHealthPoints());
+        this.SetCurrentArmorClass(this.GetArmorClass());
         this.SetRemainingMoveRange(this.GetMoveRange());
 
         /* Initialize Hero's Statistics */

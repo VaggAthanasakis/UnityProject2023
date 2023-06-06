@@ -76,14 +76,27 @@ public class TurnSystem : MonoBehaviour {
                 this.playingCharacters[j].SetIsPlayersTurn(true);
                 Debug.Log("Player's turn: " + this.playingCharacters[j].ToString());
                 this.heroWithTurn = this.playingCharacters[j];
-                OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
+                StartCoroutine(FirstTurn(this.playingCharacters[j]));
+               /* OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
                     heroWithTurn = this.playingCharacters[j]
-                });
+                });*/
                 break;
             }
         }
         return this.playingCharacters;
     }
+
+    /* Wait for some time after the dice button is pushed */
+    public IEnumerator FirstTurn(Heroes heroTurn) {
+        yield return new WaitWhile(() => frame < 200);
+        frame = 0;
+        OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
+            heroWithTurn = heroTurn
+        });
+
+    }
+
+
 
     /* create a buffer time to apply after every action in order the actions not to be
      * executed immediantly one after the other */

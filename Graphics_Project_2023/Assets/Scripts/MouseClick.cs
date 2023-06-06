@@ -135,7 +135,7 @@ public class MouseClick : MonoBehaviour {
                 }
             }
         }
-        //Debug.Log("SELECTED ENEMY: "+this.GetSelectedEnemy());
+
     }
 
     private void SelectInteractableObject() {

@@ -32,6 +32,7 @@ public class UI_Manager : MonoBehaviour {
     [SerializeField] GameObject begEnemyButton;
     [SerializeField] GameObject castSpellButton;
     [SerializeField] GameObject dashButton;
+    [SerializeField] GameObject playMusicButton;
 
     /* Game Info Panel */
     [SerializeField] public GameObject gameInfo;
@@ -69,7 +70,7 @@ public class UI_Manager : MonoBehaviour {
         this.nextTurnButton.SetActive(false);
         this.selectedHeroPanel.SetActive(false);
         this.selectedObjectPanel.SetActive(false);
-        this.roundInfoPanel.SetActive(false); // PREPEI NA TO KANO NA ANAVEI OTAN COMBAT
+        this.roundInfoPanel.SetActive(false); 
         gameRound.text = "ROUND 1";
         gameTurn.text = "TURN 1";
 
@@ -143,8 +144,6 @@ public class UI_Manager : MonoBehaviour {
             heroWithTurn.PerformAttack(attackedHero);
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
                 StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-                //gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                //gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
             }
         }
         else if(attackedHero == null) {
@@ -178,8 +177,6 @@ public class UI_Manager : MonoBehaviour {
             /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
                 StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-               // gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                //gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
             }
         }
     }
@@ -203,8 +200,6 @@ public class UI_Manager : MonoBehaviour {
     public void Button_NextTurn() {
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-        //gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-       // gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
     }
 
     /* button for enemy beg */
@@ -218,8 +213,6 @@ public class UI_Manager : MonoBehaviour {
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
             StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-            ///gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-           // gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
         }
     }
 
@@ -233,8 +226,6 @@ public class UI_Manager : MonoBehaviour {
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
             StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-            //gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-           // gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
         }
     }
 
@@ -246,10 +237,22 @@ public class UI_Manager : MonoBehaviour {
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
             StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-           // gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-           // gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
         }
     }
+
+    /* Buttom for Playing Music */
+    public void Button_PlayMusic() {
+        Debug.Log("Buttom Play Music Pushed");
+        Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
+
+        if (heroWithTurn.heroClass != Musician.HERO_CLASS) { return; }
+        heroWithTurn.PlayMusic();
+        /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
+        if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
+            StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+        }
+    }
+
 
     /***********************************************************************/
     public void SetStateInfo() {
@@ -315,6 +318,13 @@ public class UI_Manager : MonoBehaviour {
             }
             else
                 this.dashButton.SetActive(false);
+            if (e.heroWithTurn.GetActionsList().Contains("PlayMusic")) {
+                this.playMusicButton.SetActive(true);
+            }
+            else
+                this.playMusicButton.SetActive(false);
+
+
         }
         else {
             SetActionButtonsPanelActive(false);
