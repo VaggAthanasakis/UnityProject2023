@@ -57,7 +57,7 @@ public class Priest : Heroes {
         int sumOfAttributesPoints = ((this.GetNumOfAttributes() - 1) * 4 + 2);
         this.charisma = sumOfAttributesPoints / 2;
         int remain = sumOfAttributesPoints - charisma;
-        this.SetDexterity(remain / 2);
+        this.SetDexterity(remain / 2-2);
         this.SetConstitution(sumOfAttributesPoints - charisma - this.GetDexterity());
 
         // setting the features
@@ -93,7 +93,7 @@ public class Priest : Heroes {
             this.SetLevel(this.GetLevel() + 1);
             Debug.Log("Level Up");
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
-            this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
+            OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
         }
         /* Case Upgrade To Level 4 */
         else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
@@ -103,7 +103,7 @@ public class Priest : Heroes {
             this.SetLevel(this.GetLevel() + 1);
             Debug.Log("Level Up");
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
-            this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
+            OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
         }
 
     }

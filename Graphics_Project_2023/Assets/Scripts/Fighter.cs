@@ -96,6 +96,9 @@ public class Fighter : Heroes {
             this.SetArmorClass(this.GetArmorClass()+2);
             this.SetCurrentArmorClass(this.GetCurrentArmorClass()+2);
             this.SetLevel(this.GetLevel() + 1);
+            Debug.Log("Level Up");
+            UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
+            OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
         }
         /* Case Upgrade To Level 4 */
         else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
@@ -103,6 +106,9 @@ public class Fighter : Heroes {
             /* At this level the character is allowed to perform 2 main actions at the same turn */
             this.numOfAllowedActions++;
             this.SetLevel(this.GetLevel() + 1);
+            Debug.Log("Level Up");
+            UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
+            OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 

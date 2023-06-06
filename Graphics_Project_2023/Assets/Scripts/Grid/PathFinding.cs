@@ -134,7 +134,12 @@ public class PathFinding : MonoBehaviour {
                 //Debug.Log("Start Node: "+ startNode.IsWalkable()+" End Node: "+ endNode.IsWalkable());
                 
             }
-
+            /* Check if the path is not null */
+            if (gridPathPositionList == null) {
+                Debug.Log("Cannot Find Path!");
+                return;
+            }
+           
             //temporary unit position list
             List<Vector3> heroPositionsList = new List<Vector3>();
 

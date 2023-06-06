@@ -973,6 +973,7 @@ public class Heroes : MonoBehaviour {
                     hero.currentArmorClass = 2 * hero.armorClass;
                 }
             }
+            UI_Manager.Instance.SetGameInfo("Successful Allies Protection!");
             this.IncreaseExperiencePoints();
             FirstLevelUp();
         }
@@ -988,6 +989,10 @@ public class Heroes : MonoBehaviour {
     /*********** Enemy AI Behaviour ************/
     public void EnemyAIAction() {
         Debug.Log("Inside AI");
+        /* Check if the enemy has permormed all the allowed action on the round */
+        if (this.performedActions >= this.numOfAllowedActions) {
+            return;
+        }
         
         /* If this hero is an enemy and has turn and we are at combat mode */
         if (this.isEnemy && this.isPlayersTurn && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
@@ -1034,12 +1039,13 @@ public class Heroes : MonoBehaviour {
 
             /* if we are at range of actions -> permorm action, else move towards target */
             // First check if the this enemy is a FIGHTER or a RANGER and if the distance is < attack range
-            if ((this.heroClass.Equals("Fighter") || this.heroClass.Equals("Ranger"))) {
+            if ((this.heroClass.Equals("Fighter") || this.heroClass.Equals("Ranger"))) { 
                 if (closerHeroDistance <= this.attackRange) {
                     Debug.Log("Enemy AI Attacking!");
                     // now attack the hero who is closer
                     this.PerformAttack(closerHero);
-                    StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+                    this.EnemyAIAction();
+                    StartCoroutine(TurnSystem.Instance.NextTurn());   // na mpei elegxos an exei kai allo move
                 }
                 // else if we are not near an enemy, move towards him and try attack him again
                 else if (closerHeroDistance < 2 * this.attackRange) {
@@ -1049,12 +1055,14 @@ public class Heroes : MonoBehaviour {
                     // move closer to the enemy and try attack him again
                     if (closerHeroDistance <= this.attackRange) {
                         this.PerformAttack(closerHero);
+                        this.EnemyAIAction();
                         StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
                     }
                     else {  // else, we are far far away, move nowards the enemy, then dash and then move again
                         MoveEnemyAI(closerHero);
                         this.Dash();
                         MoveEnemyAI(closerHero);
+                        this.EnemyAIAction();
                         Debug.Log(this + " Dash");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
                     }
@@ -1064,6 +1072,7 @@ public class Heroes : MonoBehaviour {
                     MoveEnemyAI(closerHero);
                     this.Dash();
                     MoveEnemyAI(closerHero);
+                    this.EnemyAIAction();
                     Debug.Log(this + " Dash");
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
@@ -1075,6 +1084,7 @@ public class Heroes : MonoBehaviour {
                 if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealAmount() < closerEnemy.GetHealthPoints()) {
                     this.PerformHeal(closerEnemy);
                     Debug.Log(this + " Heal");
+                    this.EnemyAIAction();
                     StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
                 }
                 else {
@@ -1084,6 +1094,7 @@ public class Heroes : MonoBehaviour {
                         MoveEnemyAI(closerHero); // move towards the enemya and cast spell
                         this.CastSpell();
                         Debug.Log(this + " CastSpell");
+                        this.EnemyAIAction();
                         StartCoroutine(TurnSystem.Instance.NextTurn());
                     }
                     else {
@@ -1091,6 +1102,7 @@ public class Heroes : MonoBehaviour {
                         this.Dash();
                         MoveEnemyAI(closerHero);
                         Debug.Log(this + " Dash");
+                        this.EnemyAIAction();
                         StartCoroutine(TurnSystem.Instance.NextTurn());
                     }
                 }
@@ -1102,12 +1114,14 @@ public class Heroes : MonoBehaviour {
                 if (closerHeroDistance <= this.attackRange) {
                     this.Beg(closerHero);
                     Debug.Log(this + " Beg");
+                    this.EnemyAIAction();
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 // else, heal 
                 else if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealthPoints() < closerEnemy.GetHealthPoints()) {
                     this.PerformHeal(closerEnemy);
                     Debug.Log(this + " Heal");
+                    this.EnemyAIAction();
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 else if (closerHeroDistance > this.attackRange) {
@@ -1117,11 +1131,13 @@ public class Heroes : MonoBehaviour {
                     if (closerHeroDistance <= this.attackRange) {
                         this.Beg(closerHero);
                         Debug.Log(this + " Beg");
+                        this.EnemyAIAction();
                         StartCoroutine(TurnSystem.Instance.NextTurn());
                     }
                     else { // else dash
                         MoveEnemyAI(closerHero);
                         this.Dash();
+                        this.EnemyAIAction();
                         Debug.Log(this + " Dash");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
                     }
@@ -1130,6 +1146,7 @@ public class Heroes : MonoBehaviour {
                 else if (k < 6) {
                     this.CastSpell();
                     Debug.Log(this + " Cast spell");
+                    this.EnemyAIAction();
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
             }
@@ -1140,12 +1157,14 @@ public class Heroes : MonoBehaviour {
                 if (closerEnemyDistance < offset) {
                     this.PlayMusic();          // play music
                     Debug.Log(this + " Play Music");
+                    this.EnemyAIAction();
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 else {
                     MoveEnemyAI(closerEnemy);  // move him to the closer ally for protection
                     this.Dash();               // or dash
                     Debug.Log(this + " Dash");
+                    this.EnemyAIAction();
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
 
