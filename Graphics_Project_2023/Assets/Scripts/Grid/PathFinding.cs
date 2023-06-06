@@ -18,6 +18,7 @@ public class PathFinding : MonoBehaviour {
     private Heroes heroWithTurn;
 
     GridPosition prevMousePosition;
+    //public GridPosition endEnemyGridPos;
 
     private void Awake() {
         if (Instance != null) {
@@ -36,7 +37,6 @@ public class PathFinding : MonoBehaviour {
     private void Start() {
         MouseClick.instance.OnHeroSelectAction += Instance_OnHeroSelectAction;
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
-        
         //startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
         //Debug.Log("Starting Hero Position: " + startGridPosition.ToString());
         //startGridPosition = new GridPosition(0, 0);
@@ -53,7 +53,7 @@ public class PathFinding : MonoBehaviour {
         // PREPEI NA TO FTIAXO NA PAIRNEI MONO HERO 
         this.selectedHero = e.selectedHero;
         startGridPosition = PathFinding.Instance.GetGridPosition(selectedHero.transform.position);
-        Debug.Log("StartGridPath Position: "+startGridPosition);
+        //Debug.Log("StartGridPath Position: "+startGridPosition);
         //this.hero.SetIsSelected(true);
     }
 
@@ -72,10 +72,17 @@ public class PathFinding : MonoBehaviour {
         MoveHero();
     }
 
-    private void MoveHero() {
+    public void MoveHero() {
         if ((heroWithTurn == null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || selectedHero == null && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             return;
         }
+        if (heroWithTurn != null && heroWithTurn.GetIsEnemy()) {
+            return;
+        }
+        if (selectedHero != null && selectedHero.GetIsEnemy()) {
+            return;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         /* if we have press the mouse button and we do not point to a hero */
         if (Input.GetMouseButtonDown(0) && !Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, heroesLayerMask) && !Physics.Raycast(ray, out RaycastHit raycastHit2, float.MaxValue,gameObjectsLayerMask)) {
@@ -107,9 +114,18 @@ public class PathFinding : MonoBehaviour {
                 }
             }
 
-            /* Find the path that the player must follow */
-            gridPathPositionList = gridPathSystem.FindPath(startGridPosition, mouseGridPosition, false);
-            //Debug.Log(gridPathPositionList.Count);
+            /*************************************************/
+            if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam && !this.selectedHero.GetIsEnemy()) {
+                /* Find the path that the player must follow */
+                gridPathPositionList = gridPathSystem.FindPath(startGridPosition, mouseGridPosition, false);
+            }
+            else if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode && !this.heroWithTurn.GetIsEnemy()) {
+                gridPathPositionList = gridPathSystem.FindPath(startGridPosition, mouseGridPosition, false);
+            }
+            else {
+                gridPathPositionList = null;
+                //return null;
+            }
 
             if (gridPathPositionList != null) {
                 GridPosition end = gridPathPositionList[gridPathPositionList.Count-1];
@@ -138,21 +154,65 @@ public class PathFinding : MonoBehaviour {
                     10f
                 );
             }
-            //Update Unit's list
-            //Debug.Log(heroPositionsList.Count);
             /* if the hero is selected, then move it from the path calculated above */
             if (selectedHero.GetIsSelected() && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
-                // Debug.Log("========================== list: "+heroPositionsList.Count);
                 selectedHero.SetPositionsList(heroPositionsList);
             } 
             else if (heroWithTurn != null && heroWithTurn.GetIsPlayersTurn() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
                 heroWithTurn.SetPositionsList(heroPositionsList);
             }
-            //selectedHeroStartingPosition = hero.transform.position;
-            //Debug.Log("Hero Transform: " + PathFinding.Instance.GetGridPosition(hero.transform.position));
-            //startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
+
         }
     }
+
+    public bool MoveEnemyAI(GridPosition endEnemyGridPos) {
+
+        if ((heroWithTurn == null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || !heroWithTurn.GetIsEnemy()) {
+            return false;
+        }
+        gridPathPositionList = null;
+
+        if (heroWithTurn != null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            if (heroWithTurn.currentPositionIndex == 0) {
+                startGridPosition = PathFinding.Instance.GetGridPosition(heroWithTurn.transform.position);
+            }
+        }
+
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode && this.heroWithTurn.GetIsEnemy()) {
+            gridPathPositionList = gridPathSystem.FindPath(startGridPosition, endEnemyGridPos, false);
+            Debug.Log("============================================================================");
+        }
+
+        if (gridPathPositionList == null || gridPathPositionList.Count == 0) return false;
+
+        //temporary unit position list
+        List<Vector3> heroPositionsList = new List<Vector3>();
+
+        for (int i = 0; i < gridPathPositionList.Count - 1; i++) {
+            //fill the list
+            heroPositionsList.Add(gridPathSystem.GetWorldPosition(gridPathPositionList[i]));
+
+            if (i == gridPathPositionList.Count - 2)
+                heroPositionsList.Add(gridPathSystem.GetWorldPosition(gridPathPositionList[i + 1]));
+
+            Debug.DrawLine(
+                gridPathSystem.GetWorldPosition(gridPathPositionList[i]),
+                gridPathSystem.GetWorldPosition(gridPathPositionList[i + 1]),
+                Color.red,
+                10f
+            );
+        }
+        /* if the hero is selected, then move it from the path calculated above */
+        if (selectedHero.GetIsSelected() && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+            selectedHero.SetPositionsList(heroPositionsList);
+        }
+        else if (heroWithTurn != null && heroWithTurn.GetIsPlayersTurn() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            heroWithTurn.SetPositionsList(heroPositionsList);
+        }
+        return true;
+    }
+    
+
 
     public int CalculateDistanceByGrid(Vector3 targetPosition,Heroes enemyHero) {
         List<GridPosition> positionList = null;
@@ -213,7 +273,7 @@ public class PathFinding : MonoBehaviour {
         int zDistance = Mathf.Abs(gridPositionDistance.z);
         int remaining = Mathf.Abs(xDistance - zDistance);
 
-        return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT_COST * remaining;
+        return (MOVE_DIAGONAL_COST * Mathf.Min(xDistance, zDistance) + MOVE_STRAIGHT_COST * remaining)/10;
 
     }
 

@@ -18,6 +18,8 @@ public class TurnSystem : MonoBehaviour {
         public int roundNum;
     }
 
+    /**/
+    public event Action TimeBufferComplete;
 
     private int turnNumber = 1;
     private int roundNumber = 1;
@@ -38,6 +40,7 @@ public class TurnSystem : MonoBehaviour {
         }
         Instance = this;
     }
+
 
     public Heroes GetHeroWithTurn() {
         return this.heroWithTurn;
@@ -86,7 +89,20 @@ public class TurnSystem : MonoBehaviour {
         return this.playingCharacters;
     }
 
-    public void NextTurn() {
+    /* create a buffer time to apply after every action in order the actions not to be
+     * executed immediantly one after the other */
+    int frame;
+    private void Update() {
+        if (frame <= 200)
+            frame++;
+    }
+
+    public IEnumerator NextTurn() {
+
+        //Debug.Log("Before Wait");
+        yield return new WaitWhile(() => frame < 200);
+        frame = 0;
+        //Debug.Log("After Wait");
 
         /* find player with turn previously */
         int indexOfHeroWithTurn = 0;
@@ -104,9 +120,12 @@ public class TurnSystem : MonoBehaviour {
         for (i = indexOfHeroWithTurn; i < this.playingCharacters.Count - 1; i++) {
             if (this.playingCharacters[indexOfHeroWithTurn + k1] != null && !this.playingCharacters[indexOfHeroWithTurn + k1].GetIsDead()) {
                 this.playingCharacters[indexOfHeroWithTurn + k1].SetIsPlayersTurn(true);
-                Debug.Log("Current Turn " + this.playingCharacters[indexOfHeroWithTurn + k1] + " with k1= " + k1);
+               // Debug.Log("Current Turn " + this.playingCharacters[indexOfHeroWithTurn + k1] + " with k1= " + k1);
                 this.heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1];
-                OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
+                //this.heroWithTurn.WaitTimeBuffer(300);
+                //Debug.Log("Before Wait");
+                //yield return new WaitForSeconds(1);
+                 OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
                     heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1]
                 });
                 break;

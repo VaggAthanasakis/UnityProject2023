@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         FillPrefabLists();
         HeroesAndEnemiesToSpawn(heroesFromCharacterSelectionScene);
         SetAliveCharactersAtTurnSystem();
-        GameObjectsInstantiation();
+        //GameObjectsInstantiation();
         
         
     }
@@ -220,12 +220,8 @@ public class GameManager : MonoBehaviour
         int width = Mathf.CeilToInt(size.x/2); 
         int depth = Mathf.CeilToInt(size.z/2); 
 
-        /*Debug.Log("Size X: "+width);
-        Debug.Log("Size Z: "+depth);*/
-
         for (int i=-width; i<=width-1; i++) {
             for (int j = -depth; j <= depth-1; j++) {
-                //GridPosition tmpGridPosition = PathFinding.Instance.GetGridPosition(new Vector3(i, 0, j));
                 Vector3 startingGameObjectPosition = gameObject.transform.position;
                 GridPosition StartingGameObjectGridPosition = PathFinding.Instance.GetGridPosition(startingGameObjectPosition + new Vector3(i, 0, j));// +  //tmpGridPosition;
 

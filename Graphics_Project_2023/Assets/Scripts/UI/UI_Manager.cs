@@ -141,7 +141,7 @@ public class UI_Manager : MonoBehaviour {
         if (attackedHero != null && attackedHero != heroWithTurn) {
             heroWithTurn.PerformAttack(attackedHero);
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-                TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
                 gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
                 gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
             }
@@ -176,7 +176,7 @@ public class UI_Manager : MonoBehaviour {
             heroWithTurn.PerformHeal(heroToHeal);
             /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-                TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+                StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
                 gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
                 gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
             }
@@ -190,7 +190,7 @@ public class UI_Manager : MonoBehaviour {
         TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round 
         foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();
-            Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
+            //Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
             character.diceValue = diceValue;
             TurnSystem.Instance.turnBasedOnDice.Add(diceValue);
         }
@@ -201,7 +201,7 @@ public class UI_Manager : MonoBehaviour {
     /* If the player has remaining move range but do not want to use it, should press this button */
     public void Button_NextTurn() {
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
-        TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+        StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
         gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
         gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
     }
@@ -216,7 +216,7 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.Beg(enemyToBeg);
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
             gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
             gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
         }
@@ -231,7 +231,7 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.CastSpell();
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
             gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
             gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
         }
@@ -244,7 +244,7 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.Dash();
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
+            StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
             gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
             gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
         }

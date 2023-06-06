@@ -24,7 +24,7 @@ public class HeroMoveRangeBarUI : MonoBehaviour
     private void Hero_OnRemainingMoveRangeChanged(object sender, Heroes.OnRemainingMoveRangeChangedEventArgs e) {
 
         barImage.fillAmount = e.remainingSteps;
-        Debug.Log("BAR VALUE "+e.remainingSteps);
+        //Debug.Log("BAR VALUE "+e.remainingSteps);
         if (this.hero.GetIsPlayersTurn()) {
             ShowBar();
         }
