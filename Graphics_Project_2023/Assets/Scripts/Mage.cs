@@ -92,6 +92,8 @@ public class Mage : Heroes {
         /* We level up if the hero has 4 experience points */
         if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
             /// code for level up
+            this.SetIntelligence(this.GetIntelligence()+3);
+            this.SetAttackRange(this.GetAttackRange() + 2);
             this.SetLevel(this.GetLevel() + 1);
         }
         /* Case Upgrade To Level 4 */

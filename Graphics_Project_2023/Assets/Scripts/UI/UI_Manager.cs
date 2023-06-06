@@ -199,7 +199,7 @@ public class UI_Manager : MonoBehaviour {
     /* If the player has remaining move range but do not want to use it, should press this button */
     public void Button_NextTurn() {
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
-        StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+        StartCoroutine(TurnSystem.Instance.NextTurn()); 
     }
 
     /* button for enemy beg */
@@ -212,7 +212,7 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.Beg(enemyToBeg);
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+            StartCoroutine(TurnSystem.Instance.NextTurn()); 
         }
     }
 
@@ -236,7 +236,7 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.Dash();
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+            StartCoroutine(TurnSystem.Instance.NextTurn()); 
         }
     }
 
@@ -249,10 +249,9 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.PlayMusic();
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+            StartCoroutine(TurnSystem.Instance.NextTurn()); 
         }
     }
-
 
     /***********************************************************************/
     public void SetStateInfo() {
@@ -278,7 +277,6 @@ public class UI_Manager : MonoBehaviour {
             this.stateInfo.text = victoryInfo;
             SetActionButtonsPanelActive(false);
         }
- 
     }
 
     /* This method sets the panel with the turn and action buttons  active/non-active  */
@@ -330,8 +328,6 @@ public class UI_Manager : MonoBehaviour {
             SetActionButtonsPanelActive(false);
         }
     }
-
-
 
     /* Set the info for the gameInfo panel */
     public void SetGameInfo(string info) {

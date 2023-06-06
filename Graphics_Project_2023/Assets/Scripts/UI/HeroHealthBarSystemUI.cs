@@ -6,20 +6,11 @@ using UnityEngine.UI;
 public class HeroHealthBarSystemUI : MonoBehaviour {
 
     [SerializeField] private Image HeroBarImage;
-    [SerializeField] private Image EnemyBarImage;
     [SerializeField] private Heroes hero;
 
     private void Start() {
         hero.OnHealthChanged += Hero_OnHealthChanged;
-        if (!hero.GetIsEnemy()) {
-            HeroBarImage.fillAmount = 1f;
-            EnemyBarImage.fillAmount = 0f;
-        }
-        else {
-            EnemyBarImage.fillAmount = 1f;
-            HeroBarImage.fillAmount = 0f;
-        }
-        
+        HeroBarImage.fillAmount = 1f;
         this.HideBar();
         
     }
@@ -31,16 +22,7 @@ public class HeroHealthBarSystemUI : MonoBehaviour {
    
 
     private void Hero_OnHealthChanged(object sender, Heroes.OnHealthChangedEventArgs e) {
-        if (!hero.GetIsEnemy()) { // hero
-            HeroBarImage.fillAmount = e.healthNormalized;
-            EnemyBarImage.fillAmount = 0f;
-        }
-        else { // enemy
-            EnemyBarImage.fillAmount = e.healthNormalized;
-            HeroBarImage.fillAmount = 0f;
-        }
-
-        //HeroBarImage.fillAmount = e.healthNormalized;
+        HeroBarImage.fillAmount = e.healthNormalized;
         /* Check if the hero has full health or is dead
          * then hide the health bar
            else show the health bar*/

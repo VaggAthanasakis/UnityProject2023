@@ -14,7 +14,7 @@ PrefabInstance:
     - target: {fileID: 1646310482575282204, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
       propertyPath: HeroBarImage
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7475042159990930760}
     - target: {fileID: 1646310482575282204, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
       propertyPath: EnemyBarImage
       value: 

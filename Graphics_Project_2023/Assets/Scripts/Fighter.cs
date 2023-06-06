@@ -92,6 +92,9 @@ public class Fighter : Heroes {
         /* We level up if the hero has 4 experience points */
         if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
             /// code for level up
+            this.SetStrength(this.GetStrength()+3);
+            this.SetArmorClass(this.GetArmorClass()+2);
+            this.SetCurrentArmorClass(this.GetCurrentArmorClass()+2);
             this.SetLevel(this.GetLevel() + 1);
         }
         /* Case Upgrade To Level 4 */

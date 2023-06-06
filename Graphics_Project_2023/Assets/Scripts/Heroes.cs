@@ -80,7 +80,7 @@ public class Heroes : MonoBehaviour {
         gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
         currentPositionIndex = 0;
         SetWalkableNodeAtHeroPosition(false);
-        TakeDamage(10, null);
+        //TakeDamage(10, null);
     }
 
 
@@ -97,7 +97,6 @@ public class Heroes : MonoBehaviour {
     private void Instance_OnHeroSelectAction(object sender, MouseClick.OnHeroSelectActionEventArgs e) {
 
         if (this.GetIsDead() || this == null) { return; }
-
 
         if ((Heroes)e.selectedHero == this && this.GetIsEnemy()) {
             this.SetIsSelected(true);
@@ -505,7 +504,6 @@ public class Heroes : MonoBehaviour {
             }
         }
        
-
     }
 
     /* Set the node that the hero is currently at as Walkable or NoWalkable */
@@ -596,7 +594,7 @@ public class Heroes : MonoBehaviour {
     /* At the first level up, we increase the health, the dexterity and the constitution of the hero */
     /* It happens if the hero has at least 2 experience points */
     public void FirstLevelUp() {
-        if (this.GetLevel() == 1 && this.GetExperiencePoints() <= 2) {
+        if (this.GetLevel() == 1 && this.GetExperiencePoints() == 2) {
             this.currentHealthPoints += 5;
             this.healthPoints += 5;
             this.dexterity += 2;
@@ -608,7 +606,7 @@ public class Heroes : MonoBehaviour {
         }
         else {
             LevelUp();
-            this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
+            //this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 

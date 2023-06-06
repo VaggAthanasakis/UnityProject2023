@@ -83,6 +83,8 @@ public class Ranger : Heroes {
         /* We level up if the hero has 4 experience points */
         if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
             /// code for level up
+            this.SetAttackRange(this.GetAttackRange()+2);
+            this.SetStrength(this.GetStrength()+3);
             this.SetLevel(this.GetLevel()+1);
         }
         /* Case Upgrade To Level 4 */

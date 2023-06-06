@@ -75,10 +75,13 @@ public class Musician : Heroes {
         /* We level up if the hero has 4 experience points */
         if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
             /// code for level up
+            this.charisma += 5;
+            this.SetArmorClass(this.GetArmorClass() + 2);
+            this.SetCurrentArmorClass(this.GetArmorClass() + 2);
             this.SetLevel(this.GetLevel() + 1);
         }
         /* Case Upgrade To Level 4 */
-        else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
+        else if (this.GetLevel() == 3 && this.GetExperiencePoints() >= 6) {
             // code for level up
             /* At this level the character is allowed to perform 2 main actions at the same turn */
             this.numOfAllowedActions++;
