@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Collections.Generic;
 
 public class Heroes : MonoBehaviour {
 
@@ -61,8 +60,6 @@ public class Heroes : MonoBehaviour {
     // List with actions
     private List<string> actions = new List<string>();
 
-    float actionsTimerCounter = 100;
-    bool isActionFinished = false ;
   
     /**********************/
     protected virtual void Awake() {
@@ -152,6 +149,9 @@ public class Heroes : MonoBehaviour {
             Debug.Log("This Players Turn: " + this.ToString());
             if (this.isEnemy) {
                 EnemyAIAction();
+            }
+            else {
+                MouseClick.instance.SetSelectedHero(this);
             }
         }
         else {
@@ -391,7 +391,6 @@ public class Heroes : MonoBehaviour {
        
         if (newHealth <= 0) {
             this.killHero();
-            //Debug.Log("Kill");
             this.SetIsDead(true);
         }
         else {
@@ -404,11 +403,7 @@ public class Heroes : MonoBehaviour {
     public void killHero() {
         float destroyObjectDelay = 5f;
         /* Have to make the node in which the character died Walkable */
-        Vector3 killPosition = this.transform.position;
-        GridPosition killPosionAtGrid = PathFinding.Instance.GetGridPosition(killPosition);
-        PathNode killNode = PathFinding.Instance.Grid().GetPathNode(killPosionAtGrid);
-        killNode.SetIsWalkable(true);
-
+        SetWalkableNodeAtHeroPosition(true);
         this.SetIsDead(true);
         this.SetCurrentHealthPoints(0);
         GameManager.Instance.aliveCharacters.Remove(this); // remove the character for the game
@@ -420,7 +415,6 @@ public class Heroes : MonoBehaviour {
             GameManager.Instance.aliveHeroes.Remove(this);
         }
         Destroy(this.gameObject, destroyObjectDelay);
-
     }
 
     /* This method is called when an oneother hero heals this hero */
@@ -665,23 +659,26 @@ public class Heroes : MonoBehaviour {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
 
         if (heroToAttack.GetIsEnemy() != this.GetIsEnemy()) {
-            this.performedActions++; // increase the number of permoemed actionsof the hero
-            if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
+            this.performedActions++;                                // increase the number of permoemed actionsof the hero
+            if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
                 this.SetIsAttacking(false);
-                Debug.Log("Unsuccessfull Attack!");
-                UI_Manager.Instance.SetGameInfo("Unsuccessfull Attack!");
-                //WaitTimeBuffer(300);
+                Debug.Log("Max Allowed Actions Performed. Next Turn!");
+                UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+                return;
+            }
+            if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
+                this.SetIsAttacking(false);
+                Debug.Log("Dice Value = 1. Lost Turn!");
+                UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
                 return;
             }
             /* if the other hero is out of range */
-            int distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position,heroToAttack.transform.position);
-            int distance_normalized = distance; // because distance is 10x in comparison to attack range
+            int distance_normalized = PathFinding.Instance.CalculateSimpleDistance(this.transform.position,heroToAttack.transform.position);
             Debug.Log("DISTANCE "+distance_normalized);
             if (distance_normalized > this.attackRange) {
                 Debug.Log("Other Hero Out Of Range");
                 UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range!");
                 this.SetIsAttacking(false);
-                //WaitTimeBuffer(300);
                 return;
             }
 
@@ -705,7 +702,6 @@ public class Heroes : MonoBehaviour {
                 UI_Manager.Instance.SetGameInfo("Unsuccessfull Attack Due To Hero Armor");
             }
         }
-       // WaitTimeBuffer(300);
     }
 
     /****** HEAL ACTION *******/
@@ -715,13 +711,18 @@ public class Heroes : MonoBehaviour {
     /* This Function is called when this hero wants to heal another hero */
     public void PerformHeal(Heroes heroToHeal) {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
-        if (heroToHeal.GetIsEnemy() == this.GetIsEnemy()) { // we want to have the same GetIsEnemy()
-            this.performedActions++; // increase the number of permoemed actionsof the hero
-            if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
+        if (heroToHeal.GetIsEnemy() == this.GetIsEnemy()) {          // we want to have the same GetIsEnemy()
+            this.performedActions++;                                 // increase the number of permoemed actionsof the hero
+            if (this.performedActions > this.numOfAllowedActions) {  // hero can permorm numOfAllowedActions action at every turn
                 this.SetIsHealing(false);
-                Debug.Log("Unsuccessfull Heal!");
-                UI_Manager.Instance.SetGameInfo("Unsuccessfull Heal!");
-                //WaitTimeBuffer(300);
+                Debug.Log("Max Allowed Actions Performed. Next Turn!");
+                UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+                return;
+            }
+            if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
+                this.SetIsHealing(false);
+                Debug.Log("Dice Value = 1. Lost Turn!");
+                UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
                 return;
             }
             /* if the other hero is out of range */
@@ -746,7 +747,6 @@ public class Heroes : MonoBehaviour {
             this.IncreaseExperiencePoints();
             FirstLevelUp();
         }
-        //WaitTimeBuffer(300);
     }
 
     /********** OBJECT INTERACT ACTION **********/
@@ -775,42 +775,52 @@ public class Heroes : MonoBehaviour {
     public void CastSpell() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
         if (this.heroClass != Priest.HERO_CLASS && this.heroClass != Mage.HERO_CLASS) { return; }
-        this.performedActions++; // increase the number of permoemed actionsof the hero
-        if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
-            //this.SetIsBegging(false);
-            Debug.Log("Unsuccessfull Spell Cast!");
-            UI_Manager.Instance.SetGameInfo("Unsuccessfull Spell Cast!");
-            //WaitTimeBuffer(300);
+        this.performedActions++;                                     // increase the number of permoemed actionsof the hero
+        if (this.performedActions > this.numOfAllowedActions) {      // hero can permorm numOfAllowedActions action at every turn
+            Debug.Log("Max Allowed Actions Performed. Next Turn!");
+            UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
             return;
         }
+        if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
+            Debug.Log("Dice Value = 1. Lost Turn!");
+            UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+            return;
+        }        
         int randNumber = UnityEngine.Random.Range(1,11);
         /* Heal All Heroes */
-        if (randNumber <= 5) {
+        /* Because we will permorm heal for every hero, numOfAllowedActions will be increased by PerformHeal each time -> will perform only one (none because of the above increasement) */
+        /* so temporarly, we increase the numOfAllowedActions and decrease it again later */
+        int initial_numOfAllowedActions = this.numOfAllowedActions;
+        if (randNumber <= 3) {
             if (!this.GetIsEnemy()) {
+                this.numOfAllowedActions = GameManager.Instance.aliveHeroes.Count + 1;
                 foreach (Heroes hero in GameManager.Instance.aliveHeroes) {
                     this.PerformHeal(hero);
                 }
             }
             else if (this.GetIsEnemy()) {
+                this.numOfAllowedActions = GameManager.Instance.aliveEnemies.Count + 1;
                 foreach (Heroes hero in GameManager.Instance.aliveEnemies) {
                     this.PerformHeal(hero);
                 }
             }
         }
         /* Attack all enemies */
-        else if (randNumber > 5) {
+        else if (randNumber > 3) {
             if (!this.GetIsEnemy()) {
+                this.numOfAllowedActions = GameManager.Instance.aliveEnemies.Count + 1;
                 foreach (Heroes hero in GameManager.Instance.aliveEnemies) {
                     this.PerformAttack(hero);
                 }
             }
             else if (this.GetIsEnemy()) {
+                this.numOfAllowedActions = GameManager.Instance.aliveHeroes.Count + 1;
                 foreach (Heroes hero in GameManager.Instance.aliveHeroes) {
                     this.PerformAttack(hero);
                 }
             }
         }
-        //WaitTimeBuffer(300);
+        this.numOfAllowedActions = initial_numOfAllowedActions;   
     }
 
     /******** ACTION BEG ********/
@@ -824,22 +834,25 @@ public class Heroes : MonoBehaviour {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) { return; }
         if (this.heroClass != Priest.HERO_CLASS || this.GetIsEnemy() == enemyHero.GetIsEnemy()) { return; }
         this.performedActions++; // increase the number of permoemed actionsof the hero
-        if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
+        if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             this.SetIsBegging(false);
-            Debug.Log("Unsuccessfull Beg!");
-            UI_Manager.Instance.SetGameInfo("Unsuccessfull Beg!");
-            //WaitTimeBuffer(300);
+            Debug.Log("Max Allowed Actions Performed. Next Turn!");
+            UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
             return;
         }
-
+        if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
+            this.SetIsBegging(false);
+            Debug.Log("Dice Value = 1. Lost Turn!");
+            UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+            return;
+        }
         /* if the other hero is out of range */
-        int distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, enemyHero.transform.position);
-        int distance_normalized = distance; // because distance is 10x in comparison to attack range
+        int distance_normalized = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, enemyHero.transform.position);
         if (distance_normalized > this.attackRange) {
             Debug.Log("Other Hero Out Of Range");
             UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range");
             this.SetIsAttacking(false);
-           // WaitTimeBuffer(300);
+
             return;
         }
 
@@ -859,7 +872,6 @@ public class Heroes : MonoBehaviour {
                 GameManager.Instance.aliveHeroes.Remove(enemyHero);
                 GameManager.Instance.aliveEnemies.Add(enemyHero);
             }
-
             this.SetNumOfBegs(this.GetNumOfBegs() + 1);
             this.IncreaseExperiencePoints();
             FirstLevelUp();
@@ -869,7 +881,6 @@ public class Heroes : MonoBehaviour {
             Debug.Log("Unsuccessful Beg");
             UI_Manager.Instance.SetGameInfo("Unsuccessfull Beg!");
         }
-        //WaitTimeBuffer(300);
     }
 
     /*********** DASH ACTION ***************/
@@ -877,21 +888,21 @@ public class Heroes : MonoBehaviour {
     public void Dash() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
         this.performedActions++; // increase the number of permoemed actions of the hero
-        if (diceValue == 1 || this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
-            //this.SetIsBegging(false);
-            Debug.Log("Unsuccessfull Spell Cast!");
-            UI_Manager.Instance.SetGameInfo("Unsuccessfull Spell Cast!");
-            //WaitTimeBuffer(300);
+        if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
+            Debug.Log("Max Allowed Actions Performed. Next Turn!");
+            UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+            return;
+        }
+        if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
+            Debug.Log("Unsuccessfull Dash!");
+            UI_Manager.Instance.SetGameInfo("Unsuccessfull Dash!");
             return;
         }
         this.remainingMoveRange = 2 * this.moveRange;
         OnRemainingMoveRangeChanged?.Invoke(this, new OnRemainingMoveRangeChangedEventArgs {
             remainingSteps = this.remainingMoveRange
         });
-        //WaitTimeBuffer(300);
     }
-
-
 
     /*********** Enemy AI Behaviour ************/
     public void EnemyAIAction() {
@@ -948,8 +959,8 @@ public class Heroes : MonoBehaviour {
                     // now attack the hero who is closer
                     this.PerformAttack(closerHero);
                     StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                   // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                    //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
                 // else if we are not near an enemy, move towards him and try attack him again
                 else if (closerHeroDistance < 2 * this.attackRange) {
@@ -960,8 +971,8 @@ public class Heroes : MonoBehaviour {
                     if (closerHeroDistance <= this.attackRange) {
                         this.PerformAttack(closerHero);
                         StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-                        UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                        //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                     else {  // else, we are far far away, move nowards the enemy, then dash and then move again
                         MoveEnemyAI(closerHero);
@@ -969,8 +980,8 @@ public class Heroes : MonoBehaviour {
                         MoveEnemyAI(closerHero);
                         Debug.Log(this + " Dash");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
-                        UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                       // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                 }
                 // else dash
@@ -980,8 +991,8 @@ public class Heroes : MonoBehaviour {
                     MoveEnemyAI(closerHero);
                     Debug.Log(this + " Dash");
                     StartCoroutine(TurnSystem.Instance.NextTurn());
-                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                   // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                   // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
 
             }
@@ -992,8 +1003,8 @@ public class Heroes : MonoBehaviour {
                     this.PerformHeal(closerEnemy);
                     Debug.Log(this + " Heal");
                     StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                   // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                   // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
                 else {
                     // else either cast a spell or do nothing 
@@ -1003,8 +1014,8 @@ public class Heroes : MonoBehaviour {
                         this.CastSpell();
                         Debug.Log(this + " CastSpell");
                         StartCoroutine(TurnSystem.Instance.NextTurn()); 
-                        UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                       // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                     else {
                         MoveEnemyAI(closerHero);
@@ -1012,8 +1023,8 @@ public class Heroes : MonoBehaviour {
                         MoveEnemyAI(closerHero);
                         Debug.Log(this + " Dash");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
-                        UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                       // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                 }
             }
@@ -1025,16 +1036,16 @@ public class Heroes : MonoBehaviour {
                     this.Beg(closerHero);
                     Debug.Log(this + " Beg");
                     StartCoroutine(TurnSystem.Instance.NextTurn()); 
-                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                    //UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                   // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
                 // else, heal 
                 else if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealthPoints() < closerEnemy.GetHealthPoints()) {
                     this.PerformHeal(closerEnemy);
                     Debug.Log(this + " Heal");
                     StartCoroutine(TurnSystem.Instance.NextTurn()); 
-                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                    //UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                    //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
                 else if (closerHeroDistance > this.attackRange) {
                     Debug.Log("OLD "+ closerHeroDistance);
@@ -1044,16 +1055,16 @@ public class Heroes : MonoBehaviour {
                         this.Beg(closerHero);
                         Debug.Log(this + " Beg");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
-                        UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                        //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                     else { // else dash
                         MoveEnemyAI(closerHero);
                         this.Dash();
                         Debug.Log(this + " Dash");
                         StartCoroutine(TurnSystem.Instance.NextTurn());
-                        UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                        UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                       // UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                        //UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                     }
                 }
                 // else spell cast or do nothing (Dash)
@@ -1061,8 +1072,8 @@ public class Heroes : MonoBehaviour {
                     this.CastSpell();
                     Debug.Log(this + " Cast spell");
                     StartCoroutine(TurnSystem.Instance.NextTurn());
-                    UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-                    UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
+                    //UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+                   // UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
                 }
             }
         }
@@ -1082,6 +1093,9 @@ public class Heroes : MonoBehaviour {
         Vector3 tmp = new Vector3(heroPos.x,heroPos.y,heroPos.z + 1);
         GridPosition heroFront =  PathFinding.Instance.GetGridPosition(tmp);
         Debug.Log("HeroFront "+heroFront);
+
+        // check if the hero front is inside the grid
+
 
         PathFinding.Instance.MoveEnemyAI(heroFront);
         int i = 1;

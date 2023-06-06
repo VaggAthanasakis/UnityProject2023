@@ -18,9 +18,6 @@ public class TurnSystem : MonoBehaviour {
         public int roundNum;
     }
 
-    /**/
-    public event Action TimeBufferComplete;
-
     private int turnNumber = 1;
     private int roundNumber = 1;
 
@@ -61,7 +58,6 @@ public class TurnSystem : MonoBehaviour {
         turnBasedOnDice.Sort();
         turnBasedOnDice.Reverse();
         tmpTurnPlay.Clear();
-        //Debug.Log("TurnBasedOnDice.Count "+turnBasedOnDice.Count);
         for (int i = 0; i < turnBasedOnDice.Count; i++) {
             foreach (Heroes hero in playingCharacters) {
                 if (hero == null) {
@@ -99,10 +95,8 @@ public class TurnSystem : MonoBehaviour {
 
     public IEnumerator NextTurn() {
 
-        //Debug.Log("Before Wait");
         yield return new WaitWhile(() => frame < 200);
         frame = 0;
-        //Debug.Log("After Wait");
 
         /* find player with turn previously */
         int indexOfHeroWithTurn = 0;
@@ -120,11 +114,7 @@ public class TurnSystem : MonoBehaviour {
         for (i = indexOfHeroWithTurn; i < this.playingCharacters.Count - 1; i++) {
             if (this.playingCharacters[indexOfHeroWithTurn + k1] != null && !this.playingCharacters[indexOfHeroWithTurn + k1].GetIsDead()) {
                 this.playingCharacters[indexOfHeroWithTurn + k1].SetIsPlayersTurn(true);
-               // Debug.Log("Current Turn " + this.playingCharacters[indexOfHeroWithTurn + k1] + " with k1= " + k1);
                 this.heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1];
-                //this.heroWithTurn.WaitTimeBuffer(300);
-                //Debug.Log("Before Wait");
-                //yield return new WaitForSeconds(1);
                  OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
                     heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1]
                 });
@@ -135,16 +125,15 @@ public class TurnSystem : MonoBehaviour {
             }       
         }
         turnNumber++;
-        // Debug.Log("i = "+i);
-        // Debug.Log("Count+1 "+ this.playingCharacters.Count);
         if (i >= this.playingCharacters.Count -1) { // have to change round
             roundNumber++;
             UI_Manager.Instance.diceButton.SetActive(true);
             OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {
                 roundNum = roundNumber
-            });
-            
+            });       
         }
+        UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
+        UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
     }
 
 

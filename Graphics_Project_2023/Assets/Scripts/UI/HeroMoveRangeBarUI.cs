@@ -16,7 +16,6 @@ public class HeroMoveRangeBarUI : MonoBehaviour
         this.HideBar();
     }
 
-
     private void Update() {
         transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
     }
@@ -24,7 +23,6 @@ public class HeroMoveRangeBarUI : MonoBehaviour
     private void Hero_OnRemainingMoveRangeChanged(object sender, Heroes.OnRemainingMoveRangeChangedEventArgs e) {
 
         barImage.fillAmount = e.remainingSteps;
-        //Debug.Log("BAR VALUE "+e.remainingSteps);
         if (this.hero.GetIsPlayersTurn()) {
             ShowBar();
         }
@@ -37,10 +35,6 @@ public class HeroMoveRangeBarUI : MonoBehaviour
         barImage.fillAmount = 1f;
         HideBar();
     }
-
-
-
-
 
     private void ShowBar() {
         if(this != null)
