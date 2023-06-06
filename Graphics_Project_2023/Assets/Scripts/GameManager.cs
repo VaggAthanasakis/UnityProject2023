@@ -198,22 +198,22 @@ public class GameManager : MonoBehaviour
         }
 
         /* Create Enemies */
-        Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(2,0,9), Quaternion.identity);
+        //Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(2,0,9), Quaternion.identity);
          Ranger enemyRanger = (Ranger)Instantiate(enemyRangerPrefab,new Vector3(4,0,9), Quaternion.identity);
-         Priest enemyPriest = (Priest)Instantiate(enemyPriestPrefab, new Vector3(5,0,7), Quaternion.identity);
+         //Priest enemyPriest = (Priest)Instantiate(enemyPriestPrefab, new Vector3(5,0,7), Quaternion.identity);
 
-         this.aliveCharacters.Add(enemyFighter);
+        // this.aliveCharacters.Add(enemyFighter);
          this.aliveCharacters.Add(enemyRanger);
-         this.aliveCharacters.Add(enemyPriest);
-         this.aliveEnemies.Add(enemyFighter);
+        // this.aliveCharacters.Add(enemyPriest);
+        // this.aliveEnemies.Add(enemyFighter);
          this.aliveEnemies.Add(enemyRanger);
-         this.aliveEnemies.Add(enemyPriest);
-        Musician enemyMusician = (Musician)Instantiate(enemyMusicianPrefab, new Vector3(5,0,9), Quaternion.identity);
-        Musician enemyMusician2 = (Musician)Instantiate(enemyMusicianPrefab, new Vector3(6,0,9), Quaternion.identity);
-        this.aliveCharacters.Add(enemyMusician);
+        // this.aliveEnemies.Add(enemyPriest);
+        //Musician enemyMusician = (Musician)Instantiate(enemyMusicianPrefab, new Vector3(5,0,9), Quaternion.identity);
+        //Musician enemyMusician2 = (Musician)Instantiate(enemyMusicianPrefab, new Vector3(6,0,9), Quaternion.identity);
+        /*this.aliveCharacters.Add(enemyMusician);
         this.aliveCharacters.Add(enemyMusician2);
         this.aliveEnemies.Add(enemyMusician);
-        this.aliveEnemies.Add(enemyMusician2);
+        this.aliveEnemies.Add(enemyMusician2);*/
     }
 
     private void SetAliveCharactersAtTurnSystem() {

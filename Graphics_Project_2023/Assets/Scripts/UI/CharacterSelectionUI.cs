@@ -66,7 +66,7 @@ public class CharacterSelectionUI : MonoBehaviour {
 
     /* Start Game Button */
     public void Button_StartGame() {
-        if (charactersCounter > 0 && charactersCounter <= 3) {
+        if (charactersCounter > 0 && charactersCounter <= 4) {
             /* Then We Can Start The Game */
             this.errorMessage.SetActive(false);
             Debug.Log("Game Can Start!");
@@ -81,7 +81,7 @@ public class CharacterSelectionUI : MonoBehaviour {
 
     /* Add/Remove Fighter */
     public void Button_AddFighter() {
-        if (fighterCounter < 3) {
+        if (fighterCounter < 4) {
             fighterCounter++;
             fighterCounterText.text = fighterCounter.ToString();
             charactersCounter++;
@@ -98,7 +98,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     }
     /* Add/Remove Ranger */
     public void Button_AddRanger() {
-        if (rangerCounter < 3) {
+        if (rangerCounter < 4) {
             rangerCounter++;
             rangerCounterText.text = rangerCounter.ToString();
             charactersCounter++;
@@ -116,7 +116,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     }
     /* Add/Remove Mage */
     public void Button_AddMage() {
-        if (mageCounter < 3) {
+        if (mageCounter < 4) {
             mageCounter++;
             mageCounterText.text = mageCounter.ToString();
             charactersCounter++;
@@ -133,7 +133,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     }
     /* Add/Remove Priest */
     public void Button_AddPriest() {
-        if (priestCounter < 3) {
+        if (priestCounter < 4) {
             priestCounter++;
             priestCounterText.text = priestCounter.ToString();
             charactersCounter++;
@@ -150,7 +150,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     }
     /* Add/Remove Musician */
     public void Button_AddMusician() {
-        if (musicianCounter < 3) {
+        if (musicianCounter < 4) {
             musicianCounter++;
             musicianCounterText.text = musicianCounter.ToString();
             charactersCounter++;

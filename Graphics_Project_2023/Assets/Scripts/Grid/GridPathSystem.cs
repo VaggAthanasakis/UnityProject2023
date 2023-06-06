@@ -55,7 +55,7 @@ public class GridPathSystem {
     /* Made some changes for out of bounds exception */
     public PathNode GetPathNode(GridPosition gridPosition) {
         /* if it is out of bounds at the positives */
-        if (gridPosition.x > gridPathArray.GetLength(0) || gridPosition.z > gridPathArray.GetLength(1)) {
+        if (gridPosition.x >= gridPathArray.GetLength(0) || gridPosition.z >= gridPathArray.GetLength(1)) {
             return null;
         }
         /* if it is out of bounds to the negatives (out of the world) */

@@ -70,6 +70,7 @@ public class Heroes : MonoBehaviour {
     protected virtual void Awake() {
         targetPosition = this.transform.position;
         AddAction("Dash");
+        //SetWalkableNodeAtHeroPosition(false);
     }
 
     protected virtual void Start() {
