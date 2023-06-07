@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public static bool isGamePaused = false;
+
     /******/
     private List<Heroes> heroesPrefabs = new List<Heroes>();
     private List<Heroes> enemiesPrefabs = new List<Heroes>();

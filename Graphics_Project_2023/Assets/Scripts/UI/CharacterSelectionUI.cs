@@ -87,14 +87,12 @@ public class CharacterSelectionUI : MonoBehaviour {
             charactersCounter++;
         }
     }
-
     public void Button_RemoveFighter() {
         if (fighterCounter > 0) {
             fighterCounter--;
             fighterCounterText.text = fighterCounter.ToString();
             charactersCounter--;
-        }
-           
+        }    
     }
     /* Add/Remove Ranger */
     public void Button_AddRanger() {
@@ -102,17 +100,14 @@ public class CharacterSelectionUI : MonoBehaviour {
             rangerCounter++;
             rangerCounterText.text = rangerCounter.ToString();
             charactersCounter++;
-
         }
     }
-
     public void Button_RemoveRanger() {
         if (rangerCounter > 0) {
             rangerCounter--;
             rangerCounterText.text = rangerCounter.ToString();
             charactersCounter--;
         }
-
     }
     /* Add/Remove Mage */
     public void Button_AddMage() {
@@ -122,14 +117,12 @@ public class CharacterSelectionUI : MonoBehaviour {
             charactersCounter++;
         }
     }
-
     public void Button_RemoveMage() {
         if (mageCounter > 0) {
             mageCounter--;
             mageCounterText.text = mageCounter.ToString();
             charactersCounter--;
         }
-
     }
     /* Add/Remove Priest */
     public void Button_AddPriest() {
@@ -139,14 +132,12 @@ public class CharacterSelectionUI : MonoBehaviour {
             charactersCounter++;
         }
     }
-
     public void Button_RemovePriest() {
         if (priestCounter > 0) {
             priestCounter--;
             priestCounterText.text = priestCounter.ToString();
             charactersCounter--;
         }
-
     }
     /* Add/Remove Musician */
     public void Button_AddMusician() {
@@ -156,14 +147,12 @@ public class CharacterSelectionUI : MonoBehaviour {
             charactersCounter++;
         }
     }
-
     public void Button_RemoveMusician() {
         if (musicianCounter > 0) {
             musicianCounter--;
             musicianCounterText.text = musicianCounter.ToString();
             charactersCounter--;
         }
-
     }
 
 }

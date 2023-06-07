@@ -60,6 +60,9 @@ public class UI_Manager : MonoBehaviour {
     [SerializeField] public TextMeshProUGUI gameRound;
     [SerializeField] public TextMeshProUGUI gameTurn;
 
+    /* Pause Menu UI */
+    [SerializeField] private GameObject PauseMenuPanel;
+
 
     private void Awake() {
         Instance = this;
@@ -79,7 +82,6 @@ public class UI_Manager : MonoBehaviour {
     private void Start() {
         GameManager.Instance.SetCurrentState(GameManager.State.FreeRoam);
         MouseClick.instance.OnHeroSelectAction += MouseClick_OnHeroSelectAction;
-        TurnSystem.Instance.OnRoundEnded += TurnSystem_OnRoundEnded;
         MouseClick.instance.OnInteractableObjectSelection += MouseClick_OnInteractableObjectSelection;
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
     }
@@ -94,12 +96,8 @@ public class UI_Manager : MonoBehaviour {
         else if(this.gameInfo.activeSelf == true && this.gameInfoVisualTimer > 0) {
             this.gameInfoVisualTimer -= 1;
         }
-    }
 
-    // NA TO BGALO ISOS
-    /* event that arrives when game round changes */
-    private void TurnSystem_OnRoundEnded(object sender, TurnSystem.OnRoundEndedEventArgs e) {
-        //this.gameRound.text = "ROUND "+ e.roundNum.ToString();
+        PauseMenuScript(); // handle pause menu
     }
 
     /* When a hero is selected, we display his info */
@@ -334,4 +332,55 @@ public class UI_Manager : MonoBehaviour {
         this.gameInfo.SetActive(true);
         this.gameInfoText.text = info;
     }
+
+
+    /* Pause Menu Script */
+    private void PauseMenuScript() {
+        /* We pause the game if we presse Escape */
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (GameManager.isGamePaused) { // if the game is paused and we press escape again -> resume
+                ResumeGame();
+            }
+            else {                         // else pause the game
+                PauseGame();
+            
+            }
+        }
+    
+    }
+
+
+    /* Resume Game method */
+    public void ResumeGame() {
+        this.PauseMenuPanel.SetActive(false); // Deactivate the pause menu when we pause the game
+        Time.timeScale = 1f;                  // Restore the time rate back to normal
+        GameManager.isGamePaused = false;     // Inform the GameManager that the game is not paused
+    }
+
+
+    /* Pause Game Method */
+    private void PauseGame() {
+        this.PauseMenuPanel.SetActive(true); // activate the pause menu when we pause the game
+        Time.timeScale = 0f;                 // completely freeze time
+        GameManager.isGamePaused = true;     // Inform the GameManager that the game is paused
+    }
+
+    /* Function that is called when we press Menu */
+    public void LoadMenu_Button() {
+        Debug.Log("Loading Menu...");
+        Time.timeScale = 1f;                 // Restore the time rate back to normal
+        /* Clear the characters list. not necessary since object get destroyed */
+        GameManager.Instance.aliveCharacters = null;
+        GameManager.Instance.aliveEnemies = null;
+        GameManager.Instance.aliveCharacters = null;
+        SceneLoader.LoadScene(SceneLoader.Scene.MainMenuScene);
+    }
+
+    /* Function that is called when we press Quit  */
+    public void QuitGame_Button() {
+        Debug.Log("Quiting Game");
+        Application.Quit();
+    }
+
+
 }
