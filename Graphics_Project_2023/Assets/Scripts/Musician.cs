@@ -79,6 +79,7 @@ public class Musician : Heroes {
             this.SetArmorClass(this.GetArmorClass() + 2);
             this.SetCurrentArmorClass(this.GetArmorClass() + 2);
             this.SetLevel(this.GetLevel() + 1);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
         /* Case Upgrade To Level 4 */
         else if (this.GetLevel() == 3 && this.GetExperiencePoints() >= 6) {
@@ -86,6 +87,7 @@ public class Musician : Heroes {
             /* At this level the character is allowed to perform 2 main actions at the same turn */
             this.numOfAllowedActions++;
             this.SetLevel(this.GetLevel() + 1);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
     }
 

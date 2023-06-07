@@ -22,7 +22,10 @@ public static class SceneLoader{
         //SceneLoader.previousScene = SceneLoader.targetScene;
         SceneLoader.targetScene = targetScene;
         SceneManager.LoadScene(Scene.LoadingScene.ToString());
+        if (targetScene == Scene.MainGameScene) {
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
 
+        }
     }
 
     public static void LoadingSceneWait() { // this function will run at the first update of the LoadingScene

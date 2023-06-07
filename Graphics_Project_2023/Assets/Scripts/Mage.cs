@@ -98,6 +98,7 @@ public class Mage : Heroes {
             Debug.Log("Level Up");
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
             OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
         /* Case Upgrade To Level 4 */
         else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
@@ -108,6 +109,7 @@ public class Mage : Heroes {
             Debug.Log("Level Up");
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
             OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
 
     }

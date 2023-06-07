@@ -66,6 +66,7 @@ public class CharacterSelectionUI : MonoBehaviour {
 
     /* Start Game Button */
     public void Button_StartGame() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (charactersCounter > 0 && charactersCounter <= 4) {
             /* Then We Can Start The Game */
             this.errorMessage.SetActive(false);
@@ -81,6 +82,7 @@ public class CharacterSelectionUI : MonoBehaviour {
 
     /* Add/Remove Fighter */
     public void Button_AddFighter() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (fighterCounter < 4) {
             fighterCounter++;
             fighterCounterText.text = fighterCounter.ToString();
@@ -88,6 +90,7 @@ public class CharacterSelectionUI : MonoBehaviour {
         }
     }
     public void Button_RemoveFighter() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (fighterCounter > 0) {
             fighterCounter--;
             fighterCounterText.text = fighterCounter.ToString();
@@ -96,6 +99,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     }
     /* Add/Remove Ranger */
     public void Button_AddRanger() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (rangerCounter < 4) {
             rangerCounter++;
             rangerCounterText.text = rangerCounter.ToString();
@@ -103,6 +107,7 @@ public class CharacterSelectionUI : MonoBehaviour {
         }
     }
     public void Button_RemoveRanger() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (rangerCounter > 0) {
             rangerCounter--;
             rangerCounterText.text = rangerCounter.ToString();
@@ -111,6 +116,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     }
     /* Add/Remove Mage */
     public void Button_AddMage() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (mageCounter < 4) {
             mageCounter++;
             mageCounterText.text = mageCounter.ToString();
@@ -118,6 +124,7 @@ public class CharacterSelectionUI : MonoBehaviour {
         }
     }
     public void Button_RemoveMage() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (mageCounter > 0) {
             mageCounter--;
             mageCounterText.text = mageCounter.ToString();
@@ -126,6 +133,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     }
     /* Add/Remove Priest */
     public void Button_AddPriest() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (priestCounter < 4) {
             priestCounter++;
             priestCounterText.text = priestCounter.ToString();
@@ -133,6 +141,7 @@ public class CharacterSelectionUI : MonoBehaviour {
         }
     }
     public void Button_RemovePriest() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (priestCounter > 0) {
             priestCounter--;
             priestCounterText.text = priestCounter.ToString();
@@ -141,6 +150,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     }
     /* Add/Remove Musician */
     public void Button_AddMusician() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (musicianCounter < 4) {
             musicianCounter++;
             musicianCounterText.text = musicianCounter.ToString();
@@ -148,6 +158,7 @@ public class CharacterSelectionUI : MonoBehaviour {
         }
     }
     public void Button_RemoveMusician() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         if (musicianCounter > 0) {
             musicianCounter--;
             musicianCounterText.text = musicianCounter.ToString();

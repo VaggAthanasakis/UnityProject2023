@@ -431,6 +431,7 @@ public class Heroes : MonoBehaviour {
         else {
             GameManager.Instance.aliveHeroes.Remove(this);
         }
+        //SoundManager.Instance.PlaySoundWithoutFade(SoundManager.);
         Destroy(this.gameObject, destroyObjectDelay);
     }
 
@@ -471,6 +472,7 @@ public class Heroes : MonoBehaviour {
         if ((isPlayersTurn && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             if (positionList.Count <= 0) {
                 this.SetIsWalking(false);
+                //SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
                 return;
             }
             targetPosition = positionList[currentPositionIndex];
@@ -483,6 +485,7 @@ public class Heroes : MonoBehaviour {
                 this.SetIsWalking(false);
                 currentPositionIndex = 0;
                 SetWalkableNodeAtHeroPosition(false);
+                SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
                 return;
             }
             
@@ -490,10 +493,12 @@ public class Heroes : MonoBehaviour {
                 float moveSpeed = 4f;
                 transform.position += moveDirection * moveSpeed * Time.deltaTime;
                 this.SetIsWalking(true);
+                //SoundManager.Instance.PlaySoundWithoutFade(SoundManager.WALKING_MUSIC);
             }
             else {
                 this.SetIsWalking(true);
                 currentPositionIndex++;
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.WALKING_MUSIC);
                 if (currentPositionIndex >= positionList.Count) {
                     //ÅÍÄ
                     // at targetPoint
@@ -501,6 +506,7 @@ public class Heroes : MonoBehaviour {
                     currentPositionIndex = 0;
                     this.SetIsWalking(false);
                     SetWalkableNodeAtHeroPosition(false);
+                    SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
                 }
             }
         }
@@ -604,6 +610,7 @@ public class Heroes : MonoBehaviour {
             Debug.Log("Level Up");
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = "+this.level);
             this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
         else {
             LevelUp();
@@ -696,12 +703,14 @@ public class Heroes : MonoBehaviour {
                 this.SetIsAttacking(false);
                 Debug.Log("Max Allowed Actions Performed. Next Turn!");
                 UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
                 return;
             }
             if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
                 this.SetIsAttacking(false);
                 Debug.Log("Dice Value = 1. Lost Turn!");
                 UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
                 return;
             }
             /* if the other hero is out of range */
@@ -711,6 +720,7 @@ public class Heroes : MonoBehaviour {
                 Debug.Log("Other Hero Out Of Range");
                 UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range!");
                 this.SetIsAttacking(false);
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
                 return;
             }
 
@@ -721,6 +731,7 @@ public class Heroes : MonoBehaviour {
                 UI_Manager.Instance.SetGameInfo("Successfull Attack!");
                 heroToAttack.TakeDamage(this.GetCurrentAttackAmount(), this);
                 this.IncreaseExperiencePoints();
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.ATTACK_MUSIC);
                 if (heroToAttack.GetIsDead()) {
                     // NA KANO WALKABLE TO NODE PANO STO OPOIO PETHANE
                     Debug.Log("Enemy killed!");
@@ -732,6 +743,7 @@ public class Heroes : MonoBehaviour {
             else {
                 Debug.Log("Unsuccessful Due To Armor > DamageAmount");
                 UI_Manager.Instance.SetGameInfo("Unsuccessfull Attack Due To Hero Armor");
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             }
         }
     }
@@ -749,12 +761,14 @@ public class Heroes : MonoBehaviour {
                 this.SetIsHealing(false);
                 Debug.Log("Max Allowed Actions Performed. Next Turn!");
                 UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
                 return;
             }
             if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
                 this.SetIsHealing(false);
                 Debug.Log("Dice Value = 1. Lost Turn!");
                 UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
                 return;
             }
             /* if the other hero is out of range */
@@ -764,6 +778,7 @@ public class Heroes : MonoBehaviour {
                 Debug.Log("Other Hero Out Of Range");
                 UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range!");
                 this.SetIsAttacking(false);
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
                 return;
             }
 
@@ -772,7 +787,7 @@ public class Heroes : MonoBehaviour {
             heroToHeal.GetHeal(this.GetCurrentHealAmount(), this);
             /* if hero has max health, do not get xp points */
             if (heroToHeal.GetCurrentHealthPoints() == heroToHeal.healthPoints) {
-               // WaitTimeBuffer(300);
+
                 return;
             }
             this.IncreaseExperiencePoints();
@@ -810,11 +825,13 @@ public class Heroes : MonoBehaviour {
         if (this.performedActions > this.numOfAllowedActions) {      // hero can permorm numOfAllowedActions action at every turn
             Debug.Log("Max Allowed Actions Performed. Next Turn!");
             UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }
         if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
             Debug.Log("Dice Value = 1. Lost Turn!");
             UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }        
         int randNumber = UnityEngine.Random.Range(1,11);
@@ -869,12 +886,14 @@ public class Heroes : MonoBehaviour {
             this.SetIsBegging(false);
             Debug.Log("Max Allowed Actions Performed. Next Turn!");
             UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }
         if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
             this.SetIsBegging(false);
             Debug.Log("Dice Value = 1. Lost Turn!");
             UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }
         /* if the other hero is out of range */
@@ -883,7 +902,7 @@ public class Heroes : MonoBehaviour {
             Debug.Log("Other Hero Out Of Range");
             UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range");
             this.SetIsAttacking(false);
-
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }
 
@@ -892,6 +911,7 @@ public class Heroes : MonoBehaviour {
         if (enemyHero.GetCurrentArmorClass() < this.GetCurrentNegotiateValue() + begOffset) {
             Debug.Log("Successful Beg");
             UI_Manager.Instance.SetGameInfo("Successfull Beg!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BEG_MUSIC);
 
             if (enemyHero.GetIsEnemy()) {
                 enemyHero.SetIsEnemy(!enemyHero.GetIsEnemy());
@@ -913,6 +933,7 @@ public class Heroes : MonoBehaviour {
             this.isBegging = false;
             Debug.Log("Unsuccessful Beg");
             UI_Manager.Instance.SetGameInfo("Unsuccessfull Beg!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
         }
     }
 
@@ -928,7 +949,7 @@ public class Heroes : MonoBehaviour {
         }
         if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
             Debug.Log("Unsuccessfull Dash!");
-            UI_Manager.Instance.SetGameInfo("Unsuccessfull Dash!");
+            UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
             return;
         }
         this.remainingMoveRange = 2 * this.moveRange;
@@ -949,11 +970,13 @@ public class Heroes : MonoBehaviour {
         if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             Debug.Log("Max Allowed Actions Performed. Next Turn!");
             UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }
         if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
             Debug.Log("Unsuccessfull Dash!");
-            UI_Manager.Instance.SetGameInfo("Unsuccessfull Dash!");
+            UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }
 
@@ -975,6 +998,7 @@ public class Heroes : MonoBehaviour {
                 }
             }
             UI_Manager.Instance.SetGameInfo("Successful Allies Protection!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.PLAY_MUSIC);
             this.IncreaseExperiencePoints();
             FirstLevelUp();
         }
@@ -982,6 +1006,7 @@ public class Heroes : MonoBehaviour {
         else {
             Debug.Log("Unsuccessful Action. Music Volume Too Low!");
             UI_Manager.Instance.SetGameInfo("Unsuccessful Action. Music Volume Too Low!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
         }
     }
 

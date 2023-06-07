@@ -130,6 +130,7 @@ public class UI_Manager : MonoBehaviour {
     /* Code for buttons */
     public void Button_Attack() {
         Debug.Log("Attack pushed");
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         Heroes attackedHero;
         if (heroWithTurn.GetIsEnemy()) {
@@ -165,6 +166,7 @@ public class UI_Manager : MonoBehaviour {
 
     public void Buttom_Heal() {
         Debug.Log("Heal Button Pushed!");
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         if (heroWithTurn.heroClass != Mage.HERO_CLASS && heroWithTurn.heroClass != Priest.HERO_CLASS) { return; }
 
@@ -181,6 +183,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Button for playing the dice for all the characters */
     public void Button_DicePlay() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         this.roundInfoPanel.SetActive(true);
         TurnSystem.Instance.turnBasedOnDice.Clear();
         TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round 
@@ -196,12 +199,14 @@ public class UI_Manager : MonoBehaviour {
 
     /* If the player has remaining move range but do not want to use it, should press this button */
     public void Button_NextTurn() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         StartCoroutine(TurnSystem.Instance.NextTurn()); 
     }
 
     /* button for enemy beg */
     public void Button_BegEnemy() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Debug.Log("Buttom Beg Enemy Pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         Heroes enemyToBeg = MouseClick.instance.GetSelectedEnemy();
@@ -216,6 +221,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Button for cast spelling */
     public void Button_CastSpell() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Debug.Log("Buttom Cast Spell Pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
 
@@ -229,6 +235,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Button for Dash action */
     public void Button_Dash() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Debug.Log("Button Dash Pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         heroWithTurn.Dash();
@@ -240,6 +247,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Buttom for Playing Music */
     public void Button_PlayMusic() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Debug.Log("Buttom Play Music Pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
 
@@ -352,6 +360,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Resume Game method */
     public void ResumeGame() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         this.PauseMenuPanel.SetActive(false); // Deactivate the pause menu when we pause the game
         Time.timeScale = 1f;                  // Restore the time rate back to normal
         GameManager.isGamePaused = false;     // Inform the GameManager that the game is not paused
@@ -360,6 +369,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Pause Game Method */
     private void PauseGame() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         this.PauseMenuPanel.SetActive(true); // activate the pause menu when we pause the game
         Time.timeScale = 0f;                 // completely freeze time
         GameManager.isGamePaused = true;     // Inform the GameManager that the game is paused
@@ -367,6 +377,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Function that is called when we press Menu */
     public void LoadMenu_Button() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Debug.Log("Loading Menu...");
         Time.timeScale = 1f;                 // Restore the time rate back to normal
         /* Clear the characters list. not necessary since object get destroyed */
@@ -393,6 +404,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Function that is called when we press Quit  */
     public void QuitGame_Button() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Debug.Log("Quiting Game");
         Application.Quit();
     }

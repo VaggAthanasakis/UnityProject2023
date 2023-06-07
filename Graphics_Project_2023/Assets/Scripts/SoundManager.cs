@@ -10,6 +10,21 @@ public class SoundManager : MonoBehaviour {
     public const string MAIN_MENU_CHAR_SELECTION_MUSIC = "Main Menu";
     public const string FREE_ROAM_MUSIC = "Free Roam";
     public const string COMBAT_MODE_MUSIC = "Combat Mode";
+    public const string DEFEAT_MUSIC = "Defeat";
+    public const string VICTORY_MUSIC = "Victory";
+
+    /* actions music */
+    public const string WALKING_MUSIC = "Walking";
+    public const string ATTACK_MUSIC = "Attack";
+    public const string PLAY_MUSIC = "Play Music";
+    public const string HEAL_MUSIC = "Heal";
+    public const string BEG_MUSIC = "Beg";
+    public const string LEVEL_UP = "Level Up";
+    public const string NO_ACTION = "Unsuccessful Action";
+
+    /* UI Sounds */
+    public const string BUTTON_PRESS = "Button Press";
+
     //private const string 
 
     public Sound[] soundsArray;
@@ -41,6 +56,7 @@ public class SoundManager : MonoBehaviour {
     /* Play the free Roam Sound from the start */
     private void Start() {
         StartCoroutine(this.PlaySound(MAIN_MENU_CHAR_SELECTION_MUSIC));
+        //SoundManager.Instance.PlaySoundWithoutFade(SoundManager.WALKING_MUSIC);
     }
 
 

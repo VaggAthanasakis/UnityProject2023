@@ -128,12 +128,18 @@ public class GameManager : MonoBehaviour
 
     /* Chech if the game has ended, check if all heroes are dead or all enemies are dead */
     private void CheckIfGameEnded() {
-        if (aliveEnemies.Count <= 0) { //
+        if (aliveEnemies.Count <= 0 && currentState != State.Victory) { //
             currentState = State.Victory;
+            SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.VICTORY_MUSIC);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
             Debug.Log("VICTORY");
         }
-        if (aliveHeroes.Count <= 0) {
+        if (aliveHeroes.Count <= 0 && currentState != State.GameOver) {
             currentState = State.GameOver;
+            SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.DEFEAT_MUSIC);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
             Debug.Log("DEFEAT");
         }
     }
