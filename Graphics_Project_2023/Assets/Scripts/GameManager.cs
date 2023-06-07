@@ -236,6 +236,7 @@ public class GameManager : MonoBehaviour
         this.aliveEnemies.Add(enemyMusician);
         this.aliveEnemies.Add(enemyMusician2);*/
         InstantiateHeroOnPosition(Summoner.HERO_CLASS, new Vector3(2, 0, 7),true);
+        InstantiateHeroOnPosition(Priest.HERO_CLASS, new Vector3(3, 0, 6), true);
     }
 
     private void SetAliveCharactersAtTurnSystem() {

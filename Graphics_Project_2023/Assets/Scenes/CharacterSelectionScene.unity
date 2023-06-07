@@ -959,46 +959,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Software testing is the act of examining the artifacts and the behavior
-    of the software under test by validation and verification. Software testing can
-    also provide an objective, independent view of the software to allow the business
-    to appreciate and understand the risks of software implementation. Test techniques
-    include, but are not necessarily limited to:\r\n\r\nanalyzing the product requirements
-    for completeness and correctness in various contexts like industry perspective,
-    business perspective, feasibility and viability of implementation, usability,
-    performance, security, infrastructure considerations, etc.\r\nreviewing the product
-    architecture and the overall design of the product\r\nworking with product developers
-    on improvement in coding techniques, design patterns, tests that can be written
-    as part of code based on various techniques like boundary conditions, etc.\r\nexecuting
-    a program or application with the intent of examining behavior\r\nreviewing the
-    deployment infrastructure and associated scripts and automation\r\ntake part
-    in production activities by using monitoring and observability techniques\r\nSoftware
-    testing can provide objective, independent information about the quality of software
-    and risk of its failure to users or sponsors.[1]\r\n\r\nSoftware testing can
-    determine the correctness of software under the assumption of some specific hypotheses
-    (see the hierarchy of testing difficulty below), testing cannot identify all
-    the failures within the software.[2] Instead, it furnishes a criticism or comparison
-    that compares the state and behavior of the product against test oracles \u2014
-    principles or mechanisms by which someone might recognize a problem. These oracles
-    may include (but are not limited to) specifications, contracts,[3] comparable
-    products, past versions of the same product, inferences about intended or expected
-    purpose, user or customer expectations, relevant standards, applicable laws,
-    or other criteria.\r\n\r\nA primary purpose of testing is to detect software
-    failures so that defects may be discovered and corrected. Testing cannot establish
-    that a product functions properly under all conditions, but only that it does
-    not function properly under specific conditions.[4] The scope of software testing
-    may include the examination of code as well as the execution of that code in
-    various environments and conditions as well as examining the aspects of code:
-    does it do what it is supposed to do and do what it needs to do. In the current
-    culture of software development, a testing organization may be separate from
-    the development team. There are various roles for testing team members. Information
-    derived from software testing may be used to correct the process by which software
-    is developed.[5]:\u200A41\u201343\u200A\r\n\r\nEvery software product has a target
-    audience. For example, the audience for video game software is completely different
-    from banking software. Therefore, when an organization develops or otherwise
-    invests in a software product, it can assess whether the software product will
-    be acceptable to its end users, its target audience, its purchasers, and other
-    stakeholders. Software testing assists in making this assessment."
+  m_text: "\rIntroducing the Ranger, a master of the ranged combat! With unparalleled
+    marksmanship and survival skills , this skilled ranger strikes from far away
+    with deadly precision. While their individual power may be modest, their ability
+    to rain arrows upon enemies from a distance is incredible."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1025,15 +989,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 23
+  m_fontSizeBase: 23
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1061,7 +1025,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1803,7 +1767,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1653035768}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.029897662
+  m_Size: 0.32875547
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2266,7 +2230,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1119161551}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.029897662
+  m_Size: 0.26295248
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2727,8 +2691,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000012875, y: 0.0000047684}
-  m_SizeDelta: {x: 225.339, y: 101.6306}
+  m_AnchoredPosition: {x: -0.000052333, y: -0.000005722046}
+  m_SizeDelta: {x: 192.5337, y: 147.8382}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &603187162
 MonoBehaviour:
@@ -2813,7 +2777,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 0, z: 0, w: -0.000061035156}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3241,7 +3205,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a913f70d7524cd74f8f56682d27e1e5e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3575,8 +3539,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1053302775}
   m_HandleRect: {fileID: 1053302774}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.029897662
+  m_Value: 0.99999964
+  m_Size: 0.40031275
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4778,7 +4742,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1074184605}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.029897662
+  m_Size: 0.35407415
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5035,7 +4999,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1692714609}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.029897662
+  m_Size: 0.30681604
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5482,46 +5446,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Software testing is the act of examining the artifacts and the behavior
-    of the software under test by validation and verification. Software testing can
-    also provide an objective, independent view of the software to allow the business
-    to appreciate and understand the risks of software implementation. Test techniques
-    include, but are not necessarily limited to:\r\n\r\nanalyzing the product requirements
-    for completeness and correctness in various contexts like industry perspective,
-    business perspective, feasibility and viability of implementation, usability,
-    performance, security, infrastructure considerations, etc.\r\nreviewing the product
-    architecture and the overall design of the product\r\nworking with product developers
-    on improvement in coding techniques, design patterns, tests that can be written
-    as part of code based on various techniques like boundary conditions, etc.\r\nexecuting
-    a program or application with the intent of examining behavior\r\nreviewing the
-    deployment infrastructure and associated scripts and automation\r\ntake part
-    in production activities by using monitoring and observability techniques\r\nSoftware
-    testing can provide objective, independent information about the quality of software
-    and risk of its failure to users or sponsors.[1]\r\n\r\nSoftware testing can
-    determine the correctness of software under the assumption of some specific hypotheses
-    (see the hierarchy of testing difficulty below), testing cannot identify all
-    the failures within the software.[2] Instead, it furnishes a criticism or comparison
-    that compares the state and behavior of the product against test oracles \u2014
-    principles or mechanisms by which someone might recognize a problem. These oracles
-    may include (but are not limited to) specifications, contracts,[3] comparable
-    products, past versions of the same product, inferences about intended or expected
-    purpose, user or customer expectations, relevant standards, applicable laws,
-    or other criteria.\r\n\r\nA primary purpose of testing is to detect software
-    failures so that defects may be discovered and corrected. Testing cannot establish
-    that a product functions properly under all conditions, but only that it does
-    not function properly under specific conditions.[4] The scope of software testing
-    may include the examination of code as well as the execution of that code in
-    various environments and conditions as well as examining the aspects of code:
-    does it do what it is supposed to do and do what it needs to do. In the current
-    culture of software development, a testing organization may be separate from
-    the development team. There are various roles for testing team members. Information
-    derived from software testing may be used to correct the process by which software
-    is developed.[5]:\u200A41\u201343\u200A\r\n\r\nEvery software product has a target
-    audience. For example, the audience for video game software is completely different
-    from banking software. Therefore, when an organization develops or otherwise
-    invests in a software product, it can assess whether the software product will
-    be acceptable to its end users, its target audience, its purchasers, and other
-    stakeholders. Software testing assists in making this assessment."
+  m_text: A musical  with the power to uplift allies and turn the tide of battle!
+    Through their enchanting melodies and captivating tunes, they boost the morale
+    of their allies to unprecedented heights. Their music weaves a sense of invincibility,
+    inspiring allies to fight with unwavering determination. While they may lack
+    direct offensive abilities, the musician's melodies hold immeasurable power,
+    making their allies seemingly unbeatable
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5548,15 +5478,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 23
+  m_fontSizeBase: 23
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -5584,7 +5514,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -6121,46 +6051,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Software testing is the act of examining the artifacts and the behavior
-    of the software under test by validation and verification. Software testing can
-    also provide an objective, independent view of the software to allow the business
-    to appreciate and understand the risks of software implementation. Test techniques
-    include, but are not necessarily limited to:\r\n\r\nanalyzing the product requirements
-    for completeness and correctness in various contexts like industry perspective,
-    business perspective, feasibility and viability of implementation, usability,
-    performance, security, infrastructure considerations, etc.\r\nreviewing the product
-    architecture and the overall design of the product\r\nworking with product developers
-    on improvement in coding techniques, design patterns, tests that can be written
-    as part of code based on various techniques like boundary conditions, etc.\r\nexecuting
-    a program or application with the intent of examining behavior\r\nreviewing the
-    deployment infrastructure and associated scripts and automation\r\ntake part
-    in production activities by using monitoring and observability techniques\r\nSoftware
-    testing can provide objective, independent information about the quality of software
-    and risk of its failure to users or sponsors.[1]\r\n\r\nSoftware testing can
-    determine the correctness of software under the assumption of some specific hypotheses
-    (see the hierarchy of testing difficulty below), testing cannot identify all
-    the failures within the software.[2] Instead, it furnishes a criticism or comparison
-    that compares the state and behavior of the product against test oracles \u2014
-    principles or mechanisms by which someone might recognize a problem. These oracles
-    may include (but are not limited to) specifications, contracts,[3] comparable
-    products, past versions of the same product, inferences about intended or expected
-    purpose, user or customer expectations, relevant standards, applicable laws,
-    or other criteria.\r\n\r\nA primary purpose of testing is to detect software
-    failures so that defects may be discovered and corrected. Testing cannot establish
-    that a product functions properly under all conditions, but only that it does
-    not function properly under specific conditions.[4] The scope of software testing
-    may include the examination of code as well as the execution of that code in
-    various environments and conditions as well as examining the aspects of code:
-    does it do what it is supposed to do and do what it needs to do. In the current
-    culture of software development, a testing organization may be separate from
-    the development team. There are various roles for testing team members. Information
-    derived from software testing may be used to correct the process by which software
-    is developed.[5]:\u200A41\u201343\u200A\r\n\r\nEvery software product has a target
-    audience. For example, the audience for video game software is completely different
-    from banking software. Therefore, when an organization develops or otherwise
-    invests in a software product, it can assess whether the software product will
-    be acceptable to its end users, its target audience, its purchasers, and other
-    stakeholders. Software testing assists in making this assessment."
+  m_text: 'A mage of extraordinary power and mystical wisdom! Harnessing the forces
+    of magic, this spellcaster has the ability to shape reality itself. He can rain
+    destruction upon enemies and even mend wounds with his potent healing abilities.
+    While their physical prowess may be limited, he can unleash devastating spells
+    from a distance, altering the course of battles. '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6187,15 +6082,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 23
+  m_fontSizeBase: 23
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -6223,7 +6118,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -7207,46 +7102,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Software testing is the act of examining the artifacts and the behavior
-    of the software under test by validation and verification. Software testing can
-    also provide an objective, independent view of the software to allow the business
-    to appreciate and understand the risks of software implementation. Test techniques
-    include, but are not necessarily limited to:\r\n\r\nanalyzing the product requirements
-    for completeness and correctness in various contexts like industry perspective,
-    business perspective, feasibility and viability of implementation, usability,
-    performance, security, infrastructure considerations, etc.\r\nreviewing the product
-    architecture and the overall design of the product\r\nworking with product developers
-    on improvement in coding techniques, design patterns, tests that can be written
-    as part of code based on various techniques like boundary conditions, etc.\r\nexecuting
-    a program or application with the intent of examining behavior\r\nreviewing the
-    deployment infrastructure and associated scripts and automation\r\ntake part
-    in production activities by using monitoring and observability techniques\r\nSoftware
-    testing can provide objective, independent information about the quality of software
-    and risk of its failure to users or sponsors.[1]\r\n\r\nSoftware testing can
-    determine the correctness of software under the assumption of some specific hypotheses
-    (see the hierarchy of testing difficulty below), testing cannot identify all
-    the failures within the software.[2] Instead, it furnishes a criticism or comparison
-    that compares the state and behavior of the product against test oracles \u2014
-    principles or mechanisms by which someone might recognize a problem. These oracles
-    may include (but are not limited to) specifications, contracts,[3] comparable
-    products, past versions of the same product, inferences about intended or expected
-    purpose, user or customer expectations, relevant standards, applicable laws,
-    or other criteria.\r\n\r\nA primary purpose of testing is to detect software
-    failures so that defects may be discovered and corrected. Testing cannot establish
-    that a product functions properly under all conditions, but only that it does
-    not function properly under specific conditions.[4] The scope of software testing
-    may include the examination of code as well as the execution of that code in
-    various environments and conditions as well as examining the aspects of code:
-    does it do what it is supposed to do and do what it needs to do. In the current
-    culture of software development, a testing organization may be separate from
-    the development team. There are various roles for testing team members. Information
-    derived from software testing may be used to correct the process by which software
-    is developed.[5]:\u200A41\u201343\u200A\r\n\r\nEvery software product has a target
-    audience. For example, the audience for video game software is completely different
-    from banking software. Therefore, when an organization develops or otherwise
-    invests in a software product, it can assess whether the software product will
-    be acceptable to its end users, its target audience, its purchasers, and other
-    stakeholders. Software testing assists in making this assessment."
+  m_text: A priest of unwavering faith and increadible influence! Embracing the powers
+    of the godlike, he possesses a diverse array of spells that can mend wounds.
+    With a voice soaked with charismatic persuasion, the priest possesses a unique
+    ability to take enemies to their side. Through the power of their unwavering
+    charisma, they can attempt to sway enemies, turning adversaries into allies and
+    shifting the course of battles.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7273,15 +7134,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 23
+  m_fontSizeBase: 23
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -7309,7 +7170,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -8429,7 +8290,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -7.4611, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1566678915
 MonoBehaviour:
@@ -8465,46 +8326,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Software testing is the act of examining the artifacts and the behavior
-    of the software under test by validation and verification. Software testing can
-    also provide an objective, independent view of the software to allow the business
-    to appreciate and understand the risks of software implementation. Test techniques
-    include, but are not necessarily limited to:\r\n\r\nanalyzing the product requirements
-    for completeness and correctness in various contexts like industry perspective,
-    business perspective, feasibility and viability of implementation, usability,
-    performance, security, infrastructure considerations, etc.\r\nreviewing the product
-    architecture and the overall design of the product\r\nworking with product developers
-    on improvement in coding techniques, design patterns, tests that can be written
-    as part of code based on various techniques like boundary conditions, etc.\r\nexecuting
-    a program or application with the intent of examining behavior\r\nreviewing the
-    deployment infrastructure and associated scripts and automation\r\ntake part
-    in production activities by using monitoring and observability techniques\r\nSoftware
-    testing can provide objective, independent information about the quality of software
-    and risk of its failure to users or sponsors.[1]\r\n\r\nSoftware testing can
-    determine the correctness of software under the assumption of some specific hypotheses
-    (see the hierarchy of testing difficulty below), testing cannot identify all
-    the failures within the software.[2] Instead, it furnishes a criticism or comparison
-    that compares the state and behavior of the product against test oracles \u2014
-    principles or mechanisms by which someone might recognize a problem. These oracles
-    may include (but are not limited to) specifications, contracts,[3] comparable
-    products, past versions of the same product, inferences about intended or expected
-    purpose, user or customer expectations, relevant standards, applicable laws,
-    or other criteria.\r\n\r\nA primary purpose of testing is to detect software
-    failures so that defects may be discovered and corrected. Testing cannot establish
-    that a product functions properly under all conditions, but only that it does
-    not function properly under specific conditions.[4] The scope of software testing
-    may include the examination of code as well as the execution of that code in
-    various environments and conditions as well as examining the aspects of code:
-    does it do what it is supposed to do and do what it needs to do. In the current
-    culture of software development, a testing organization may be separate from
-    the development team. There are various roles for testing team members. Information
-    derived from software testing may be used to correct the process by which software
-    is developed.[5]:\u200A41\u201343\u200A\r\n\r\nEvery software product has a target
-    audience. For example, the audience for video game software is completely different
-    from banking software. Therefore, when an organization develops or otherwise
-    invests in a software product, it can assess whether the software product will
-    be acceptable to its end users, its target audience, its purchasers, and other
-    stakeholders. Software testing assists in making this assessment."
+  m_text: Introducing the fighter class, a true force of close-quarters combat with
+    unmatched power. His expertise lies in the art of up-close and personal combat,
+    delivering devastating blows that leave enemies shattered. While their range
+    may be limited, their strength make them a formidable presence on the battlefield.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8531,15 +8356,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 23
+  m_fontSizeBase: 23
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -8567,7 +8392,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -10852,46 +10677,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Software testing is the act of examining the artifacts and the behavior
-    of the software under test by validation and verification. Software testing can
-    also provide an objective, independent view of the software to allow the business
-    to appreciate and understand the risks of software implementation. Test techniques
-    include, but are not necessarily limited to:\r\n\r\nanalyzing the product requirements
-    for completeness and correctness in various contexts like industry perspective,
-    business perspective, feasibility and viability of implementation, usability,
-    performance, security, infrastructure considerations, etc.\r\nreviewing the product
-    architecture and the overall design of the product\r\nworking with product developers
-    on improvement in coding techniques, design patterns, tests that can be written
-    as part of code based on various techniques like boundary conditions, etc.\r\nexecuting
-    a program or application with the intent of examining behavior\r\nreviewing the
-    deployment infrastructure and associated scripts and automation\r\ntake part
-    in production activities by using monitoring and observability techniques\r\nSoftware
-    testing can provide objective, independent information about the quality of software
-    and risk of its failure to users or sponsors.[1]\r\n\r\nSoftware testing can
-    determine the correctness of software under the assumption of some specific hypotheses
-    (see the hierarchy of testing difficulty below), testing cannot identify all
-    the failures within the software.[2] Instead, it furnishes a criticism or comparison
-    that compares the state and behavior of the product against test oracles \u2014
-    principles or mechanisms by which someone might recognize a problem. These oracles
-    may include (but are not limited to) specifications, contracts,[3] comparable
-    products, past versions of the same product, inferences about intended or expected
-    purpose, user or customer expectations, relevant standards, applicable laws,
-    or other criteria.\r\n\r\nA primary purpose of testing is to detect software
-    failures so that defects may be discovered and corrected. Testing cannot establish
-    that a product functions properly under all conditions, but only that it does
-    not function properly under specific conditions.[4] The scope of software testing
-    may include the examination of code as well as the execution of that code in
-    various environments and conditions as well as examining the aspects of code:
-    does it do what it is supposed to do and do what it needs to do. In the current
-    culture of software development, a testing organization may be separate from
-    the development team. There are various roles for testing team members. Information
-    derived from software testing may be used to correct the process by which software
-    is developed.[5]:\u200A41\u201343\u200A\r\n\r\nEvery software product has a target
-    audience. For example, the audience for video game software is completely different
-    from banking software. Therefore, when an organization develops or otherwise
-    invests in a software product, it can assess whether the software product will
-    be acceptable to its end users, its target audience, its purchasers, and other
-    stakeholders. Software testing assists in making this assessment."
+  m_text: 'Introducing the Humble Summoner, a peasant with an extraordinary ability
+    to call upon mighty heroes for help! Despite their humble origins, this summoner
+    possesses a unique talent for summoning powerful allies to the battlefield. With
+    a simple gesture, they can bring forth heroic beings to fight alongside them,
+    turning the tide of any encounter. '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10918,15 +10708,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25
-  m_fontSizeBase: 25
+  m_fontSize: 23
+  m_fontSizeBase: 23
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -10954,7 +10744,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -11354,7 +11144,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1713720518}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.029897662
+  m_Size: 0.27890095
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
