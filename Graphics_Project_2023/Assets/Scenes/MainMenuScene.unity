@@ -3856,11 +3856,13 @@ MonoBehaviour:
   rangerPrefab: {fileID: 2738748548033036449, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
   priestPrefab: {fileID: 4728035790122058362, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
   musicianPrefab: {fileID: 0}
+  summonerPrefab: {fileID: 0}
   enemyFighterPrefab: {fileID: 5256821239497487444, guid: c269681524e6b184a8ad27a51499dc60, type: 3}
   enemyMagePrefab: {fileID: 1566355281530214997, guid: f2afd985c43ec9947b965605fa451011, type: 3}
   enemyRangerPrefab: {fileID: 4348868648601571819, guid: 676e7596be347ba47b249571aabb8584, type: 3}
   enemyPriestPrefab: {fileID: 843827416403820808, guid: 55859313627e4dd4b895d50d6ccdcf38, type: 3}
   enemyMusicianPrefab: {fileID: 0}
+  enemySummonerPrefab: {fileID: 0}
   cube: {fileID: 8590739525980631686, guid: 367151bfe82a54b449a68c68c9808171, type: 3}
 --- !u!4 &1906760300
 Transform:

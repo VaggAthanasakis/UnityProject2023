@@ -52,7 +52,7 @@ public class Heroes : MonoBehaviour {
     public int performedActions = 0;
     public int numOfAllowedActions = 1;
 
-    public string attributesToString; 
+    public string attributesToString;
 
     /* Useful Variables For Animations */
     protected int getHitAnimationsCounter = 0;
@@ -60,12 +60,12 @@ public class Heroes : MonoBehaviour {
     protected int healingAnimationCounter = 0;
     protected int beggingAnimationCounter = 0;
     protected int castSpellingAnimationCounter = 0;
-    protected int musicPlayingAnimationCounter =0;
+    protected int musicPlayingAnimationCounter = 0;
 
     // List with actions
     private List<string> actions = new List<string>();
 
-  
+
     /**********************/
     protected virtual void Awake() {
         targetPosition = this.transform.position;
@@ -111,9 +111,9 @@ public class Heroes : MonoBehaviour {
         }
         else if ((Heroes)e.selectedHero == this && !this.GetIsEnemy() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             //if (isPlayersTurn) {
-                this.SetIsSelected(true);
-                SelectedHeroVisual();
-                Debug.Log("Selected " + this.ToString());
+            this.SetIsSelected(true);
+            SelectedHeroVisual();
+            Debug.Log("Selected " + this.ToString());
             //}
             /*else {
                 this.SetIsSelected(false);
@@ -265,7 +265,7 @@ public class Heroes : MonoBehaviour {
     public bool GetIsBegging() {
         return this.isBegging;
     }
-    public int GetCurrentNegotiateValue() { 
+    public int GetCurrentNegotiateValue() {
         return this.currentNegotiateValue;
     }
     public int GetNumOfBegs() {
@@ -277,7 +277,7 @@ public class Heroes : MonoBehaviour {
     public List<string> GetActionsList() {
         return this.actions;
     }
-    public bool GetIsPlayingMusic() { 
+    public bool GetIsPlayingMusic() {
         return this.isPlayingMusic;
     }
 
@@ -358,7 +358,7 @@ public class Heroes : MonoBehaviour {
         this.isPointedByMouse = b;
     }
     public void SetIsBegging(bool b) {
-        this.isBegging = b; 
+        this.isBegging = b;
     }
     public void SetCurrentNegotiateValue(int value) {
         this.currentNegotiateValue = value;
@@ -372,7 +372,7 @@ public class Heroes : MonoBehaviour {
     public void SetIsPlayingMusic(bool b) {
         this.isPlayingMusic = b;
     }
-    
+
     /* Increase Experience Points By One */
     public void IncreaseExperiencePoints() {
         this.experiencePoints++;
@@ -405,7 +405,7 @@ public class Heroes : MonoBehaviour {
         OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs {
             healthNormalized = (float)(this.GetCurrentHealthPoints()) / this.GetHealthPoints()
         });
-       
+
         if (newHealth <= 0) {
             this.killHero();
             this.SetIsDead(true);
@@ -413,7 +413,7 @@ public class Heroes : MonoBehaviour {
         else {
             this.SetGetsHit(true);
             this.SetIsDead(false);
-        }     
+        }
     }
 
     /* This method is called when hero's currentHealthPoints <= 0 */
@@ -488,7 +488,7 @@ public class Heroes : MonoBehaviour {
                 SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
                 return;
             }
-            
+
             if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance) {
                 float moveSpeed = 4f;
                 transform.position += moveDirection * moveSpeed * Time.deltaTime;
@@ -510,7 +510,7 @@ public class Heroes : MonoBehaviour {
                 }
             }
         }
-       
+
     }
 
     /* Set the node that the hero is currently at as Walkable or NoWalkable */
@@ -544,7 +544,7 @@ public class Heroes : MonoBehaviour {
         }
         foreach (Vector3 pathPosition in pathGridPositions)
             positionList.Add(pathPosition);
-       
+
     }
 
     /* Initialize hero's statistic values */
@@ -608,7 +608,7 @@ public class Heroes : MonoBehaviour {
             this.constitution += 2;
             this.level++;
             Debug.Log("Level Up");
-            UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = "+this.level);
+            UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.level);
             this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
@@ -682,12 +682,12 @@ public class Heroes : MonoBehaviour {
 
     /*****  HERO ACTIONS ****/
 
-    /********** ATTACK ACTION ******/
-
     /*** Add action to hero ***/
     public void AddAction(string action) {
         this.actions.Add(action);
     }
+
+    /********** ATTACK ACTION *********/
 
     /* Calculate the attack damage amount of the attack action */
     public virtual void AttackAmountCalculation() { }
@@ -714,8 +714,8 @@ public class Heroes : MonoBehaviour {
                 return;
             }
             /* if the other hero is out of range */
-            int distance_normalized = PathFinding.Instance.CalculateSimpleDistance(this.transform.position,heroToAttack.transform.position);
-            Debug.Log("DISTANCE "+distance_normalized);
+            int distance_normalized = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, heroToAttack.transform.position);
+            Debug.Log("DISTANCE " + distance_normalized);
             if (distance_normalized > this.attackRange) {
                 Debug.Log("Other Hero Out Of Range");
                 UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range!");
@@ -802,7 +802,7 @@ public class Heroes : MonoBehaviour {
         if (objectToInteract != null) {
             // write code to happen after the open button pushed
             Debug.Log("Pushed to interact!");
-           
+
             /* Check What Interactable Object We Have */
             if (objectToInteract.GetObjectType() == InteractableObject.Type.Chest) {
                 return objectToInteract.ChestOpen(this);
@@ -833,8 +833,8 @@ public class Heroes : MonoBehaviour {
             UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
-        }        
-        int randNumber = UnityEngine.Random.Range(1,11);
+        }
+        int randNumber = UnityEngine.Random.Range(1, 11);
         /* Heal All Heroes */
         /* Because we will permorm heal for every hero, numOfAllowedActions will be increased by PerformHeal each time -> will perform only one (none because of the above increasement) */
         /* so temporarly, we increase the numOfAllowedActions and decrease it again later */
@@ -868,7 +868,7 @@ public class Heroes : MonoBehaviour {
                 }
             }
         }
-        this.numOfAllowedActions = initial_numOfAllowedActions;   
+        this.numOfAllowedActions = initial_numOfAllowedActions;
     }
 
     /******** ACTION BEG ********/
@@ -966,7 +966,7 @@ public class Heroes : MonoBehaviour {
     public virtual void SoundVolumeCalculation() { } // Calculate the volume of the music
     public void PlayMusic() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
-        this.performedActions++; // increase the number of permoemed actions of the hero
+        this.performedActions++; // increase the number of permomed actions of the hero
         if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             Debug.Log("Max Allowed Actions Performed. Next Turn!");
             UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
@@ -988,7 +988,7 @@ public class Heroes : MonoBehaviour {
             if (!this.GetIsEnemy()) { // if we have a hero
                 List<Heroes> heroesList = GameManager.Instance.aliveHeroes;
                 foreach (Heroes hero in heroesList) {
-                    hero.currentArmorClass = 2*hero.armorClass; 
+                    hero.currentArmorClass = 2 * hero.armorClass;
                 }
             }
             else {                   // else if we have an enemy
@@ -1008,6 +1008,90 @@ public class Heroes : MonoBehaviour {
             UI_Manager.Instance.SetGameInfo("Unsuccessful Action. Music Volume Too Low!");
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
         }
+    }
+
+    /********************  CALL FOR HELP  ********************************/
+
+    /* This method is called by the summoner to calculate the help power  */
+    public virtual void HelpPowerAmountCalculation() { }
+
+    public void CallForHelp() {
+        if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+        this.performedActions++;                                  // increase the number of permomed actions of the hero
+        if (this.performedActions > this.numOfAllowedActions) {   // hero can permorm numOfAllowedActions action at every turn
+            Debug.Log("Max Allowed Actions Performed. Next Turn!");
+            UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
+            return;
+        }
+        if (diceValue == 1) {                                  // if dicevalue == 1 -> lose turn
+            Debug.Log("Dice = 1!");
+            UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
+            return;
+        }
+
+        HelpPowerAmountCalculation();            // calculate the power of the call
+        int actionSuccessfulOffset = 15;
+        if (this.GetCurrentAttackAmount() > actionSuccessfulOffset) {
+            // then we can permorm the action
+            bool wasSpawned = SpawnHero(this.transform.position);
+            if (!wasSpawned) { // Cannot Spawn Hero
+                Debug.Log("Unsuccessful Action. Cannot Call For Help!");
+                UI_Manager.Instance.SetGameInfo("Unsuccessful Action. Cannot Call For Help");
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
+            }
+            else {             // Can Spawn Hero
+                Debug.Log("Help Arrived!");
+                UI_Manager.Instance.SetGameInfo("Help Arrived!");
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.HEAL_MUSIC);
+                this.IncreaseExperiencePoints();
+                FirstLevelUp();
+            }
+        }
+        else {
+            // unsuccessful action
+            Debug.Log("Unsuccessful Action. Music Volume Too Low!");
+            UI_Manager.Instance.SetGameInfo("Unsuccessful Action. Allies Far Away!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
+        }
+
+    }
+
+    /* Function that spawns a hero at a specific position */
+    private bool SpawnHero(Vector3 position) {
+        // find the gridPosition and the specific node next to the calling hero
+        Vector3 spawnPos = new Vector3(position.x + 1, 0, position.z);
+        GridPosition gridPos = PathFinding.Instance.GetGridPosition(spawnPos);
+        PathNode node = PathFinding.Instance.Grid().GetPathNode(gridPos);
+
+        /* If the above Node is not walkable or null, try to the next one */
+        int i = 1;
+        while (node == null || !node.IsWalkable() || i < 3) {
+            Debug.Log("i = " + i);
+            spawnPos = new Vector3(position.x + 1, 0, position.z + i);
+            gridPos = PathFinding.Instance.GetGridPosition(spawnPos);
+            node = PathFinding.Instance.Grid().GetPathNode(gridPos);
+            i++;
+        }
+        if (node == null || !node.IsWalkable()) {
+            Debug.Log("Cannot Spawn!");
+            return false;
+        }
+
+        int randNumber = UnityEngine.Random.Range(1,11);
+        if (randNumber <= 6) {
+            // spawn a ranger
+            GameManager.Instance.InstantiateHeroOnPosition(Ranger.HERO_CLASS,spawnPos,this.GetIsEnemy());
+            return true;
+        }
+        else {
+            // spawn a fighter
+            GameManager.Instance.InstantiateHeroOnPosition(Fighter.HERO_CLASS, spawnPos, this.GetIsEnemy());
+            return true;
+        }
+
+
     }
 
 
@@ -1065,7 +1149,7 @@ public class Heroes : MonoBehaviour {
 
             /* if we are at range of actions -> permorm action, else move towards target */
             // First check if the this enemy is a FIGHTER or a RANGER and if the distance is < attack range
-            if ((this.heroClass.Equals("Fighter") || this.heroClass.Equals("Ranger"))) { 
+            if ((this.heroClass.Equals("Fighter") || this.heroClass.Equals("Ranger"))) {
                 if (closerHeroDistance <= this.attackRange) {
                     Debug.Log("Enemy AI Attacking!");
                     // now attack the hero who is closer
@@ -1178,7 +1262,7 @@ public class Heroes : MonoBehaviour {
             }
             /******************************************* If this hero is a MUSICIAN ***********************************/
             else if (this.heroClass.Equals("Musician")) {
-                int offset = 8;
+                int offset = 5;
                 /* If the musician is far away from the closer ally, approach him */
                 if (closerEnemyDistance < offset) {
                     this.PlayMusic();          // play music
@@ -1193,7 +1277,24 @@ public class Heroes : MonoBehaviour {
                     this.EnemyAIAction();
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
-
+            }
+            /********************************************** If this hero is a Summoner ************************************/
+            else if (this.heroClass.Equals("Summoner")) {
+                int offset = 5;
+                /* If the musician is far away from the closer ally, approach him */
+                if (closerEnemyDistance < offset) {
+                    this.CallForHelp();          // play music
+                    Debug.Log(this + " Call For Help");
+                    this.EnemyAIAction();
+                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                }
+                else {
+                    MoveEnemyAI(closerEnemy);  // move him to the closer ally for protection
+                    this.Dash();               // or dash
+                    Debug.Log(this + " Dash");
+                    this.EnemyAIAction();
+                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                }
             }
         }
         /* else return */

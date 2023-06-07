@@ -262,7 +262,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 197742612093550922, guid: 5385aa4f3517d29408816dd9bee623b1, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 197742612093550922, guid: 5385aa4f3517d29408816dd9bee623b1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -648,7 +648,7 @@ GameObject:
   - component: {fileID: 102327487}
   - component: {fileID: 102327486}
   m_Layer: 5
-  m_Name: 'MusicianPanel '
+  m_Name: 'SummonerPanel '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5164,7 +5164,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1597302591}
         m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
-        m_MethodName: Button_RemovePriest
+        m_MethodName: Button_RemoveSummoner
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6351,11 +6351,13 @@ MonoBehaviour:
   rangerPrefab: {fileID: 2738748548033036449, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
   priestPrefab: {fileID: 4728035790122058362, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
   musicianPrefab: {fileID: 0}
+  summonerPrefab: {fileID: 0}
   enemyFighterPrefab: {fileID: 5256821239497487444, guid: c269681524e6b184a8ad27a51499dc60, type: 3}
   enemyMagePrefab: {fileID: 1566355281530214997, guid: f2afd985c43ec9947b965605fa451011, type: 3}
   enemyRangerPrefab: {fileID: 4348868648601571819, guid: 676e7596be347ba47b249571aabb8584, type: 3}
   enemyPriestPrefab: {fileID: 843827416403820808, guid: 55859313627e4dd4b895d50d6ccdcf38, type: 3}
   enemyMusicianPrefab: {fileID: 0}
+  enemySummonerPrefab: {fileID: 0}
   cube: {fileID: 8590739525980631686, guid: 367151bfe82a54b449a68c68c9808171, type: 3}
 --- !u!4 &1127363276
 Transform:
@@ -6719,7 +6721,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1597302591}
         m_TargetAssemblyTypeName: CharacterSelectionUI, Assembly-CSharp
-        m_MethodName: Button_AddPriest
+        m_MethodName: Button_AddSummoner
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6767,102 +6769,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1294818500}
   m_CullTransparentMesh: 1
---- !u!1001 &1301155555
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1612198826}
-    m_Modifications:
-    - target: {fileID: 1459658620566207844, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.048
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.8584815
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 6.734
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.9098551
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.41492617
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 49.029
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3350646566853054045, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_Name
-      value: Priest (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297976816597012830, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4728035790122058362, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: isHeroSelected
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6804858666637059090, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4728035790122058362, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-  m_SourcePrefab: {fileID: 100100000, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
---- !u!4 &1301155556 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3350646566853054044, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-  m_PrefabInstance: {fileID: 1301155555}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1301155557 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3350646566853054045, guid: 87868b894885bd5419ad4c52660ba75e, type: 3}
-  m_PrefabInstance: {fileID: 1301155555}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1301155558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1301155557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ce62d2a7fd03874597b1e48d0579068, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1302316898
 GameObject:
   m_ObjectHideFlags: 0
@@ -7062,7 +6968,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1340035502}
   m_Layer: 5
-  m_Name: NewCharInfo
+  m_Name: SummonerInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7475,7 +7381,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Musician
+  m_text: 'Summoner
 
 '
   m_isRightToLeft: 0
@@ -8256,6 +8162,84 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1503473848}
   m_CullTransparentMesh: 1
+--- !u!1001 &1505694686
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1612198826}
+    m_Modifications:
+    - target: {fileID: 3583667647937455549, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3819044221613149023, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7815809559303698566, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_Name
+      value: Summoner
+      objectReference: {fileID: 0}
+    - target: {fileID: 8011408327351065470, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.0452385
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.8584815
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.7374697
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.88827497
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.45931217
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 54.685
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8895798430865553902, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+--- !u!4 &1505694687 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8770000781711529759, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+  m_PrefabInstance: {fileID: 1505694686}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1547518776 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 796850834158394480, guid: 8eb5ec7e3ee4d7c42a8e37f2ea768aab, type: 3}
@@ -8843,6 +8827,7 @@ MonoBehaviour:
   mageCounterText: {fileID: 2025105868}
   priestCounterText: {fileID: 1302316900}
   musicianCounterText: {fileID: 1072678011}
+  summonerCounterText: {fileID: 1548132285}
 --- !u!1 &1608887357
 GameObject:
   m_ObjectHideFlags: 0
@@ -8914,8 +8899,8 @@ Transform:
   - {fileID: 1001705378}
   - {fileID: 222313859}
   - {fileID: 1547518776}
-  - {fileID: 1301155556}
   - {fileID: 47828027}
+  - {fileID: 1505694687}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11556,7 +11541,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2066363276}
   m_Layer: 5
-  m_Name: boxNewChar
+  m_Name: boxSummoner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11927,6 +11912,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 817.76953, y: 264.3615}
-  m_SizeDelta: {x: 237.1407, y: 110.0614}
+  m_AnchoredPosition: {x: 842.27246, y: 221.18958}
+  m_SizeDelta: {x: 211.471, y: 196.4052}
   m_Pivot: {x: 0.5, y: 0.5}

@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Heroes rangerPrefab;
     [SerializeField] Heroes priestPrefab;
     [SerializeField] Heroes musicianPrefab;
+    [SerializeField] Heroes summonerPrefab;
 
     /* Enemies Prefabs */
     [SerializeField] Heroes enemyFighterPrefab;
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Heroes enemyRangerPrefab;
     [SerializeField] Heroes enemyPriestPrefab;
     [SerializeField] Heroes enemyMusicianPrefab;
+    [SerializeField] Heroes enemySummonerPrefab; 
 
     /* GameObject Prefabs */
     [SerializeField] GameObject cube;
@@ -207,6 +209,11 @@ public class GameManager : MonoBehaviour
                     this.aliveCharacters.Add(musician);
                     this.aliveHeroes.Add(musician);
                 }
+                else if (heroString.Equals(Summoner.HERO_CLASS)) {
+                    Summoner summoner = (Summoner)Instantiate(summonerPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
+                    this.aliveCharacters.Add(summoner);
+                    this.aliveHeroes.Add(summoner);
+                }
                 xWorldPos++;
             } 
         }
@@ -228,6 +235,7 @@ public class GameManager : MonoBehaviour
         this.aliveCharacters.Add(enemyMusician2);
         this.aliveEnemies.Add(enemyMusician);
         this.aliveEnemies.Add(enemyMusician2);*/
+        InstantiateHeroOnPosition(Summoner.HERO_CLASS, new Vector3(2, 0, 7),true);
     }
 
     private void SetAliveCharactersAtTurnSystem() {
@@ -287,6 +295,84 @@ public class GameManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void InstantiateHeroOnPosition(string heroClass, Vector3 position, bool isEnemy) {
+        switch (heroClass) {
+            case Fighter.HERO_CLASS :
+                if (!isEnemy) {
+                    Fighter fighter = (Fighter)Instantiate(fighterPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(fighter);
+                    aliveHeroes.Add(fighter);
+                }
+                else {
+                    Fighter fighter = (Fighter)Instantiate(enemyFighterPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(fighter);
+                    aliveEnemies.Add(fighter);
+                }
+                break;
+            case Ranger.HERO_CLASS:
+                if (!isEnemy) {
+                    Ranger ranger = (Ranger)Instantiate(rangerPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(ranger);
+                    aliveHeroes.Add(ranger);
+                }
+                else {
+                    Ranger ranger = (Ranger)Instantiate(enemyRangerPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(ranger);
+                    aliveEnemies.Add(ranger);
+                }
+                break;
+            case Mage.HERO_CLASS:
+                if (!isEnemy) {
+                    Mage mage = (Mage)Instantiate(magePrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(mage);
+                    aliveHeroes.Add(mage);
+                }
+                else {
+                    Mage mage = (Mage)Instantiate(enemyMagePrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(mage);
+                    aliveEnemies.Add(mage);
+                }
+                break;
+            case Priest.HERO_CLASS:
+                if (!isEnemy) {
+                    Priest priest = (Priest)Instantiate(priestPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(priest);
+                    aliveHeroes.Add(priest);
+                }
+                else {
+                    Priest priest = (Priest)Instantiate(enemyPriestPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(priest);
+                    aliveEnemies.Add(priest);
+                }
+                break;
+            case Musician.HERO_CLASS:
+                if (!isEnemy) {
+                    Musician musician = (Musician)Instantiate(musicianPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(musician);
+                    aliveHeroes.Add(musician);
+                }
+                else {
+                    Musician musician = (Musician)Instantiate(enemyMusicianPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(musician);
+                    aliveEnemies.Add(musician);
+                }
+                break;
+            case Summoner.HERO_CLASS:
+                if (!isEnemy) {
+                    Summoner summoner = (Summoner)Instantiate(summonerPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(summoner);
+                    aliveHeroes.Add(summoner);
+                }
+                else {
+                    Summoner summoner = (Summoner)Instantiate(enemySummonerPrefab, position, Quaternion.identity);
+                    aliveCharacters.Add(summoner);
+                    aliveEnemies.Add(summoner);
+                }
+                break;
+        }
+    
     }
 
 }

@@ -22,7 +22,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     [SerializeField] TextMeshProUGUI mageCounterText;
     [SerializeField] TextMeshProUGUI priestCounterText;
     [SerializeField] TextMeshProUGUI musicianCounterText;
-   // [SerializeField] TextMeshProUGUI newCharCounterText;
+    [SerializeField] TextMeshProUGUI summonerCounterText;
 
 
     private int fighterCounter = 0;
@@ -30,7 +30,7 @@ public class CharacterSelectionUI : MonoBehaviour {
     private int mageCounter = 0;
     private int priestCounter = 0;
     private int musicianCounter = 0;
-    //private int newcharCounter = 0;
+    private int summonerCounter = 0;
     private int charactersCounter = 0;
     /* The Heroes That The User Has Select */
     private void SelectedCharactersToSpawn() {
@@ -54,6 +54,10 @@ public class CharacterSelectionUI : MonoBehaviour {
             if (musicianCounter > 0) {
                 selectedHeroes.Add(Musician.HERO_CLASS);
                 musicianCounter--;
+            }
+            if (summonerCounter > 0) {
+                selectedHeroes.Add(Summoner.HERO_CLASS);
+                summonerCounter--;
             }
 
         }
@@ -162,6 +166,24 @@ public class CharacterSelectionUI : MonoBehaviour {
         if (musicianCounter > 0) {
             musicianCounter--;
             musicianCounterText.text = musicianCounter.ToString();
+            charactersCounter--;
+        }
+    }
+
+    /* Add/Remove Summoner */
+    public void Button_AddSummoner() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
+        if (summonerCounter < 4) {
+            summonerCounter++;
+            summonerCounterText.text = summonerCounter.ToString();
+            charactersCounter++;
+        }
+    }
+    public void Button_RemoveSummoner() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
+        if (summonerCounter > 0) {
+            summonerCounter--;
+            summonerCounterText.text = summonerCounter.ToString();
             charactersCounter--;
         }
     }

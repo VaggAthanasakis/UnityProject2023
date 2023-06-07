@@ -33,7 +33,8 @@ public class UI_Manager : MonoBehaviour {
     [SerializeField] GameObject castSpellButton;
     [SerializeField] GameObject dashButton;
     [SerializeField] GameObject playMusicButton;
-
+    [SerializeField] GameObject callForHelpButton;
+ 
     /* Game Info Panel */
     [SerializeField] public GameObject gameInfo;
     [SerializeField] public TextMeshProUGUI gameInfoText;
@@ -259,6 +260,22 @@ public class UI_Manager : MonoBehaviour {
         }
     }
 
+    /* Button for calling for help */
+    public void Button_CallForHelp() {
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
+        Debug.Log("Buttom Play Music Pushed");
+        Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
+
+        if (heroWithTurn.heroClass != Summoner.HERO_CLASS) { return; }
+        heroWithTurn.CallForHelp();
+        /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
+        if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
+            StartCoroutine(TurnSystem.Instance.NextTurn());
+        }
+
+    }
+
+
     /***********************************************************************/
     public void SetStateInfo() {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
@@ -327,7 +344,11 @@ public class UI_Manager : MonoBehaviour {
             }
             else
                 this.playMusicButton.SetActive(false);
-
+            if (e.heroWithTurn.GetActionsList().Contains("CallForHelp")) {
+                this.callForHelpButton.SetActive(true);
+            }
+            else
+                this.callForHelpButton.SetActive(false);
 
         }
         else {
