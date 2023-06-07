@@ -6,7 +6,7 @@ using TMPro;
 
 public class UI_Manager : MonoBehaviour {
     public static UI_Manager Instance { get; private set; }
-   
+ 
     /* Text for game state */
     private string freeRoam = "Free Roam";
     private string combatMode = "Combat Mode";
@@ -76,7 +76,7 @@ public class UI_Manager : MonoBehaviour {
         this.roundInfoPanel.SetActive(false); 
         gameRound.text = "ROUND 1";
         gameTurn.text = "TURN 1";
-
+        //DontDestroyOnLoad(gameObject);
     }
 
     private void Start() {
@@ -373,7 +373,22 @@ public class UI_Manager : MonoBehaviour {
         GameManager.Instance.aliveCharacters = null;
         GameManager.Instance.aliveEnemies = null;
         GameManager.Instance.aliveCharacters = null;
+        if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+            Debug.Log("Here1");
+            SoundManager.Instance.StopSoundWithoutFade(SoundManager.FREE_ROAM_MUSIC);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
+            /*StartCoroutine(SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC));
+            StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));*/
+        }
+        else if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            Debug.Log("Here2");
+            SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
+            /*StartCoroutine(SoundManager.Instance.StopSound(SoundManager.COMBAT_MODE_MUSIC));
+            StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));*/
+        }
         SceneLoader.LoadScene(SceneLoader.Scene.MainMenuScene);
+
     }
 
     /* Function that is called when we press Quit  */

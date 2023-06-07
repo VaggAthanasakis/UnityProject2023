@@ -87,7 +87,10 @@ public class GameManager : MonoBehaviour
         SetAliveCharactersAtTurnSystem();
         //GameObjectsInstantiation();
         
-        
+        /* Start The Free Roam Music */
+        StartCoroutine(SoundManager.Instance.StopSound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));
+        StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.FREE_ROAM_MUSIC));
+
     }
 
     /* This event arrives when the round ends */
@@ -107,6 +110,9 @@ public class GameManager : MonoBehaviour
                 UI_Manager.Instance.SetStateInfo();
                 break;
             case State.CombatMode:
+                //StartCoroutine(SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC));
+                //SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC);
+                //SoundManager.Instance.PlaySound(SoundManager.COMBAT_MODE_MUSIC);
                 UI_Manager.Instance.SetStateInfo();
                 CheckIfGameEnded();
                 break;
@@ -269,6 +275,8 @@ public class GameManager : MonoBehaviour
                 isCheckingForCombat = false;
                 currentState = GameManager.State.CombatMode;
                 isCheckingForCombat = false;
+                StartCoroutine(SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC));
+                StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.COMBAT_MODE_MUSIC));
                 return true;
             }
         }
