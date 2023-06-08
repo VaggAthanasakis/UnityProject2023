@@ -17,6 +17,7 @@ public class InteractableObject : MonoBehaviour {
 
     public bool isSelected = false;
     public bool isOpen = false;
+    public int selectedCounter = 0;
     public enum Type { 
         Chest,
         Door,  
@@ -48,6 +49,7 @@ public class InteractableObject : MonoBehaviour {
     private void Instance_OnInteractableObjectSelection(object sender, MouseClick.OnInteractableObjectSelectionEventArgs e) {
         if (e.selectedInteractableObject == this) {
             this.isSelected = true;
+            selectedCounter++;
             SelectedObjectVisual();
         }
         else {
@@ -90,6 +92,6 @@ public class InteractableObject : MonoBehaviour {
 
     /* Info about the interactable game object */
     public string InteractableObjectToString() {
-        return "This Box Contain Either A Heal Potion Or Poison That Will Hurm Your Hero! Open it Wisely";
+        return "This Chest Contain Either A Heal Potion Or Poison That Will Hurm Your Hero! Click Again To Open It...";
     }
 }

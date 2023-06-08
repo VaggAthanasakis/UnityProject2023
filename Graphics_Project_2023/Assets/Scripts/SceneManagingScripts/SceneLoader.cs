@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using System;
 
 public static class SceneLoader{
-
     public enum Scene { 
         MainMenuScene,
         LoadingScene,
@@ -22,7 +21,7 @@ public static class SceneLoader{
         //SceneLoader.previousScene = SceneLoader.targetScene;
         SceneLoader.targetScene = targetScene;
         SceneManager.LoadScene(Scene.LoadingScene.ToString());
-        if (targetScene == Scene.MainGameScene) {
+        if (targetScene == Scene.MainMenuScene) {
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
 
         }
@@ -32,6 +31,7 @@ public static class SceneLoader{
         /* After the first frame at the loading scene, we load the next one */
         if (targetScene == Scene.MainGameScene) {
             selectedCharacters = CharacterSelectionUI.Instance.GetSelectedCharacters(); // we inform the character list with the selected
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
         }
         SceneManager.LoadScene(targetScene.ToString());
     }

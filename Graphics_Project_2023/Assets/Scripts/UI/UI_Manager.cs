@@ -408,14 +408,14 @@ public class UI_Manager : MonoBehaviour {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             Debug.Log("Here1");
             SoundManager.Instance.StopSoundWithoutFade(SoundManager.FREE_ROAM_MUSIC);
-            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
+            //SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
             /*StartCoroutine(SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC));
             StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));*/
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             Debug.Log("Here2");
             SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
-            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
+            //SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
             /*StartCoroutine(SoundManager.Instance.StopSound(SoundManager.COMBAT_MODE_MUSIC));
             StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));*/
         }

@@ -65,12 +65,10 @@ public class Heroes : MonoBehaviour {
     // List with actions
     private List<string> actions = new List<string>();
 
-
     /**********************/
     protected virtual void Awake() {
         targetPosition = this.transform.position;
         AddAction("Dash");
-        //SetWalkableNodeAtHeroPosition(false);
     }
 
     protected virtual void Start() {
@@ -81,7 +79,6 @@ public class Heroes : MonoBehaviour {
         gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
         currentPositionIndex = 0;
         SetWalkableNodeAtHeroPosition(false);
-        //TakeDamage(10, null);
     }
 
 
@@ -514,7 +511,7 @@ public class Heroes : MonoBehaviour {
     }
 
     /* Set the node that the hero is currently at as Walkable or NoWalkable */
-    private void SetWalkableNodeAtHeroPosition(bool isWalkable) {
+    public void SetWalkableNodeAtHeroPosition(bool isWalkable) {
         GridPosition heroGridPos = PathFinding.Instance.GetGridPosition(this.transform.position);
         PathNode heroNode = PathFinding.Instance.Grid().GetPathNode(heroGridPos);
         heroNode.SetIsWalkable(isWalkable);
@@ -1160,22 +1157,9 @@ public class Heroes : MonoBehaviour {
                 // else if we are not near an enemy, move towards him and try attack him again
                 else if (closerHeroDistance < 2 * this.attackRange) {
                     Debug.Log("Old Distance " + closerHeroDistance);
+                    this.Dash();
                     closerHeroDistance = MoveEnemyAI(closerHero);
-                    //Debug.Log("Move Enemy " + this + " to hero " + closerHero);
-                    // move closer to the enemy and try attack him again
-                    if (closerHeroDistance <= this.attackRange) {
-                        this.PerformAttack(closerHero);
-                        this.EnemyAIAction();
-                        StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
-                    }
-                    else {  // else, we are far far away, move nowards the enemy, then dash and then move again
-                        MoveEnemyAI(closerHero);
-                        this.Dash();
-                        MoveEnemyAI(closerHero);
-                        this.EnemyAIAction();
-                        Debug.Log(this + " Dash");
-                        StartCoroutine(TurnSystem.Instance.NextTurn());
-                    }
+                    StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 // else dash
                 else {
@@ -1308,21 +1292,37 @@ public class Heroes : MonoBehaviour {
     private int MoveEnemyAI(Heroes heroToFollow) {
         /* at first, we find the heroToFollow pathnode that is in front of him */
         Vector3 heroPos = heroToFollow.transform.position;
-        
-        Vector3 tmp = new Vector3(heroPos.x,heroPos.y,heroPos.z + 1);
-        GridPosition heroFront =  PathFinding.Instance.GetGridPosition(tmp);
-        Debug.Log("HeroFront "+heroFront);
+
+        Vector3 tmp = new Vector3(heroPos.x, heroPos.y, heroPos.z + 1);
+        GridPosition heroFront = PathFinding.Instance.GetGridPosition(tmp);
+        Debug.Log("HeroFront " + heroFront);
+        PathNode node = PathFinding.Instance.Grid().GetPathNode(heroFront);
+        int k = 0;
+        while (node == null || !node.IsWalkable()) {
+            tmp = new Vector3(heroPos.x+k, 0 , heroPos.z + 1);
+            heroFront = PathFinding.Instance.GetGridPosition(tmp);
+            node = PathFinding.Instance.Grid().GetPathNode(heroFront);
+            k++;
+            Debug.Log("Inside While");
+            if (k > 2) {
+                break;
+            }
+        }
 
         // check if the hero front is inside the grid
-
-        PathFinding.Instance.FindPathForEnemyAI(heroFront);
-        int i = 1;
-        while (!PathFinding.Instance.FindPathForEnemyAI(heroFront) && i<=3) {
+        bool found;
+        found = PathFinding.Instance.FindPathForEnemyAI(heroFront);
+        //int i = 1;
+        /*while (!found && i<=3) {
             Vector3 tmp1 = new Vector3(heroPos.x +i , heroPos.y, heroPos.z + i);
             tmp = tmp1;
             heroFront = PathFinding.Instance.GetGridPosition(tmp);
+            found = PathFinding.Instance.FindPathForEnemyAI(heroFront);
+            if (found == true)
+                break;
             i++;
-        }
+            Debug.Log(i);
+        }*/
 
         int newDistance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, heroToFollow.transform.position);
         //Debug.Log("NewDistance "+newDistance);

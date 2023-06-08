@@ -38,14 +38,12 @@ public class SoundManager : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
-
         /* Do not Destroy the Object when we change scenes */
         DontDestroyOnLoad(gameObject);
-
         /* For each sound add an audio source */
         foreach (Sound sound in soundsArray) {
             sound.source = gameObject.AddComponent<AudioSource>();
-            sound.source.clip = sound.clip; // sound that willl actually play
+            sound.source.clip = sound.clip; // sound that will actually play
 
             sound.source.volume = sound.volume;
             sound.source.pitch = sound.pitch;
@@ -56,9 +54,7 @@ public class SoundManager : MonoBehaviour {
     /* Play the free Roam Sound from the start */
     private void Start() {
         StartCoroutine(this.PlaySound(MAIN_MENU_CHAR_SELECTION_MUSIC));
-        //SoundManager.Instance.PlaySoundWithoutFade(SoundManager.WALKING_MUSIC);
     }
-
 
     int stopFader;
     int startFader;
@@ -88,8 +84,8 @@ public class SoundManager : MonoBehaviour {
         while (soundToPlay.source.volume < startingVolume) {
             soundToPlay.source.volume += startingVolume / fadeTime;
             yield return new WaitWhile(() => startFader < 50);
-            Debug.Log("Wait to start: Volume "+ soundToPlay.source.volume);
-            Debug.Log("Start Volume: "+startingVolume);
+            //Debug.Log("Wait to start: Volume "+ soundToPlay.source.volume);
+            //Debug.Log("Start Volume: "+startingVolume);
             startFader = 0;
         }
         
@@ -109,7 +105,7 @@ public class SoundManager : MonoBehaviour {
         while (soundToStop.source.volume > 0) {
             soundToStop.source.volume -= startingVolume / fadeTime;
             yield return new WaitWhile(() => stopFader < 50);
-            Debug.Log("Waiting Volume: "+soundToStop.source.volume);
+            //Debug.Log("Waiting Volume: "+soundToStop.source.volume);
             stopFader = 0 ;
         }
         //yield return null; 

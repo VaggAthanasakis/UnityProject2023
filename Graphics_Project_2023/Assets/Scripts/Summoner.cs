@@ -20,6 +20,7 @@ public class Summoner : Heroes {
     protected override void Start() {
         base.Start();
         HeroAttributesToString();
+        SetWalkableNodeAtHeroPosition(false);
     }
 
     // Update is called once per frame

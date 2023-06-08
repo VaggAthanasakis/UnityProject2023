@@ -168,25 +168,33 @@ public class PathFinding : MonoBehaviour {
         }
     }
 
+    /******************************************************************************************/
     public bool FindPathForEnemyAI(GridPosition endEnemyGridPos) {
-
+        Debug.Log("START");
         if ((heroWithTurn == null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || !heroWithTurn.GetIsEnemy()) {
             return false;
         }
         gridPathPositionList = null;
 
         if (heroWithTurn != null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            //if (heroWithTurn.currentPositionIndex == 0) {
+            if (heroWithTurn.currentPositionIndex == 0) {
                 startGridPosition = PathFinding.Instance.GetGridPosition(heroWithTurn.transform.position);
-           //}
+           }
         }
-
         if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode && this.heroWithTurn.GetIsEnemy()) {
             gridPathPositionList = gridPathSystem.FindPath(startGridPosition, endEnemyGridPos, false);
-            Debug.Log("============================================================================");
+        }
+        else {
+            gridPathPositionList = null; 
         }
 
-        if (gridPathPositionList == null || gridPathPositionList.Count == 0) return false;
+        /* if (gridPathPositionList == null || gridPathPositionList.Count == 0) {
+
+             return false;
+         }*/
+        if (gridPathPositionList == null) {
+            return false;
+        }
 
         //temporary unit position list
         List<Vector3> heroPositionsList = new List<Vector3>();
@@ -206,12 +214,13 @@ public class PathFinding : MonoBehaviour {
             );
         }
         /* if the hero is selected, then move it from the path calculated above */
-        if (selectedHero.GetIsSelected() && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
+       /* if (selectedHero.GetIsSelected() && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             selectedHero.SetPositionsList(heroPositionsList);
-        }
-        else if (heroWithTurn != null && heroWithTurn.GetIsPlayersTurn() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+        }*/
+        if (heroWithTurn != null && heroWithTurn.GetIsPlayersTurn() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             heroWithTurn.SetPositionsList(heroPositionsList);
         }
+        Debug.Log("FINISH");
         return true;
     }
     

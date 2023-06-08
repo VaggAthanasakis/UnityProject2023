@@ -305,11 +305,13 @@ public class GameManager : MonoBehaviour
                     Fighter fighter = (Fighter)Instantiate(fighterPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(fighter);
                     aliveHeroes.Add(fighter);
+                    fighter.SetWalkableNodeAtHeroPosition(false);
                 }
                 else {
                     Fighter fighter = (Fighter)Instantiate(enemyFighterPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(fighter);
                     aliveEnemies.Add(fighter);
+                    fighter.SetWalkableNodeAtHeroPosition(false);
                 }
                 break;
             case Ranger.HERO_CLASS:
@@ -317,11 +319,13 @@ public class GameManager : MonoBehaviour
                     Ranger ranger = (Ranger)Instantiate(rangerPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(ranger);
                     aliveHeroes.Add(ranger);
+                    ranger.SetWalkableNodeAtHeroPosition(false);
                 }
                 else {
                     Ranger ranger = (Ranger)Instantiate(enemyRangerPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(ranger);
                     aliveEnemies.Add(ranger);
+                    ranger.SetWalkableNodeAtHeroPosition(false);
                 }
                 break;
             case Mage.HERO_CLASS:
@@ -329,11 +333,13 @@ public class GameManager : MonoBehaviour
                     Mage mage = (Mage)Instantiate(magePrefab, position, Quaternion.identity);
                     aliveCharacters.Add(mage);
                     aliveHeroes.Add(mage);
+                    mage.SetWalkableNodeAtHeroPosition(false);
                 }
                 else {
                     Mage mage = (Mage)Instantiate(enemyMagePrefab, position, Quaternion.identity);
                     aliveCharacters.Add(mage);
                     aliveEnemies.Add(mage);
+                    mage.SetWalkableNodeAtHeroPosition(false);
                 }
                 break;
             case Priest.HERO_CLASS:
@@ -341,11 +347,13 @@ public class GameManager : MonoBehaviour
                     Priest priest = (Priest)Instantiate(priestPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(priest);
                     aliveHeroes.Add(priest);
+                    priest.SetWalkableNodeAtHeroPosition(false);
                 }
                 else {
                     Priest priest = (Priest)Instantiate(enemyPriestPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(priest);
                     aliveEnemies.Add(priest);
+                    priest.SetWalkableNodeAtHeroPosition(false);
                 }
                 break;
             case Musician.HERO_CLASS:
@@ -353,11 +361,13 @@ public class GameManager : MonoBehaviour
                     Musician musician = (Musician)Instantiate(musicianPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(musician);
                     aliveHeroes.Add(musician);
+                    musician.SetWalkableNodeAtHeroPosition(false);
                 }
                 else {
                     Musician musician = (Musician)Instantiate(enemyMusicianPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(musician);
                     aliveEnemies.Add(musician);
+                    musician.SetWalkableNodeAtHeroPosition(false);
                 }
                 break;
             case Summoner.HERO_CLASS:
@@ -365,11 +375,13 @@ public class GameManager : MonoBehaviour
                     Summoner summoner = (Summoner)Instantiate(summonerPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(summoner);
                     aliveHeroes.Add(summoner);
+                    summoner.SetWalkableNodeAtHeroPosition(false);
                 }
                 else {
                     Summoner summoner = (Summoner)Instantiate(enemySummonerPrefab, position, Quaternion.identity);
                     aliveCharacters.Add(summoner);
                     aliveEnemies.Add(summoner);
+                    summoner.SetWalkableNodeAtHeroPosition(false);
                 }
                 break;
         }
