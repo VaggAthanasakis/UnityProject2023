@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
 
     public static bool isGamePaused = false;
-
+   
     /******/
     private List<Heroes> heroesPrefabs = new List<Heroes>();
     private List<Heroes> enemiesPrefabs = new List<Heroes>();
@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour {
 
     private List<int> turnBasedOnDice = new List<int>();
 
-    private int enterCombatModeRange = 3;
+    private int enterCombatModeRange = 8;
     public bool isCheckingForCombat = false;
     private int gameRound = 1;
 
@@ -44,7 +44,10 @@ public class GameManager : MonoBehaviour {
     //[SerializeField] GameObject grass;
     [SerializeField] GameObject treePrefab;
     [SerializeField] GameObject rockPrefab;
- 
+
+    // variable to keep on track at which stage of the game we are
+    private int atEnemyGroup = 1;
+
 
     public enum State {  
         FreeRoam,
@@ -87,13 +90,18 @@ public class GameManager : MonoBehaviour {
         TurnSystem.Instance.OnRoundEnded += TurnSystem_OnRoundEnded;
         heroesFromCharacterSelectionScene = SceneLoader.selectedCharacters;
         FillPrefabLists();
-        HeroesAndEnemiesToSpawn(heroesFromCharacterSelectionScene);
+        HeroesToSpawn(heroesFromCharacterSelectionScene);
+        // Spawn the first Group Of Enemies
+        SpawnNextGroupOfEnemies();
         SetAliveCharactersAtTurnSystem();
         
         /* Start The Free Roam Music */
         StartCoroutine(SoundManager.Instance.StopSound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));
         StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.FREE_ROAM_MUSIC));
+        // Spawn the objects
         RandomGameObjectsInstantiation();
+
+ 
     }
 
     /* This event arrives when the round ends */
@@ -126,7 +134,17 @@ public class GameManager : MonoBehaviour {
 
     /* Chech if the game has ended, check if all heroes are dead or all enemies are dead */
     private void CheckIfGameEnded() {
-        if (aliveEnemies.Count <= 0 && currentState != State.Victory) { //
+        if (aliveEnemies.Count <= 0 && currentState != State.Victory ) { //
+            if (atEnemyGroup != 3) { // if we have defeat the final group of enemies then win
+                /* Spawn next Group here */
+                currentState = GameManager.State.FreeRoam;
+                SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.FREE_ROAM_MUSIC);
+                SpawnNextGroupOfEnemies();
+                SetAliveCharactersAtTurnSystem();
+                return;
+            }
+            // else we have defeat all the groups of enemies -> victory
             currentState = State.Victory;
             SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.VICTORY_MUSIC);
@@ -166,7 +184,7 @@ public class GameManager : MonoBehaviour {
         this.enemiesPrefabs.Add(enemyMusicianPrefab);
     }
 
-    private void HeroesAndEnemiesToSpawn(List<string> listOfHeroes) {
+    private void HeroesToSpawn(List<string> listOfHeroes) {
         int xWorldPos = 0;
         this.aliveHeroes = new List<Heroes>();
         this.aliveEnemies = new List<Heroes>();
@@ -178,35 +196,42 @@ public class GameManager : MonoBehaviour {
                 //Debug.Log(heroString);
             }
 
+            GridPosition startGridPosition = new GridPosition(9,7);  // checked this via the debag objects
             foreach (string heroString in listOfHeroes) {
                 if (heroString.Equals(Fighter.HERO_CLASS)) {
-                    Fighter fighter = (Fighter)Instantiate(fighterPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
+                    Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(startGridPosition.x + xWorldPos, startGridPosition.z));
+                    Fighter fighter = (Fighter)Instantiate(fighterPrefab, posToSpawn, Quaternion.identity);
                     this.aliveCharacters.Add(fighter);
                     this.aliveHeroes.Add(fighter);
                 }
                 else if (heroString.Equals(Ranger.HERO_CLASS)) {
-                    Ranger ranger = (Ranger)Instantiate(rangerPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
+                    Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(startGridPosition.x + xWorldPos, startGridPosition.z));
+                    Ranger ranger = (Ranger)Instantiate(rangerPrefab, posToSpawn, Quaternion.identity);
                     this.aliveCharacters.Add(ranger);
                     this.aliveHeroes.Add(ranger);
                 }
                 else if (heroString.Equals(Mage.HERO_CLASS)) {
-                    Mage mage = (Mage)Instantiate(magePrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
+                    Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(startGridPosition.x + xWorldPos, startGridPosition.z));
+                    Mage mage = (Mage)Instantiate(magePrefab, posToSpawn, Quaternion.identity);
                     this.aliveCharacters.Add(mage);
                     this.aliveHeroes.Add(mage);
 
                 }
                 else if (heroString.Equals(Priest.HERO_CLASS)) {
-                    Priest priest = (Priest)Instantiate(priestPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
+                    Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(startGridPosition.x + xWorldPos, startGridPosition.z));
+                    Priest priest = (Priest)Instantiate(priestPrefab, posToSpawn, Quaternion.identity);
                     this.aliveCharacters.Add(priest);
                     this.aliveHeroes.Add(priest);
                 }
                 else if (heroString.Equals(Musician.HERO_CLASS)) {
-                    Musician musician = (Musician)Instantiate(musicianPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
+                    Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(startGridPosition.x + xWorldPos, startGridPosition.z));
+                    Musician musician = (Musician)Instantiate(musicianPrefab, posToSpawn, Quaternion.identity);
                     this.aliveCharacters.Add(musician);
                     this.aliveHeroes.Add(musician);
                 }
                 else if (heroString.Equals(Summoner.HERO_CLASS)) {
-                    Summoner summoner = (Summoner)Instantiate(summonerPrefab, new Vector3(xWorldPos, 0, 1), Quaternion.identity);
+                    Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(startGridPosition.x + xWorldPos, startGridPosition.z));
+                    Summoner summoner = (Summoner)Instantiate(summonerPrefab, posToSpawn, Quaternion.identity);
                     this.aliveCharacters.Add(summoner);
                     this.aliveHeroes.Add(summoner);
                 }
@@ -214,6 +239,72 @@ public class GameManager : MonoBehaviour {
             } 
         }
     }
+
+    /* This method creates the group of enemies
+     * There are three group of enemies, with the 3rd one being the boss
+     * We Spawn Enemies due to the curse of the battle */
+    private void SpawnNextGroupOfEnemies() {
+        int enemiesToSpawn = 0;
+        GridPosition positionOfFirstEnemy = new GridPosition(0,0);
+        int numOfAliveHeroes = this.aliveHeroes.Count;
+        // If we are the first group of enemies
+        if (atEnemyGroup == 1) {
+            Debug.Log("Heroes Alive: "+numOfAliveHeroes);
+            enemiesToSpawn = numOfAliveHeroes - 2;
+            if (enemiesToSpawn <= 0) { enemiesToSpawn = 1; }
+            Debug.Log("enemies To spawn: " + enemiesToSpawn);
+            positionOfFirstEnemy = new GridPosition(76,14);   // checked this via debug objects
+            Debug.Log("At First Group");
+        }
+        else if (atEnemyGroup == 2) {
+            enemiesToSpawn = numOfAliveHeroes - 1;
+            if (enemiesToSpawn <= 0) { enemiesToSpawn = 1; }
+            positionOfFirstEnemy = new GridPosition(80, 66); // adding at x axis for the next
+            Debug.Log("At Second Group");
+        }
+        else {
+            Debug.Log("At 3rd Group");
+        }
+        atEnemyGroup++; // increase the counter
+
+        /* Now Randomly Spawn The Enemies */
+        for (int i=0; i< enemiesToSpawn; i++) {
+            int randNumber = Random.Range(1, 7); // since we have 6 prefabs of enemies
+            if (randNumber == 1) {               // spawn fighter
+                positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
+                InstantiateHeroOnPosition(Fighter.HERO_CLASS, worldPos, true); // true because it is an enemy
+            }
+            else if (randNumber == 2) {         // spawn ranger
+                positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
+                InstantiateHeroOnPosition(Ranger.HERO_CLASS, worldPos, true); // true because it is an enemy
+            }
+            else if (randNumber == 3) {         // spawn mage
+                positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
+                InstantiateHeroOnPosition(Mage.HERO_CLASS, worldPos, true); // true because it is an enemy
+            }
+            else if (randNumber == 4) {         // spawn priest
+                positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
+                InstantiateHeroOnPosition(Priest.HERO_CLASS, worldPos, true); // true because it is an enemy
+            }
+            else if (randNumber == 5) {         // spawn musician
+                positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
+                InstantiateHeroOnPosition(Musician.HERO_CLASS, worldPos, true); // true because it is an enemy
+            }
+            else if (randNumber == 6) {         // spawn summoner
+                positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
+                InstantiateHeroOnPosition(Summoner.HERO_CLASS, worldPos, true); // true because it is an enemy
+            }
+
+        }
+   
+    }
+
 
     private void SetAliveCharactersAtTurnSystem() {
         TurnSystem.Instance.SetPlayingCharacters(this.aliveCharacters);
@@ -295,32 +386,9 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void SetNoWalkableAreaAtObjectInstantiation(GameObject gameObject) {
-        
-        
-        
-        /*Renderer renderer = gameObject.GetComponent<Renderer>();
-        Bounds bounds = renderer.bounds;
-        Vector3 size = bounds.size;
-        
-        int width = Mathf.CeilToInt(size.x/2); 
-        int depth = Mathf.CeilToInt(size.z/2); 
-
-        for (int i=-width; i<=width-1; i++) {
-            for (int j = -depth; j <= depth-1; j++) {
-                Vector3 startingGameObjectPosition = gameObject.transform.position;
-                GridPosition StartingGameObjectGridPosition = PathFinding.Instance.GetGridPosition(startingGameObjectPosition + new Vector3(i, 0, j));// +  //tmpGridPosition;
-
-                PathNode objectPathNode = PathFinding.Instance.Grid().GetPathNode(StartingGameObjectGridPosition);
-                objectPathNode.SetIsWalkable(false);
-            }
-        }*/
-  
-    }
-
     /* Now we will check if during the movement, the hero comes close to an enemy
-     * if yes, then the game state changes to combatMode */
-    /* We calculate the distance between the current position of the hero who is moving
+     * if yes, then the game state changes to combatMode 
+     * We calculate the distance between the current position of the hero who is moving
      * with the position of all the enemies. If that distance is less than the combat mode
      * range, with at least an enemy, then we switch to combat mode */
     public bool CheckForCombatMode(Vector3 targetPosition) {
