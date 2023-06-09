@@ -2590,7 +2590,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919274271}
-  m_LocalRotation: {x: 0.0000000063539662, y: 0.92931837, z: -0.36927956, w: 0.000000015990208}
+  m_LocalRotation: {x: -0.0000000063539645, y: 0.92931837, z: -0.36927956, w: -0.000000015990206}
   m_LocalPosition: {x: 0, y: 15.1, z: 16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2755,7 +2755,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.0000000063539662, y: 0.92931837, z: -0.36927956, w: 0.000000015990208}
+  m_LocalRotation: {x: -0.0000000063539645, y: 0.92931837, z: -0.36927956, w: -0.000000015990206}
   m_LocalPosition: {x: 0, y: 15.1, z: 16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4466,7 +4466,9 @@ MonoBehaviour:
   enemyPriestPrefab: {fileID: 843827416403820808, guid: 55859313627e4dd4b895d50d6ccdcf38, type: 3}
   enemyMusicianPrefab: {fileID: 1671720181155743003, guid: e62bfc5e6bcb9b14fa994695cdd5bbc1, type: 3}
   enemySummonerPrefab: {fileID: 6406229254579635087, guid: 3cbae76c77ee45548a593fa2dd3fbf66, type: 3}
-  cube: {fileID: 8590739525980631686, guid: 367151bfe82a54b449a68c68c9808171, type: 3}
+  chestPrefab: {fileID: 4455521177444065876, guid: a69410e549920124f933d79736ebacc2, type: 3}
+  treePrefab: {fileID: 100002, guid: ee6765da7db992e42a63c23f4e2c42e0, type: 3}
+  rockPrefab: {fileID: 1000011949594382, guid: 75fa8bf3a73ee6b4da0c7a2c6d3db6a1, type: 3}
 --- !u!4 &1479874125
 Transform:
   m_ObjectHideFlags: 0
@@ -5178,8 +5180,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -822.1301, y: -209.38013}
-  m_SizeDelta: {x: 233.4375, y: 284.26}
+  m_AnchoredPosition: {x: -822.1301, y: -239.17175}
+  m_SizeDelta: {x: 233.4375, y: 343.8433}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1736183126
 GameObject:
@@ -5351,8 +5353,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000014305, y: -40}
-  m_SizeDelta: {x: 208.85, y: 223.217}
+  m_AnchoredPosition: {x: -0.0000014305, y: -25.980408}
+  m_SizeDelta: {x: 208.85, y: 251.2561}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1746521514
 MonoBehaviour:

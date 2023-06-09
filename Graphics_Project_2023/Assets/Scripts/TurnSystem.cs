@@ -124,10 +124,12 @@ public class TurnSystem : MonoBehaviour {
         this.playingCharacters[indexOfHeroWithTurn].SetIsPlayersTurn(false);
         int k1 = 1;
         int i = indexOfHeroWithTurn;
+        Heroes lastHeroWithTurn = null ;
         for (i = indexOfHeroWithTurn; i < this.playingCharacters.Count - 1; i++) {
             if (this.playingCharacters[indexOfHeroWithTurn + k1] != null && !this.playingCharacters[indexOfHeroWithTurn + k1].GetIsDead()) {
                 this.playingCharacters[indexOfHeroWithTurn + k1].SetIsPlayersTurn(true);
                 this.heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1];
+                lastHeroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1];
                  OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
                     heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1]
                 });
@@ -138,7 +140,13 @@ public class TurnSystem : MonoBehaviour {
             }       
         }
         turnNumber++;
+        
         if (i >= this.playingCharacters.Count -1) { // have to change round
+            /**/if (lastHeroWithTurn != null) {
+                lastHeroWithTurn.SetIsPlayersTurn(false);
+                lastHeroWithTurn.SelectedHeroVisual();
+            }/**/
+            UI_Manager.Instance.nextTurnButton.SetActive(false); // hide next turn button
             roundNumber++;
             UI_Manager.Instance.diceButton.SetActive(true);
             OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {

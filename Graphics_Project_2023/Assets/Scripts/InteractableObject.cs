@@ -27,7 +27,7 @@ public class InteractableObject : MonoBehaviour {
     }
     private void Start() {
         MouseClick.instance.OnInteractableObjectSelection += Instance_OnInteractableObjectSelection;
-        GameManager.Instance.SetNoWalkableAreaAtObjectInstantiation(this.gameObject);
+        //GameManager.Instance.SetNoWalkableAreaAtObjectInstantiation(this.gameObject);
     }
 
     private void SetType() {
@@ -76,15 +76,23 @@ public class InteractableObject : MonoBehaviour {
         }
 
         this.isOpen = true;
-        int randomNumber = Random.Range(1, 11);
-        /* 60% heal, 40% damage */
-        if (randomNumber < 7) { // then heal else damage
+        int randomNumber = Random.Range(1, 101);
+        /* 25% heal, 25% damage, 25% decrease attack range decrease, 25% range increase */
+        if (randomNumber <= 25) { // then heal else damage
             mysteryBoxAction = "HEAL";
-            heroInteracted.GetHeal(randomNumber,null);
+            heroInteracted.GetHeal(randomNumber, null);
+        }
+        else if (randomNumber <= 50) {
+            mysteryBoxAction = "DAMAGE";
+            heroInteracted.TakeDamage(randomNumber - 2, null);
+        }
+        else if (randomNumber <= 75) {
+            mysteryBoxAction = "RANGE DOWN";
+            heroInteracted.SetAttackRange(heroInteracted.GetAttackRange()/2 +1); // decrease attack range
         }
         else {
-            mysteryBoxAction = "DAMAGE";
-            heroInteracted.TakeDamage(randomNumber-2,null);
+            mysteryBoxAction = "RANGE UP";
+            heroInteracted.SetAttackRange(heroInteracted.GetAttackRange() * 2 - 2); // decrease attack range
         }
         UI_Manager.Instance.selectedObjectPanel.SetActive(false);
         return true;
@@ -92,6 +100,6 @@ public class InteractableObject : MonoBehaviour {
 
     /* Info about the interactable game object */
     public string InteractableObjectToString() {
-        return "This Chest Contain Either A Heal Potion Or Poison That Will Hurm Your Hero! Click Again To Open It...";
+        return "Chest Contain Either A Heal Potion,a Hurmful Poison And Can Even Decrease/Increase Attack Range. Click Again To Open It...";
     }
 }

@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
-{
+public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
 
     public static bool isGamePaused = false;
@@ -38,11 +37,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] Heroes enemyRangerPrefab;
     [SerializeField] Heroes enemyPriestPrefab;
     [SerializeField] Heroes enemyMusicianPrefab;
-    [SerializeField] Heroes enemySummonerPrefab; 
+    [SerializeField] Heroes enemySummonerPrefab;
 
     /* GameObject Prefabs */
-    [SerializeField] GameObject cube;
-
+    [SerializeField] GameObject chestPrefab;
+    //[SerializeField] GameObject grass;
+    [SerializeField] GameObject treePrefab;
+    [SerializeField] GameObject rockPrefab;
+ 
 
     public enum State {  
         FreeRoam,
@@ -92,6 +94,9 @@ public class GameManager : MonoBehaviour
         /* Start The Free Roam Music */
         StartCoroutine(SoundManager.Instance.StopSound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));
         StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.FREE_ROAM_MUSIC));
+        //GameObjectsInstantiation(treePrefab,new GridPosition(1,2));
+        GameObjectsInstantiation(rockPrefab, new GridPosition(1,2));
+        GameObjectsInstantiation(chestPrefab, new GridPosition(2,4));
 
     }
 
@@ -247,13 +252,24 @@ public class GameManager : MonoBehaviour
         this.aliveCharacters = playingCharacters;
     }
 
-    private void GameObjectsInstantiation() {
-        GameObject cubeObject = Instantiate(cube,new Vector3(4,1,4), Quaternion.identity);
-        SetNoWalkableAreaAtObjectInstantiation(cubeObject);
+    private void GameObjectsInstantiation(GameObject objectToSpawn, GridPosition pos) {
+        Vector3 position = PathFinding.Instance.Grid().GetWorldPosition(pos);
+        PathNode node = PathFinding.Instance.Grid().GetPathNode(pos);
+
+        /* Check if there is already an object there */
+
+        GameObject spawnedObject = Instantiate(objectToSpawn, position, Quaternion.identity);
+        node.SetIsWalkable(false);
+        /*if (spawnedObject != null) {
+            SetNoWalkableAreaAtObjectInstantiation(spawnedObject);
+        }*/
     }
 
     public void SetNoWalkableAreaAtObjectInstantiation(GameObject gameObject) {
-        Renderer renderer = gameObject.GetComponent<Renderer>();
+        
+        
+        
+        /*Renderer renderer = gameObject.GetComponent<Renderer>();
         Bounds bounds = renderer.bounds;
         Vector3 size = bounds.size;
         
@@ -268,7 +284,7 @@ public class GameManager : MonoBehaviour
                 PathNode objectPathNode = PathFinding.Instance.Grid().GetPathNode(StartingGameObjectGridPosition);
                 objectPathNode.SetIsWalkable(false);
             }
-        }
+        }*/
   
     }
 

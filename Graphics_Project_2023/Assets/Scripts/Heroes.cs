@@ -413,7 +413,8 @@ public class Heroes : MonoBehaviour {
         }
     }
 
-    /* This method is called when hero's currentHealthPoints <= 0 */
+    /* This method is called when hero's currentHeal
+     * thPoints <= 0 */
     public void killHero() {
         float destroyObjectDelay = 5f;
         /* Have to make the node in which the character died Walkable */
@@ -434,6 +435,12 @@ public class Heroes : MonoBehaviour {
 
     /* This method is called when an oneother hero heals this hero */
     public void GetHeal(int healAmount, Heroes otherHero) {
+        /* if we already have max health */
+        if (this.currentHealAmount == this.healthPoints) {
+            UI_Manager.Instance.SetGameInfo("Unsuccessful Heal");
+            Debug.Log("Player Already Healed!");
+            return;
+        }
         int newHealth = this.GetCurrentHealthPoints() + healAmount;
         if (newHealth > this.GetHealthPoints()) {
             this.SetCurrentHealthPoints(this.GetHealthPoints());
@@ -724,8 +731,8 @@ public class Heroes : MonoBehaviour {
             AttackAmountCalculation(); // calculate the attack amount
             PointAtTheInteractedHero(heroToAttack);
             if (heroToAttack.GetCurrentArmorClass() < this.GetCurrentAttackAmount()) {
-                Debug.Log("Successfull Attack");
-                UI_Manager.Instance.SetGameInfo("Successfull Attack!");
+                Debug.Log("Successful Attack");
+                UI_Manager.Instance.SetGameInfo("Successful Attack!");
                 heroToAttack.TakeDamage(this.GetCurrentAttackAmount(), this);
                 this.IncreaseExperiencePoints();
                 SoundManager.Instance.PlaySoundWithoutFade(SoundManager.ATTACK_MUSIC);
@@ -784,7 +791,6 @@ public class Heroes : MonoBehaviour {
             heroToHeal.GetHeal(this.GetCurrentHealAmount(), this);
             /* if hero has max health, do not get xp points */
             if (heroToHeal.GetCurrentHealthPoints() == heroToHeal.healthPoints) {
-
                 return;
             }
             this.IncreaseExperiencePoints();

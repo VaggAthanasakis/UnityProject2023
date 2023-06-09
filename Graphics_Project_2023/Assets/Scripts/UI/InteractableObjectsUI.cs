@@ -14,6 +14,8 @@ public class InteractableObjectsUI : MonoBehaviour {
 
     private string healString = "HEAL";
     private string damageString = "DAMAGE";
+    private string rangeDown = "RANGE DOWN";
+    private string rangeUp = "RANGE UP";
     public string actionInsideMysteryBox;
 
 
@@ -57,16 +59,10 @@ public class InteractableObjectsUI : MonoBehaviour {
             this.interactable.isOpen = true;
             this.buttonOpen.SetActive(false);
             this.actionPanel.SetActive(true);
-            if (interactable.mysteryBoxAction == healString) {
-                this.InsideObjectText.text = healString;
-            }
-            else if (interactable.mysteryBoxAction == damageString) {
-                this.InsideObjectText.text = damageString;
+            this.InsideObjectText.text = interactable.mysteryBoxAction;
 
-            }
-            else {
-                Debug.Log("STRING HAS NOT BEEN SET");
-            }
+            // Hide the side panel
+            UI_Manager.Instance.selectedObjectPanel.SetActive(false);
         }
 
     }

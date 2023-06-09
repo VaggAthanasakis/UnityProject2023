@@ -23,7 +23,7 @@ public class UI_Manager : MonoBehaviour {
     [SerializeField] GameObject footerBarInfo;
     [SerializeField] GameObject actionButtons;
     [SerializeField] GameObject gameTurnButtons;
-    [SerializeField] GameObject nextTurnButton;
+    [SerializeField] public GameObject nextTurnButton;
     [SerializeField] public GameObject diceButton;
 
     /* Action Buttons */
@@ -196,6 +196,8 @@ public class UI_Manager : MonoBehaviour {
         }
         TurnSystem.Instance.CharactersSortByDicePlay();
         this.diceButton.SetActive(false);
+        UI_Manager.Instance.nextTurnButton.SetActive(true); // pop up the next turn button
+
     }
 
     /* If the player has remaining move range but do not want to use it, should press this button */
