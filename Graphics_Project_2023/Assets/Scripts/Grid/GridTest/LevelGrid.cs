@@ -22,7 +22,7 @@ public class LevelGrid : MonoBehaviour
         //Grid Creation
 
         //10 x 100 Grid , 1 unit tile size
-        gridSystem = new GridSystem(10, 10, 1f);
+        gridSystem = new GridSystem(20, 20, 1f);
         //Create Debug Objects on each grid tile
         gridSystem.CreateDebugObjects(gridDebugObjectPrefab, this.transform); 
     }

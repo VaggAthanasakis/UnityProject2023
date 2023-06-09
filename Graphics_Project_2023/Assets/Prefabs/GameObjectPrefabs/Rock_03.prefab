@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000013308252972}
-  - component: {fileID: 205000011883594630}
+  - component: {fileID: -3767930390307802493}
   m_Layer: 0
   m_Name: Rock_03
   m_TagString: Untagged
@@ -118,33 +118,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &205000011883594630
-LODGroup:
+--- !u!114 &-3767930390307802493
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011949594382}
-  serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.04103172, y: -0.04789567, z: 0.08643508}
-  m_Size: 3.4534183
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
-  m_LastLODIsBillboard: 0
-  m_LODs:
-  - screenRelativeHeight: 0.60094124
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 23000012513637330}
-  - screenRelativeHeight: 0.30093464
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 23000014287857050}
-  - screenRelativeHeight: 0.0659413
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 23000012150228588}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e70a87345c244a4396c1d4c50f2e9a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000012074862460
 GameObject:
   m_ObjectHideFlags: 0

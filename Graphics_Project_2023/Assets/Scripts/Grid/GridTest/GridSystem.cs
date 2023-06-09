@@ -12,6 +12,7 @@ public class GridSystem
 
     public GridSystem(int width, int height, float cellSize)
     {
+        ////////////////
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
@@ -24,6 +25,7 @@ public class GridSystem
             {
                 GridPosition gridPosition = new GridPosition(x, z);
                 gridObjectArray[x, z] = new GridObject(this, gridPosition);
+                Debug.Log(x + z);
             }
         }
     }

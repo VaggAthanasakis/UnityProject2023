@@ -96,7 +96,7 @@ public class SoundManager : MonoBehaviour {
     public IEnumerator StopSound(string name) {
         Sound soundToStop = Array.Find(soundsArray, sound => sound.soundName == name); // find the sound with this specific name at the sounds array
         if (soundToStop == null) {
-            Debug.Log("Sound Not Found");
+            //Debug.Log("Sound Not Found");
             yield return null; 
         }
 
@@ -117,7 +117,7 @@ public class SoundManager : MonoBehaviour {
     public void PlaySoundWithoutFade(string name) {
         Sound soundToPlay = Array.Find(soundsArray, sound => sound.soundName == name); // find the sound with this specific name at the sounds array
         if (soundToPlay == null) {
-            Debug.Log("Sound Not Found");
+            //Debug.Log("Sound Not Found");
             return;
         }
         soundToPlay.source.Play();
@@ -127,7 +127,7 @@ public class SoundManager : MonoBehaviour {
     public void StopSoundWithoutFade(string name) {
         Sound soundToStop = Array.Find(soundsArray, sound => sound.soundName == name); // find the sound with this specific name at the sounds array
         if (soundToStop == null) {
-            Debug.Log("Sound Not Found");
+            //Debug.Log("Sound Not Found");
             return;
         }
         soundToStop.source.Stop();
