@@ -29,7 +29,7 @@ public class PathFinding : MonoBehaviour {
     
         //Grid Creation
         //100 x 100 Grid , 1 unit tile size
-        gridPathSystem = new GridPathSystem(20, 20, 1f);
+        gridPathSystem = new GridPathSystem(100, 80, 1f);
         //Create Debug Objects on each grid tile
         //gridPathSystem.CreateDebugObjects(_pathfindingDebugObjectPrefab, this.transform);
     }

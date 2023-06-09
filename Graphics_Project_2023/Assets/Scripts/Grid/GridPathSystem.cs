@@ -14,6 +14,7 @@ public class GridPathSystem {
 
     
 
+    /* instantiation of the grid */
     public GridPathSystem(int width, int height, float cellSize) {
         this.width = width;
         this.height = height;
@@ -24,7 +25,31 @@ public class GridPathSystem {
         for (int x = 0; x < width; x++) {
             for (int z = 0; z < height; z++) {
                 GridPosition gridPosition = new GridPosition(x, z);
-                gridPathArray[x, z] = new PathNode(this, gridPosition);
+                PathNode newNode = new PathNode(this, gridPosition);
+                /* Make the edge nodes no walkable */
+                if (x == 0) {
+                    newNode.SetIsWalkable(false);
+                }
+                if (z == 0) {
+                    newNode.SetIsWalkable(false);
+                }
+                if (x == 99) {
+                    newNode.SetIsWalkable(false);
+                }
+                if (z == 79) {
+                    newNode.SetIsWalkable(false);
+                }
+                /* Make the inside limits no walkable */
+                if (x == 69 && (z >= 45 && z <= 58)) { newNode.SetIsWalkable(false); }
+                if(z == 45 && (x >= 0 && x <= 69)) { newNode.SetIsWalkable(false); }
+                if(x == 62 && (z >= 28 && z <= 45)) { newNode.SetIsWalkable(false); }
+                if(z == 28 && (x >= 49 && x <= 62)) { newNode.SetIsWalkable(false); }
+                if(x == 49 && (z <= 14 && z >= 28)) { newNode.SetIsWalkable(false); }
+                if (z == 27 && x >= 77) { newNode.SetIsWalkable(false); }
+                if(x == 77 && z <= 27) { newNode.SetIsWalkable(false); }
+
+                gridPathArray[x, z] = newNode;
+
             }
         }
     }

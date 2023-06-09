@@ -89,15 +89,11 @@ public class GameManager : MonoBehaviour {
         FillPrefabLists();
         HeroesAndEnemiesToSpawn(heroesFromCharacterSelectionScene);
         SetAliveCharactersAtTurnSystem();
-        //GameObjectsInstantiation();
         
         /* Start The Free Roam Music */
         StartCoroutine(SoundManager.Instance.StopSound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));
         StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.FREE_ROAM_MUSIC));
-        //GameObjectsInstantiation(treePrefab,new GridPosition(1,2));
-        //GameObjectsInstantiation(rockPrefab, new GridPosition(1,2));
-        //GameObjectsInstantiation(chestPrefab, new GridPosition(2,4));
-
+        RandomGameObjectsInstantiation();
     }
 
     /* This event arrives when the round ends */
@@ -110,16 +106,11 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        //CheckForCombatMode();
-        //Debug.Log("Current State: "+currentState);
         switch (currentState) {
             case State.FreeRoam:
                 UI_Manager.Instance.SetStateInfo();
                 break;
             case State.CombatMode:
-                //StartCoroutine(SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC));
-                //SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC);
-                //SoundManager.Instance.PlaySound(SoundManager.COMBAT_MODE_MUSIC);
                 UI_Manager.Instance.SetStateInfo();
                 CheckIfGameEnded();
                 break;
@@ -222,26 +213,6 @@ public class GameManager : MonoBehaviour {
                 xWorldPos++;
             } 
         }
-
-        /* Create Enemies */
-        //Fighter enemyFighter = (Fighter)Instantiate(enemyFighterPrefab, new Vector3(2,0,9), Quaternion.identity);
-         //Ranger enemyRanger = (Ranger)Instantiate(enemyRangerPrefab,new Vector3(4,0,9), Quaternion.identity);
-         //Priest enemyPriest = (Priest)Instantiate(enemyPriestPrefab, new Vector3(5,0,7), Quaternion.identity);
-
-        // this.aliveCharacters.Add(enemyFighter);
-         //this.aliveCharacters.Add(enemyRanger);
-        // this.aliveCharacters.Add(enemyPriest);
-        // this.aliveEnemies.Add(enemyFighter);
-        // this.aliveEnemies.Add(enemyRanger);
-        // this.aliveEnemies.Add(enemyPriest);
-        //Musician enemyMusician = (Musician)Instantiate(enemyMusicianPrefab, new Vector3(5,0,9), Quaternion.identity);
-        //Musician enemyMusician2 = (Musician)Instantiate(enemyMusicianPrefab, new Vector3(6,0,9), Quaternion.identity);
-        /*this.aliveCharacters.Add(enemyMusician);
-        this.aliveCharacters.Add(enemyMusician2);
-        this.aliveEnemies.Add(enemyMusician);
-        this.aliveEnemies.Add(enemyMusician2);*/
-       // InstantiateHeroOnPosition(Summoner.HERO_CLASS, new Vector3(2, 0, 7),true);
-       // InstantiateHeroOnPosition(Priest.HERO_CLASS, new Vector3(3, 0, 6), true);
     }
 
     private void SetAliveCharactersAtTurnSystem() {
@@ -252,17 +223,76 @@ public class GameManager : MonoBehaviour {
         this.aliveCharacters = playingCharacters;
     }
 
-    private void GameObjectsInstantiation(GameObject objectToSpawn, GridPosition pos) {
-        Vector3 position = PathFinding.Instance.Grid().GetWorldPosition(pos);
-        PathNode node = PathFinding.Instance.Grid().GetPathNode(pos);
+    /* This method creates a randmom amount of gameObjects to the board at random places */
+    private void RandomGameObjectsInstantiation() {
+        int numOfChests = Random.Range(5, 10); // number of chest to instantiate
+        int numOfRocks = Random.Range(8, 15); // number of rocks to instantiate
 
-        /* Check if there is already an object there */
+        // intantiate all the chests
+        while (numOfChests != 0) {
+            int randx = Random.Range(1, 101);
+            int randz = Random.Range(1, 81);
+            if ((randx >= 55 && randx <= 70) && (randz >= 3 && randz <= 22)) {
+                Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(randx,randz));
+                GameObject chest = Instantiate(chestPrefab, posToSpawn, Quaternion.identity);
+                PathNode node = PathFinding.Instance.Grid().GetPathNode(new GridPosition(randx,randz));
+               
+                /* Check if there is already an object there */
+                if (node != null) { node.SetIsWalkable(false); }
 
-        GameObject spawnedObject = Instantiate(objectToSpawn, position, Quaternion.identity);
-        node.SetIsWalkable(false);
-        /*if (spawnedObject != null) {
-            SetNoWalkableAreaAtObjectInstantiation(spawnedObject);
-        }*/
+                numOfChests--;
+            }
+            else if ((randx >= 64 && randx <= 94) && (randz >= 30 && randz <= 42)) {
+                Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(randx, randz));
+                GameObject chest = Instantiate(chestPrefab, posToSpawn, Quaternion.identity);
+                PathNode node = PathFinding.Instance.Grid().GetPathNode(new GridPosition(randx, randz));
+
+                /* Check if there is already an object there */
+                if (node != null) { node.SetIsWalkable(false); }
+                numOfChests--;
+            }
+            else if ((randx >= 22 && randx <= 66) && (randz >= 43 && randz <= 75)) {
+                Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(randx, randz));
+                GameObject chest = Instantiate(chestPrefab, posToSpawn, Quaternion.identity);
+                PathNode node = PathFinding.Instance.Grid().GetPathNode(new GridPosition(randx, randz));
+
+                /* Check if there is already an object there */
+                if (node != null) { node.SetIsWalkable(false); }
+                numOfChests--;
+            }
+        }
+        // intantiate the rocks
+        while (numOfRocks != 0) {
+            int randx = Random.Range(1, 101);
+            int randz = Random.Range(1, 81);
+            if ((randx >= 55 && randx <= 70) && (randz >= 3 && randz <= 22)) {
+                Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(randx, randz));
+                GameObject rock = Instantiate(rockPrefab, posToSpawn, Quaternion.identity);
+                PathNode node = PathFinding.Instance.Grid().GetPathNode(new GridPosition(randx, randz));
+
+                /* Check if there is already an object there */
+                if (node != null) { node.SetIsWalkable(false); }
+                numOfRocks--;
+            }
+            else if ((randx >= 64 && randx <= 94) && (randz >= 30 && randz <= 42)) {
+                Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(randx, randz));
+                GameObject rock = Instantiate(rockPrefab, posToSpawn, Quaternion.identity);
+                PathNode node = PathFinding.Instance.Grid().GetPathNode(new GridPosition(randx, randz));
+
+                /* Check if there is already an object there */
+                if (node != null) { node.SetIsWalkable(false); }
+                numOfRocks--;
+            }
+            else if ((randx >= 22 && randx <= 66) && (randz >= 43 && randz <= 75)) {
+                Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(randx, randz));
+                GameObject rock = Instantiate(rockPrefab, posToSpawn, Quaternion.identity);
+                PathNode node = PathFinding.Instance.Grid().GetPathNode(new GridPosition(randx, randz));
+
+                /* Check if there is already an object there */
+                if (node != null) { node.SetIsWalkable(false); }
+                numOfRocks--;
+            }
+        }
     }
 
     public void SetNoWalkableAreaAtObjectInstantiation(GameObject gameObject) {
