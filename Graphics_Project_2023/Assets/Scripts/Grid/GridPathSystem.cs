@@ -41,13 +41,23 @@ public class GridPathSystem {
                 }
                 /* Make the inside limits no walkable */
                 if (x == 69 && (z >= 45 && z <= 58)) { newNode.SetIsWalkable(false); }
-                if(z == 45 && (x >= 0 && x <= 69)) { newNode.SetIsWalkable(false); }
-                if(x == 62 && (z >= 28 && z <= 45)) { newNode.SetIsWalkable(false); }
-                if(z == 28 && (x >= 49 && x <= 62)) { newNode.SetIsWalkable(false); }
-                if(x == 49 && (z <= 14 && z >= 28)) { newNode.SetIsWalkable(false); }
+                if (z == 45 && (x >= 0 && x <= 69)) { newNode.SetIsWalkable(false); }
+                if (x == 62 && (z >= 28 && z <= 45)) { newNode.SetIsWalkable(false); }
+                if (z == 28 && (x >= 49 && x <= 62)) { newNode.SetIsWalkable(false); }
+                if (x == 49 && (z <= 14 && z >= 28)) { newNode.SetIsWalkable(false); }
                 if (z == 27 && x >= 77) { newNode.SetIsWalkable(false); }
-                if(x == 77 && z <= 27) { newNode.SetIsWalkable(false); }
+                if (x == 77 && z <= 27) { newNode.SetIsWalkable(false); }
 
+                /* Make the nodes that are below the houses, no walkable */
+                if (z == 8 && (x >= 1 && x <= 9)) { newNode.SetIsWalkable(false); }
+                if ((x >= 0 && x <= 14) && (z >= 14 && z <= 34)) { newNode.SetIsWalkable(false); }
+                if ((x >= 14 && x <= 62) && (z >= 34 && x <= 44)) { newNode.SetIsWalkable(false); }
+                if ((x >= 51 && x <= 62) && (z >= 29 && z <= 45)) { newNode.SetIsWalkable(false); }
+                if ((x >= 39 && x <= 49) && (z >= 14 && z <= 29)) { newNode.SetIsWalkable(false); }
+                if ((x >= 21 && x <= 31) && (z >= 23 && z <= 30)) { newNode.SetIsWalkable(false); }
+                if ((x >= 69 && x <= 81) && (z >= 52 && z <= 61)) { newNode.SetIsWalkable(false); }
+                if ((x >= 72) && (z >= 68)) { newNode.SetIsWalkable(false); }
+                if (x >= 89 && z >= 55) { newNode.SetIsWalkable(false); }
                 gridPathArray[x, z] = newNode;
 
             }
