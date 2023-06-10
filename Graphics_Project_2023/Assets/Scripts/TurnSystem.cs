@@ -51,6 +51,9 @@ public class TurnSystem : MonoBehaviour {
     public void ResetTurnNumber() {
         this.turnNumber = 1;
     }
+    public void ResetRoundNumber() {
+        this.roundNumber = 1;
+    }
 
     /* This Method Sorts The Characters List Based On The Turn */
     public List<Heroes> CharactersSortByDicePlay() {
@@ -88,7 +91,7 @@ public class TurnSystem : MonoBehaviour {
 
     /* Wait for some time after the dice button is pushed */
     public IEnumerator FirstTurn(Heroes heroTurn) {
-        yield return new WaitWhile(() => frame < 200);
+        yield return new WaitWhile(() => frame < 150);
         frame = 0;
         OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
             heroWithTurn = heroTurn
@@ -102,13 +105,13 @@ public class TurnSystem : MonoBehaviour {
      * executed immediantly one after the other */
     int frame;
     private void Update() {
-        if (frame <= 200)
+        if (frame <= 150)
             frame++;
     }
 
     public IEnumerator NextTurn() {
 
-        yield return new WaitWhile(() => frame < 200);
+        yield return new WaitWhile(() => frame < 150);
         frame = 0;
 
         /* find player with turn previously */

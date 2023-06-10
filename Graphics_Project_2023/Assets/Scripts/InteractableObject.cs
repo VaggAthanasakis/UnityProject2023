@@ -8,7 +8,6 @@ public class InteractableObject : MonoBehaviour {
 
     [SerializeField] GameObject interactableObject;
     [SerializeField] string objectType;
-    [SerializeField] GameObject objectInsideChest;
     [SerializeField] GameObject selectedChestVisual;
 
     public string mysteryBoxAction;
@@ -33,12 +32,7 @@ public class InteractableObject : MonoBehaviour {
     private void SetType() {
         if (objectType.Equals("Chest")) {
             this.currentType = Type.Chest;
-        }
-        else if (objectType.Equals("Door")) {
-            this.currentType = Type.Door;
-            this.objectInsideChest = null;
-        }
-        
+        }        
     }
 
     public Type GetObjectType() {

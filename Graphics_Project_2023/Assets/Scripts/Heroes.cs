@@ -494,6 +494,7 @@ public class Heroes : MonoBehaviour {
             Vector3 endPosition = positionList[positionList.Count - 1];
             /* Check if we are already there */
             if (this.transform.position == endPosition) {
+                Debug.Log("Already there");
                 this.SetIsWalking(false);
                 //SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
                 SetWalkableNodeAtHeroPosition(false);
@@ -810,7 +811,7 @@ public class Heroes : MonoBehaviour {
             }
             /* if the other hero is out of range */
             int distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, heroToHeal.transform.position);
-            int distance_normalized = distance; // because distance is 10x in comparison to attack range
+            int distance_normalized = distance; 
             if (distance_normalized > this.attackRange) {
                 Debug.Log("Other Hero Out Of Range");
                 UI_Manager.Instance.SetGameInfo("Other Hero Out Of Range!");
@@ -1096,17 +1097,19 @@ public class Heroes : MonoBehaviour {
     /* Function that spawns a hero at a specific position */
     private bool SpawnHero(Vector3 position) {
         // find the gridPosition and the specific node next to the calling hero
-        Vector3 spawnPos = new Vector3(position.x + 1, 0, position.z);
-        GridPosition gridPos = PathFinding.Instance.GetGridPosition(spawnPos);
-        PathNode node = PathFinding.Instance.Grid().GetPathNode(gridPos);
+        //Vector3 spawnPos = new Vector3(position.x + 1, 0, position.z);
+        GridPosition tmp = PathFinding.Instance.GetGridPosition(position);
+        GridPosition spawnPos = new GridPosition(tmp.x +1,tmp.z);
+        //GridPosition gridPos = PathFinding.Instance.GetGridPosition(new GridPosition(tmp.x,tmp.z));
+        PathNode node = PathFinding.Instance.Grid().GetPathNode(spawnPos);
 
         /* If the above Node is not walkable or null, try to the next one */
         int i = 1;
         while (node == null || !node.IsWalkable() || i < 3) {
             Debug.Log("i = " + i);
-            spawnPos = new Vector3(position.x + 1, 0, position.z + i);
-            gridPos = PathFinding.Instance.GetGridPosition(spawnPos);
-            node = PathFinding.Instance.Grid().GetPathNode(gridPos);
+            spawnPos = new GridPosition(spawnPos.x, spawnPos.z + i);
+            //gridPos = PathFinding.Instance.GetGridPosition(spawnPos);
+            node = PathFinding.Instance.Grid().GetPathNode(spawnPos);
             i++;
         }
         if (node == null || !node.IsWalkable()) {
@@ -1114,15 +1117,16 @@ public class Heroes : MonoBehaviour {
             return false;
         }
 
+        Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(spawnPos);
         int randNumber = UnityEngine.Random.Range(1,11);
         if (randNumber <= 6) {
             // spawn a ranger
-            GameManager.Instance.InstantiateHeroOnPosition(Ranger.HERO_CLASS,spawnPos,this.GetIsEnemy());
+            GameManager.Instance.InstantiateHeroOnPosition(Ranger.HERO_CLASS, worldPos, this.GetIsEnemy());
             return true;
         }
         else {
             // spawn a fighter
-            GameManager.Instance.InstantiateHeroOnPosition(Fighter.HERO_CLASS, spawnPos, this.GetIsEnemy());
+            GameManager.Instance.InstantiateHeroOnPosition(Fighter.HERO_CLASS, worldPos, this.GetIsEnemy());
             return true;
         }
 
@@ -1133,7 +1137,14 @@ public class Heroes : MonoBehaviour {
         Debug.Log("Inside AI");
         /* Check if the enemy has permormed all the allowed action on the round */
         if (this.performedActions >= this.numOfAllowedActions) {
+            UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
+        }
+        /* If the enemy has diceValue == 1 -> lost turn */
+        if (diceValue == 1) {
+            UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
         }
         
         /* If this hero is an enemy and has turn and we are at combat mode */
@@ -1176,7 +1187,6 @@ public class Heroes : MonoBehaviour {
                     closerHeroDistance = pair.Value;
                 }
             }
-            //Debug.Log("Move Enemy "+this+" to hero "+closerHero);
             // Now we know the closer hero and the closer enemy
 
             /* if we are at range of actions -> permorm action, else move towards target */

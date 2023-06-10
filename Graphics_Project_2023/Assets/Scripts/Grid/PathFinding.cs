@@ -107,6 +107,7 @@ public class PathFinding : MonoBehaviour {
                 }
                 /* fix for new position before end of last move */
                 else if (selectedHero.GetPositionList() != null) {
+                    Debug.Log("Before Last Move");
                     List<Vector3> heroesList = selectedHero.GetPositionList();
                     Vector3 lastPos = heroesList[heroesList.Count-1];
                     startGridPosition = PathFinding.Instance.GetGridPosition(lastPos);
@@ -120,6 +121,7 @@ public class PathFinding : MonoBehaviour {
                 }
                 /* fix for new position before end of last move */
                 else if (selectedHero.GetPositionList() != null) {
+                    Debug.Log("Before Last Move");
                     List<Vector3> heroesList = selectedHero.GetPositionList();
                     Vector3 lastPos = heroesList[heroesList.Count - 1];
                     startGridPosition = PathFinding.Instance.GetGridPosition(lastPos);

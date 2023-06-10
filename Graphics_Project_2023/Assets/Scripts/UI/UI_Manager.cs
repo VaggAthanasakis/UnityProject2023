@@ -54,7 +54,6 @@ public class UI_Manager : MonoBehaviour {
     [SerializeField] public GameObject selectedObjectPanel;
     [SerializeField] private TextMeshProUGUI SelectedObjectInfoTitle;
     [SerializeField] private TextMeshProUGUI selectedObjectInfo;
-    private Heroes selectedObject = null;
 
     /* Body Game Round And Turn Texts */
     [SerializeField] private GameObject roundInfoPanel;
@@ -134,12 +133,7 @@ public class UI_Manager : MonoBehaviour {
         SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         Heroes attackedHero;
-        if (heroWithTurn.GetIsEnemy()) {
-            attackedHero = MouseClick.instance.GetSelectedHero();
-        }
-        else {
-            attackedHero = MouseClick.instance.GetSelectedEnemy();
-        }
+        attackedHero = MouseClick.instance.GetSelectedEnemy();
         if (attackedHero != null && attackedHero != heroWithTurn) {
             heroWithTurn.PerformAttack(attackedHero);
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
@@ -149,20 +143,6 @@ public class UI_Manager : MonoBehaviour {
         else if(attackedHero == null) {
             Debug.Log("ATTACKED HERO NULL");           
         }
-
-        /* AUTA THA MPOUN OTAN KANO TO AI
-
-        Heroes enemyHero = MouseClick.instance.GetSelectedEnemy();
-        
-        if (enemyHero != null && enemyHero != heroWithTurn) {
-            Debug.Log("Can Perform Attack!");
-            heroWithTurn.PerformAttack(enemyHero);
-            // IF HERO CANNOT FURTHER MOVE
-            TurnSystem.Instance.NextTurn(); // na mpei elegxos an exei kai allo move
-            gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
-            gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();
-        }
-        */
     }
 
     public void Buttom_Heal() {
@@ -190,8 +170,9 @@ public class UI_Manager : MonoBehaviour {
         TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round 
         foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();
-            //Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
+            Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
             character.diceValue = diceValue;
+            Debug.Log("DIce Value "+character.diceValue);
             TurnSystem.Instance.turnBasedOnDice.Add(diceValue);
         }
         TurnSystem.Instance.CharactersSortByDicePlay();
@@ -288,8 +269,8 @@ public class UI_Manager : MonoBehaviour {
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             this.gameState.text = combatMode;
             this.stateInfo.text = combatModeInfo;
-            //SetActionButtonsPanelActive(true);
             this.footerBarInfo.SetActive(true);
+            Debug.Log("Set Turn Buttons On");
             this.gameTurnButtons.SetActive(true);
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.GameOver) {

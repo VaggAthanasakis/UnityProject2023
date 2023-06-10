@@ -66,15 +66,8 @@ public class GameManager : MonoBehaviour {
         this.currentState = newState;
     }
 
-
     public Heroes GetHeroWithTurn() {
         return TurnSystem.Instance.GetHeroWithTurn();
-        /*foreach (Heroes hero in aliveCharacters) {
-            if (hero.GetIsPlayersTurn()) {
-                return hero;
-            }
-        }
-        return null;*/
     }
 
     private void Awake() {
@@ -101,7 +94,6 @@ public class GameManager : MonoBehaviour {
         // Spawn the objects
         RandomGameObjectsInstantiation();
 
- 
     }
 
     /* This event arrives when the round ends */
@@ -137,19 +129,22 @@ public class GameManager : MonoBehaviour {
         if (aliveEnemies.Count <= 0 && currentState != State.Victory ) { //
             if (atEnemyGroup != 3) { // if we have defeat the final group of enemies then win
                 /* Spawn next Group here */
+                TurnSystem.Instance.ResetRoundNumber();
+                TurnSystem.Instance.ResetTurnNumber();
                 currentState = GameManager.State.FreeRoam;
                 SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
                 SoundManager.Instance.PlaySoundWithoutFade(SoundManager.FREE_ROAM_MUSIC);
                 SpawnNextGroupOfEnemies();
                 SetAliveCharactersAtTurnSystem();
-                return;
             }
-            // else we have defeat all the groups of enemies -> victory
-            currentState = State.Victory;
-            SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
-            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.VICTORY_MUSIC);
-            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
-            Debug.Log("VICTORY");
+            else {
+                // else we have defeat all the groups of enemies -> victory
+                currentState = State.Victory;
+                SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.VICTORY_MUSIC);
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
+                Debug.Log("VICTORY");
+            }
         }
         if (aliveHeroes.Count <= 0 && currentState != State.GameOver) {
             currentState = State.GameOver;
@@ -165,6 +160,7 @@ public class GameManager : MonoBehaviour {
         foreach (Heroes hero in aliveCharacters) {
             hero.SetRemainingMoveRange(hero.GetMoveRange());
             hero.SetCurrentArmorClass(hero.GetArmorClass());
+            hero.performedActions = 0;
         }
     }
 
@@ -305,9 +301,13 @@ public class GameManager : MonoBehaviour {
    
     }
 
-
     private void SetAliveCharactersAtTurnSystem() {
         TurnSystem.Instance.SetPlayingCharacters(this.aliveCharacters);
+        Debug.Log("========================");
+        foreach (Heroes hero in this.aliveCharacters) {
+            Debug.Log(hero);
+        }
+        Debug.Log("========================");
     }
 
     public void SetPlayingCharacters(List<Heroes> playingCharacters) {
@@ -403,6 +403,8 @@ public class GameManager : MonoBehaviour {
             if (distance <= enterCombatModeRange) {
                 isCheckingForCombat = false;
                 currentState = GameManager.State.CombatMode;
+                ResetCharactersFeatures();
+                UI_Manager.Instance.diceButton.SetActive(true);
                 isCheckingForCombat = false;
                 StartCoroutine(SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC));
                 StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.COMBAT_MODE_MUSIC));
