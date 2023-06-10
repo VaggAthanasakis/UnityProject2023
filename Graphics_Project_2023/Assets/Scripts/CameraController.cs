@@ -7,8 +7,13 @@ public class CameraController : MonoBehaviour {
     private bool dragPanMoveActive;
     private Vector2 lastMousePosition;
     private float targetFieldOfView = 50;
-    private float fieldOfViewMax = 50;
-    private float fieldOfViewMin = 10;
+    private float zoomFieldOfViewMax = 80;
+    private float zoomFieldOfViewMin = 20;
+    private float minX = 5;
+    private float maxX = 85;
+    private float minZ = 5;
+    private float maxZ = 85;
+
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
     private void Update() {
@@ -30,7 +35,13 @@ public class CameraController : MonoBehaviour {
         // we use .z because we are at 3d environment
         Vector3 moveDirection = transform.forward * inputDirection.z + transform.right * inputDirection.x;
         float moveSpeed = 20f;
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        /* fix the camere within a range */
+        Vector3 tmp = transform.position + moveDirection * moveSpeed * Time.deltaTime;
+        float clampedX = Mathf.Clamp(tmp.x, minX, maxX);
+        float clampedZ = Mathf.Clamp(tmp.z, minZ, maxZ);
+        transform.position = new Vector3(clampedX,transform.position.y, clampedZ);
+        /**/
+        //transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
 
     private void HandleCameraMovementDragPan() {
@@ -58,7 +69,13 @@ public class CameraController : MonoBehaviour {
         // we use .z because we are at 3d environment
         Vector3 moveDirection = transform.forward * inputDirection.z + transform.right * inputDirection.x;
         float moveSpeed = 20f;
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        /* fix the camera do be inside a range */
+        Vector3 tmp = transform.position + moveDirection * moveSpeed * Time.deltaTime;
+        float clampedX = Mathf.Clamp(tmp.x, minX, maxX);
+        float clampedZ = Mathf.Clamp(tmp.z, minZ, maxZ);
+        transform.position = new Vector3(clampedX, transform.position.y, clampedZ);
+
+        //transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
 
     /* Handle camera rotation */
@@ -80,10 +97,10 @@ public class CameraController : MonoBehaviour {
 
     /* Handle camera zoom  using the mouse scroll */
     private void HandleCameraZoom() {
-        if (Input.mouseScrollDelta.y > 0 && targetFieldOfView >= fieldOfViewMin) { // zoom in
+        if (Input.mouseScrollDelta.y > 0 && targetFieldOfView >= zoomFieldOfViewMin) { // zoom in
             targetFieldOfView -= 5;
         }
-        if (Input.mouseScrollDelta.y < 0 && targetFieldOfView <= fieldOfViewMax) { // zoom out
+        if (Input.mouseScrollDelta.y < 0 && targetFieldOfView <= zoomFieldOfViewMax) { // zoom out
             targetFieldOfView += 5;
         }
         // apply the zoom smoothly

@@ -97,9 +97,6 @@ public class GridPathSystem {
         if (gridPosition.x < 0 || gridPosition.z < 0 ) {
             return null;
         }
-        /* else, find the node */
-        //Debug.Log("gridPosition.x = "+gridPosition.x+" gridPosition.z = "+gridPosition.z);
-        //Debug.Log("GridPathArray.0 = "+ gridPathArray.GetLength(0)+ "GridPathArray.1 = "+ gridPathArray.GetLength(1));
         return gridPathArray[gridPosition.x, gridPosition.z];
     }
 

@@ -17,17 +17,12 @@ public class Priest : Heroes {
         AddAction("Heal");
         AddAction("BegEnemy");
         AddAction("CastSpell");
-        //AddAction("");
     }
 
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
         HeroAttributesToString();
-        /*gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
-        PathFinding.Instance.AddUnitAtGridPosition(gridPosition,this.gameObject.GetComponent<Unit>());
-        currentPositionIndex = 0;
-        */
     }
 
     // Update is called once per frame
@@ -111,7 +106,7 @@ public class Priest : Heroes {
     }
 
     public override void HeroAttributesToString() {
-        base.attributesToString = "Charisma: " + this.GetCharisma() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
+        base.attributesToString = "Charisma: " + this.GetCharisma() + "\nArmor Class: " + this.GetArmorClass() +"\nHealth: "+this.GetCurrentHealthPoints()+"\nMove Range: " + this.GetMoveRange() + "\nDice Value: " + this.diceValue;
     }
 
     public override void NegotiateAmount() {

@@ -80,7 +80,7 @@ public class Fighter : Heroes {
 
     /*************/
     public override void HeroAttributesToString() {
-        base.attributesToString = "Strength: "+this.GetStrength()+"\nArmor Class: "+this.GetArmorClass()+"\nMove Range: "+this.GetMoveRange()+"\n";
+        base.attributesToString = "Strength: "+this.GetStrength()+"\nArmor Class: "+this.GetArmorClass()+"\nHealth: "+this.GetCurrentHealthPoints()+"\nMove Range: "+this.GetMoveRange()+"\nDice Value: "+this.diceValue;
     }
 
     /* function that is called when the hero levels up */

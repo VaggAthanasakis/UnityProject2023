@@ -122,7 +122,7 @@ public class Mage : Heroes {
     }
 
     public override void HeroAttributesToString() {
-        base.attributesToString = "Strength: " + this.GetStrength() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
+        base.attributesToString = "Intelligence: " + this.GetIntelligence() + "\nArmor Class: " + this.GetArmorClass() +"\nHealth: "+this.GetCurrentHealthPoints() +"\nMove Range: " + this.GetMoveRange() + "\nDice Value: " + this.diceValue;
     }
 
     /* Calculates the damage amount of the attack. damageAmount = dice + main attribute */
@@ -131,6 +131,4 @@ public class Mage : Heroes {
         this.SetIsCastSpelling(true);
         this.SetCurrentAttackAmount(damageAmount);
     }
-
-
 }

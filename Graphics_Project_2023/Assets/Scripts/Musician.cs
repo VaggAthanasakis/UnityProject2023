@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Musician : Heroes {
 
-    private int charisma;
+    private int intelligence;
     public const string HERO_CLASS = "Musician";
 
     /* Awake(), Start(), Update() */
@@ -31,13 +31,13 @@ public class Musician : Heroes {
     }
 
     /* Getters */
-    public int GetCharisma() {
-        return this.charisma;
+    public int GetIntelligence() {
+        return this.intelligence;
     }
 
     /* Setters */
-    public void SetCharisma(int cha) {
-        this.charisma = cha;
+    public void SetCharisma(int intell) {
+        this.intelligence = intell;
     }
 
     /********* Methods **********/
@@ -47,10 +47,10 @@ public class Musician : Heroes {
 
         // setting the attributes
         int sumOfAttributesPoints = ((this.GetNumOfAttributes() - 1) * 4 + 2);
-        this.charisma = sumOfAttributesPoints / 2;
-        int remain = sumOfAttributesPoints - charisma;
+        this.intelligence = sumOfAttributesPoints / 2;
+        int remain = sumOfAttributesPoints - intelligence;
         this.SetDexterity(remain / 2);
-        this.SetConstitution(sumOfAttributesPoints - charisma - this.GetDexterity());
+        this.SetConstitution(sumOfAttributesPoints - intelligence - this.GetDexterity());
 
         // setting the features
         this.SetHealthPoints(10 + this.GetConstitution());
@@ -75,7 +75,7 @@ public class Musician : Heroes {
         /* We level up if the hero has 4 experience points */
         if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
             /// code for level up
-            this.charisma += 5;
+            this.intelligence += 5;
             this.SetArmorClass(this.GetArmorClass() + 2);
             this.SetCurrentArmorClass(this.GetArmorClass() + 2);
             this.SetLevel(this.GetLevel() + 1);
@@ -92,12 +92,12 @@ public class Musician : Heroes {
     }
 
     public override void HeroAttributesToString() {
-        base.attributesToString = "Charisma: " + this.GetCharisma() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
+        base.attributesToString = "Intelligence: " + this.GetIntelligence() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\nDice Value: " + this.diceValue;
     }
 
     /* Calculate the volume of the music */
     public override void SoundVolumeCalculation() {
-        int decibel = diceValue + this.charisma - 2;
+        int decibel = diceValue + this.intelligence - 2;
         this.SetIsPlayingMusic(true);
         this.SetCurrentAttackAmount(decibel);
     }

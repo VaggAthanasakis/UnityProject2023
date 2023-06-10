@@ -23,7 +23,6 @@ public static class SceneLoader{
         SceneManager.LoadScene(Scene.LoadingScene.ToString());
         if (targetScene == Scene.MainMenuScene) {
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
-
         }
     }
 
@@ -34,6 +33,9 @@ public static class SceneLoader{
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
         }
         SceneManager.LoadScene(targetScene.ToString());
+        if (targetScene == Scene.MainMenuScene) {
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
+        }
     }
 
 }

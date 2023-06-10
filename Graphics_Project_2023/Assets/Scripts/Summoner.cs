@@ -97,7 +97,7 @@ public class Summoner : Heroes {
     }
 
     public override void HeroAttributesToString() {
-        base.attributesToString = "Charisma: " + this.GetCharisma() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\n";
+        base.attributesToString = "Charisma: " + this.GetCharisma() + "\nArmor Class: " + this.GetArmorClass() +"Health: "+this.GetCurrentHealthPoints() +"\nMove Range: " + this.GetMoveRange() + "\nDice Value: " + this.diceValue;
     }
 
     public override void HelpPowerAmountCalculation() {
