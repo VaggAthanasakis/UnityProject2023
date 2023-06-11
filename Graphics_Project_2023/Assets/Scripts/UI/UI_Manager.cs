@@ -39,6 +39,7 @@ public class UI_Manager : MonoBehaviour {
     [SerializeField] public GameObject gameInfo;
     [SerializeField] public TextMeshProUGUI gameInfoText;
     private int gameInfoVisualTimer = 100;
+    private int gameStoryPanelPopUpDelay = 100;
 
     /* Header Texts */
     [SerializeField] TextMeshProUGUI gameState;
@@ -69,6 +70,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Game Story Panel */
     [SerializeField] private GameObject gameStoryPanel;
+    private bool isGameStoryPanelOpen = true;
 
 
     private void Awake() {
@@ -103,6 +105,14 @@ public class UI_Manager : MonoBehaviour {
         else if(this.gameInfo.activeSelf == true && this.gameInfoVisualTimer > 0) {
             this.gameInfoVisualTimer -= 1;
         }
+        /* Code For Poping Up The Game Story Panel */
+        if (gameStoryPanelPopUpDelay <= 0 && !this.gameStoryPanel.activeSelf && isGameStoryPanelOpen) {
+            Debug.Log("Activate");
+            this.gameStoryPanel.SetActive(true); }
+        else if (!gameStoryPanel.activeSelf && isGameStoryPanelOpen) {
+
+            Debug.Log("Counter");
+            gameStoryPanelPopUpDelay--; }  // increase the counter only if it is not activated
 
         PauseMenuScript(); // handle pause menu
     }
@@ -396,9 +406,9 @@ public class UI_Manager : MonoBehaviour {
     }
 
     /* Button For Closing The Start Story */
-    public void CloseGameStory_Button() { 
-    
-    
+    public void CloseGameStory_Button() {
+        this.gameStoryPanel.SetActive(false);
+        this.isGameStoryPanelOpen = false;
     }
 
 
@@ -435,6 +445,4 @@ public class UI_Manager : MonoBehaviour {
         Debug.Log("Quiting Game");
         Application.Quit();
     }
-
-
 }
