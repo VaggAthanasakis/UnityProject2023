@@ -67,6 +67,9 @@ public class UI_Manager : MonoBehaviour {
     /* Pause Menu UI */
     [SerializeField] private GameObject PauseMenuPanel;
 
+    /* Game Story Panel */
+    [SerializeField] private GameObject gameStoryPanel;
+
 
     private void Awake() {
         Instance = this;
@@ -390,6 +393,12 @@ public class UI_Manager : MonoBehaviour {
             this.turnInfoPanelText.text = heroTurn;
         }
 
+    }
+
+    /* Button For Closing The Start Story */
+    public void CloseGameStory_Button() { 
+    
+    
     }
 
 
