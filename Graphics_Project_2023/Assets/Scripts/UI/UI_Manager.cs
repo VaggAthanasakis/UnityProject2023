@@ -60,6 +60,10 @@ public class UI_Manager : MonoBehaviour {
     [SerializeField] public TextMeshProUGUI gameRound;
     [SerializeField] public TextMeshProUGUI gameTurn;
 
+    /* Turn Info */
+    [SerializeField] GameObject turnInfoPanel;
+    [SerializeField] TextMeshProUGUI turnInfoPanelText;
+
     /* Pause Menu UI */
     [SerializeField] private GameObject PauseMenuPanel;
 
@@ -258,7 +262,6 @@ public class UI_Manager : MonoBehaviour {
 
     }
 
-
     /***********************************************************************/
     public void SetStateInfo() {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
@@ -355,12 +358,9 @@ public class UI_Manager : MonoBehaviour {
             }
             else {                         // else pause the game
                 PauseGame();
-            
             }
         }
-    
     }
-
 
     /* Resume Game method */
     public void ResumeGame() {
@@ -370,7 +370,6 @@ public class UI_Manager : MonoBehaviour {
         GameManager.isGamePaused = false;     // Inform the GameManager that the game is not paused
     }
 
-
     /* Pause Game Method */
     private void PauseGame() {
         SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
@@ -378,6 +377,21 @@ public class UI_Manager : MonoBehaviour {
         Time.timeScale = 0f;                 // completely freeze time
         GameManager.isGamePaused = true;     // Inform the GameManager that the game is paused
     }
+
+    /* Turn Info  */
+    public void SetTurnInfo(bool isEnemy,bool activate) {
+        string heroTurn = "Hero's Turn";
+        string enemyTurn = "Enemy's Turn";
+        this.turnInfoPanel.SetActive(activate);
+        if (isEnemy) {
+            this.turnInfoPanelText.text = enemyTurn;
+        }
+        else {
+            this.turnInfoPanelText.text = heroTurn;
+        }
+
+    }
+
 
     /* Function that is called when we press Menu */
     public void LoadMenu_Button() {

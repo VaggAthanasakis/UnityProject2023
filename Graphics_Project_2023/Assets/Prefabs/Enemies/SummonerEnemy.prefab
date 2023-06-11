@@ -19,6 +19,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.6603774
       objectReference: {fileID: 0}
+    - target: {fileID: 3558752607645959952, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2.79
+      objectReference: {fileID: 0}
     - target: {fileID: 3819044221613149023, guid: 55fd8ff932d83bf4bb6e32c06416b26f, type: 3}
       propertyPath: isEnemy
       value: 1

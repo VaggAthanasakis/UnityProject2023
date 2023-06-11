@@ -75,6 +75,10 @@ PrefabInstance:
       propertyPath: isEnemy
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5385386813854419805, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2.52
+      objectReference: {fileID: 0}
     - target: {fileID: 8587361477188690388, guid: 27e588ea222ea3a42b400be90b09d82e, type: 3}
       propertyPath: m_IsActive
       value: 0

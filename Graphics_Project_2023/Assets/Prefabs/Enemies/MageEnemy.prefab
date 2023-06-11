@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 187600965138304347, guid: 9cb57cea9669f364caa83c08709c51a6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2.33
+      objectReference: {fileID: 0}
     - target: {fileID: 508794489185140554, guid: 9cb57cea9669f364caa83c08709c51a6, type: 3}
       propertyPath: hero
       value: 

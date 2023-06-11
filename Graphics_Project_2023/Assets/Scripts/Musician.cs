@@ -92,7 +92,7 @@ public class Musician : Heroes {
     }
 
     public override void HeroAttributesToString() {
-        base.attributesToString = "Intelligence: " + this.GetIntelligence() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\nDice Value: " + this.diceValue;
+        base.attributesToString = "Intelligence: " + this.GetIntelligence() + "\nArmor Class: " + this.GetArmorClass() + "\nMove Range: " + this.GetMoveRange() + "\nAction Range: " + this.GetAttackRange() + "\nDice Value: " + this.diceValue;
     }
 
     /* Calculate the volume of the music */

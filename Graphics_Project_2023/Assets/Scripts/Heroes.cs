@@ -85,7 +85,6 @@ public class Heroes : MonoBehaviour {
     }
 
 
-
     /****************************** Incoming Events ***********************************/
 
     /* This event arrives from MouseClick when the user clicks on any hero
@@ -138,7 +137,6 @@ public class Heroes : MonoBehaviour {
         //Debug.Log("Pointig On A Mage!");
         if (e.pointedHero != null && e.pointedHero == this) {
             this.isPointedByMouse = true;
-
         }
         else {
             this.isPointedByMouse = false;
@@ -1019,7 +1017,7 @@ public class Heroes : MonoBehaviour {
 
         SoundVolumeCalculation(); // store the volume at the attack amount in order not to declare too many variables
 
-        int actionSuccessfulOffset = 20;
+        int actionSuccessfulOffset = 15;
         if (this.GetCurrentAttackAmount() > actionSuccessfulOffset) {
             // then we can perform the action
             if (!this.GetIsEnemy()) { // if we have a hero
@@ -1222,7 +1220,7 @@ public class Heroes : MonoBehaviour {
                 else {
                     // else either cast a spell or dash
                     int k = UnityEngine.Random.Range(1, 11);
-                    if (k < 6) {
+                    if (k < 7) {
                         //MoveEnemyAI(closerHero); // move towards the enemy and cast spell
                         this.CastSpell();
                         Debug.Log(this + " CastSpell");

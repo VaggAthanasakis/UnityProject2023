@@ -75,6 +75,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 4852127481903942945, guid: 5385aa4f3517d29408816dd9bee623b1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2.53
+      objectReference: {fileID: 0}
     - target: {fileID: 5241519308592329145, guid: 5385aa4f3517d29408816dd9bee623b1, type: 3}
       propertyPath: m_Name
       value: BarEnemy

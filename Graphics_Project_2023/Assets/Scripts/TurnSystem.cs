@@ -93,9 +93,15 @@ public class TurnSystem : MonoBehaviour {
     public IEnumerator FirstTurn(Heroes heroTurn) {
         yield return new WaitWhile(() => frame < 150);
         frame = 0;
+        /**/
+        if (heroWithTurn.GetIsEnemy()) {
+            UI_Manager.Instance.nextTurnButton.SetActive(false);
+        }
+        /**/
         OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
             heroWithTurn = heroTurn
         });
+        UI_Manager.Instance.SetTurnInfo(this.heroWithTurn.GetIsEnemy(),true);
 
     }
 
@@ -133,9 +139,15 @@ public class TurnSystem : MonoBehaviour {
                 this.playingCharacters[indexOfHeroWithTurn + k1].SetIsPlayersTurn(true);
                 this.heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1];
                 lastHeroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1];
-                 OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
+                /**/
+                if (heroWithTurn.GetIsEnemy()) {
+                    UI_Manager.Instance.nextTurnButton.SetActive(false);
+                }
+                /**/
+                OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs {
                     heroWithTurn = this.playingCharacters[indexOfHeroWithTurn + k1]
                 });
+                UI_Manager.Instance.SetTurnInfo(this.heroWithTurn.GetIsEnemy(), true);
                 break;
             }
             else {
@@ -154,7 +166,8 @@ public class TurnSystem : MonoBehaviour {
             UI_Manager.Instance.diceButton.SetActive(true);
             OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {
                 roundNum = roundNumber
-            });       
+            });
+            UI_Manager.Instance.SetTurnInfo(false, false);
         }
         UI_Manager.Instance.gameRound.text = "ROUND " + TurnSystem.Instance.GetRoundNumber();
         UI_Manager.Instance.gameTurn.text = "TURN " + TurnSystem.Instance.GetTurnNumber();

@@ -313,6 +313,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2452332172821940468}
   - component: {fileID: 6313420159248864729}
+  - component: {fileID: 7484354387004762815}
   m_Layer: 7
   m_Name: EnemyBoss
   m_TagString: Untagged
@@ -363,6 +364,20 @@ MonoBehaviour:
   performedActions: 0
   numOfAllowedActions: 1
   attributesToString: 
+--- !u!136 &7484354387004762815
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2452332172821940469}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &3239201077773251560
 GameObject:
   m_ObjectHideFlags: 0

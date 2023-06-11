@@ -89,8 +89,8 @@ public class GameManager : MonoBehaviour {
         SetAliveCharactersAtTurnSystem();
         
         /* Start The Free Roam Music */
-        StartCoroutine(SoundManager.Instance.StopSound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));
-        StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.FREE_ROAM_MUSIC));
+        //StartCoroutine(SoundManager.Instance.StopSound(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC));
+        //StartCoroutine(SoundManager.Instance.PlaySound(SoundManager.FREE_ROAM_MUSIC));
         // Spawn the objects
         RandomGameObjectsInstantiation();
 
@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour {
     /* Chech if the game has ended, check if all heroes are dead or all enemies are dead */
     private void CheckIfGameEnded() {
         if (aliveEnemies.Count <= 0 && currentState != State.Victory ) { //
+            UI_Manager.Instance.SetTurnInfo(false, false);  // deactivate the turn panel
             if (atEnemyGroup <= 3) { // if we have defeat the final group of enemies then win
                 /* Spawn next Group here */
                 TurnSystem.Instance.ResetRoundNumber();
