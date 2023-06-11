@@ -270,7 +270,7 @@ public class UI_Manager : MonoBehaviour {
             this.gameState.text = combatMode;
             this.stateInfo.text = combatModeInfo;
             this.footerBarInfo.SetActive(true);
-            Debug.Log("Set Turn Buttons On");
+            //Debug.Log("Set Turn Buttons On");
             this.gameTurnButtons.SetActive(true);
         }
         else if (GameManager.Instance.GetCurrentState() == GameManager.State.GameOver) {

@@ -38,10 +38,10 @@ public class GameManager : MonoBehaviour {
     [SerializeField] Heroes enemyPriestPrefab;
     [SerializeField] Heroes enemyMusicianPrefab;
     [SerializeField] Heroes enemySummonerPrefab;
+    [SerializeField] Heroes enemyBossPrefab;
 
     /* GameObject Prefabs */
     [SerializeField] GameObject chestPrefab;
-    //[SerializeField] GameObject grass;
     [SerializeField] GameObject treePrefab;
     [SerializeField] GameObject rockPrefab;
 
@@ -120,14 +120,13 @@ public class GameManager : MonoBehaviour {
             case State.GameOver:
                 UI_Manager.Instance.SetStateInfo();
                 break; 
-        }
-        
+        }  
     }
 
     /* Chech if the game has ended, check if all heroes are dead or all enemies are dead */
     private void CheckIfGameEnded() {
         if (aliveEnemies.Count <= 0 && currentState != State.Victory ) { //
-            if (atEnemyGroup != 3) { // if we have defeat the final group of enemies then win
+            if (atEnemyGroup <= 3) { // if we have defeat the final group of enemies then win
                 /* Spawn next Group here */
                 TurnSystem.Instance.ResetRoundNumber();
                 TurnSystem.Instance.ResetTurnNumber();
@@ -137,7 +136,7 @@ public class GameManager : MonoBehaviour {
                 SpawnNextGroupOfEnemies();
                 SetAliveCharactersAtTurnSystem();
             }
-            else {
+            else  {
                 // else we have defeat all the groups of enemies -> victory
                 currentState = State.Victory;
                 SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
@@ -245,11 +244,11 @@ public class GameManager : MonoBehaviour {
         int numOfAliveHeroes = this.aliveHeroes.Count;
         // If we are the first group of enemies
         if (atEnemyGroup == 1) {
-            Debug.Log("Heroes Alive: "+numOfAliveHeroes);
+            Debug.Log("Heroes Alive: " + numOfAliveHeroes);
             enemiesToSpawn = numOfAliveHeroes - 2;
             if (enemiesToSpawn <= 0) { enemiesToSpawn = 1; }
             Debug.Log("enemies To spawn: " + enemiesToSpawn);
-            positionOfFirstEnemy = new GridPosition(76,14);   // checked this via debug objects
+            positionOfFirstEnemy = new GridPosition(76, 14);   // checked this via debug objects
             Debug.Log("At First Group");
         }
         else if (atEnemyGroup == 2) {
@@ -258,13 +257,22 @@ public class GameManager : MonoBehaviour {
             positionOfFirstEnemy = new GridPosition(80, 66); // adding at x axis for the next
             Debug.Log("At Second Group");
         }
-        else {
+        else if (atEnemyGroup == 3) {
+            // here we will spawn the final boss of the enemies
+            enemiesToSpawn = numOfAliveHeroes - 1;
+            if (enemiesToSpawn <= 0) { enemiesToSpawn = 1; }
+            positionOfFirstEnemy = new GridPosition(23, 61);
             Debug.Log("At 3rd Group");
         }
-        atEnemyGroup++; // increase the counter
+        else {
+            Debug.Log("Spawned all Enemies");
+            return;
+        }
+        //atEnemyGroup++; // increase the counter
 
         /* Now Randomly Spawn The Enemies */
-        for (int i=0; i< enemiesToSpawn; i++) {
+        int i;
+        for (i=0; i< enemiesToSpawn; i++) { 
             int randNumber = Random.Range(1, 7); // since we have 6 prefabs of enemies
             if (randNumber == 1) {               // spawn fighter
                 positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
@@ -296,9 +304,18 @@ public class GameManager : MonoBehaviour {
                 Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
                 InstantiateHeroOnPosition(Summoner.HERO_CLASS, worldPos, true); // true because it is an enemy
             }
-
         }
-   
+        /* if we are at the 3rd group, we also need to spawn the enemy boss */
+        if (atEnemyGroup == 3) {
+            Debug.Log("Spawn Boss");
+            positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i + 1);
+            Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
+            InstantiateHeroOnPosition(FinalBoss.HERO_CLASS, worldPos, true); // true because it is an enemy
+        }
+
+        atEnemyGroup++; // increase the counter
+
+
     }
 
     private void SetAliveCharactersAtTurnSystem() {
@@ -414,6 +431,9 @@ public class GameManager : MonoBehaviour {
         return false;
     }
 
+    /* This method takes the hero and the position and spawns it at the world
+     * Also, it puts the hero/enemy at the list of alive heroes/enemies and to the alive Characters List
+     * and makes the grid hero's node no walkable */
     public void InstantiateHeroOnPosition(string heroClass, Vector3 position, bool isEnemy) {
         switch (heroClass) {
             case Fighter.HERO_CLASS :
@@ -499,6 +519,12 @@ public class GameManager : MonoBehaviour {
                     aliveEnemies.Add(summoner);
                     summoner.SetWalkableNodeAtHeroPosition(false);
                 }
+                break;
+            case FinalBoss.HERO_CLASS:
+                FinalBoss boss = (FinalBoss)Instantiate(enemyBossPrefab, position, Quaternion.identity);
+                aliveCharacters.Add(boss);
+                aliveEnemies.Add(boss);
+                boss.SetWalkableNodeAtHeroPosition(false);
                 break;
         }
     

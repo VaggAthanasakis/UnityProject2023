@@ -51,7 +51,7 @@ public class GridPathSystem {
                 /* Make the nodes that are below the houses, no walkable */
                 if (z == 8 && (x >= 1 && x <= 9)) { newNode.SetIsWalkable(false); }
                 if ((x >= 0 && x <= 14) && (z >= 14 && z <= 34)) { newNode.SetIsWalkable(false); }
-                if ((x >= 14 && x <= 62) && (z >= 34 && x <= 44)) { newNode.SetIsWalkable(false); }
+                if ((x >= 14 && x <= 62) && (z >= 34 && z <= 44)) { newNode.SetIsWalkable(false); }
                 if ((x >= 51 && x <= 62) && (z >= 29 && z <= 45)) { newNode.SetIsWalkable(false); }
                 if ((x >= 39 && x <= 49) && (z >= 14 && z <= 29)) { newNode.SetIsWalkable(false); }
                 if ((x >= 21 && x <= 31) && (z >= 23 && z <= 30)) { newNode.SetIsWalkable(false); }

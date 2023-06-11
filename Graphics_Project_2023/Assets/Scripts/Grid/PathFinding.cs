@@ -12,7 +12,6 @@ public class PathFinding : MonoBehaviour {
     [SerializeField] public LayerMask floorLayerMask;
 
     private GridPathSystem gridPathSystem;
-    private Vector3 selectedHeroStartingPosition;
     public GridPosition startGridPosition;
     private Heroes selectedHero;
     private Heroes heroWithTurn;
