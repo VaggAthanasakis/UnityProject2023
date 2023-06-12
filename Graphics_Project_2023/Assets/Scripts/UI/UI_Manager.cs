@@ -112,7 +112,8 @@ public class UI_Manager : MonoBehaviour {
         else if (!gameStoryPanel.activeSelf && isGameStoryPanelOpen) {
 
             //Debug.Log("Counter");
-            gameStoryPanelPopUpDelay--; }  // increase the counter only if it is not activated
+            gameStoryPanelPopUpDelay--; // increase the counter only if it is not activated
+        }  
 
         PauseMenuScript(); // handle pause menu
     }
