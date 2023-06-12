@@ -27,7 +27,7 @@ public class PathFinding : MonoBehaviour {
         Instance = this;
     
         //Grid Creation
-        //100 x 100 Grid , 1 unit tile size
+        //100 x 80 Grid , 1 unit tile size
         gridPathSystem = new GridPathSystem(100, 80, 1f);
         //Create Debug Objects on each grid tile
         //gridPathSystem.CreateDebugObjects(_pathfindingDebugObjectPrefab, this.transform);
@@ -98,7 +98,11 @@ public class PathFinding : MonoBehaviour {
             GridPosition mouseGridPosition = PathFinding.Instance.GetGridPosition(MouseClick.GetPosition());
             
             this.prevMousePosition = mouseGridPosition;
-            
+
+            if (this.Grid().GetPathNode(mouseGridPosition) == null ) {
+                Debug.Log("Cannot Move There");
+                return;
+            }
 
             if (selectedHero != null && GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
                 if (selectedHero.currentPositionIndex == 0) {
@@ -256,8 +260,8 @@ public class PathFinding : MonoBehaviour {
         /* Find the path that the player must follow */
         positionList = gridPathSystem.FindPath(startGridPosition, targetGridPosition, true);
         this.prevMousePosition = new GridPosition();
-        if (positionList == null) {
-            Debug.Log("NULLLLLLLLLLLLLLLLLLLLLLLLL");
+        if (positionList == null) {  
+            //Debug.Log("NULLLLLLLLLLLLLLLLLLLLLLLLL");
             return -1;
         }
 
@@ -267,6 +271,11 @@ public class PathFinding : MonoBehaviour {
             PathNode startNode = gridPathSystem.GetPathNode(start);
             PathNode endNode = gridPathSystem.GetPathNode(end);
 
+        }
+        /* ADDED */
+        if (gridPathPositionList == null) { 
+            //Debug.Log("NULL");
+            return int.MaxValue;  // return this because if we return a small value, we may enter combat mode
         }
 
         //temporary unit position list

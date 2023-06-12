@@ -69,9 +69,9 @@ public class FinalBoss : Heroes {
         this.strength += 1;
 
         // setting the features
-        this.SetHealthPoints(10 + this.GetConstitution());
+        this.SetHealthPoints(15 + this.GetConstitution());
         this.SetArmorClass(10 + this.GetDexterity());
-        this.SetAttackRange(6);
+        this.SetAttackRange(7);
         this.SetMoveRange(5);
         this.SetCurrentHealthPoints(this.GetHealthPoints());
         this.SetCurrentArmorClass(this.GetArmorClass());

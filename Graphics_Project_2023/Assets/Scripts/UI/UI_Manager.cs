@@ -111,7 +111,7 @@ public class UI_Manager : MonoBehaviour {
             this.gameStoryPanel.SetActive(true); }
         else if (!gameStoryPanel.activeSelf && isGameStoryPanelOpen) {
 
-            Debug.Log("Counter");
+            //Debug.Log("Counter");
             gameStoryPanelPopUpDelay--; }  // increase the counter only if it is not activated
 
         PauseMenuScript(); // handle pause menu
@@ -227,7 +227,8 @@ public class UI_Manager : MonoBehaviour {
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
 
         if (heroWithTurn.heroClass != Priest.HERO_CLASS && heroWithTurn.heroClass != Mage.HERO_CLASS) { return; }
-        heroWithTurn.CastSpell();
+        int healProbability = 50;
+        heroWithTurn.CastSpell(healProbability);
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
             StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
@@ -409,6 +410,7 @@ public class UI_Manager : MonoBehaviour {
     public void CloseGameStory_Button() {
         this.gameStoryPanel.SetActive(false);
         this.isGameStoryPanelOpen = false;
+        SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
     }
 
 

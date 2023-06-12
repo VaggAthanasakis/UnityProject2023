@@ -91,7 +91,7 @@ public class TurnSystem : MonoBehaviour {
 
     /* Wait for some time after the dice button is pushed */
     public IEnumerator FirstTurn(Heroes heroTurn) {
-        yield return new WaitWhile(() => frame < 150);
+        yield return new WaitWhile(() => frame < 6f);
         frame = 0;
         /**/
         if (heroWithTurn.GetIsEnemy()) {
@@ -105,19 +105,26 @@ public class TurnSystem : MonoBehaviour {
 
     }
 
-
-
     /* create a buffer time to apply after every action in order the actions not to be
      * executed immediantly one after the other */
-    int frame;
+    float frame;
+    float incrementAmount = 1f;
+    float elapsedTime = 0;
     private void Update() {
-        if (frame <= 150)
-            frame++;
+        elapsedTime += Time.deltaTime;
+        if (elapsedTime >= incrementAmount && frame <=6f) {
+            frame += incrementAmount;
+            elapsedTime = 0;
+        }
+
+        /*
+        if (frame <= 10f)
+            frame = frame + incrementAmount * Time.deltaTime;*/
     }
 
     public IEnumerator NextTurn() {
 
-        yield return new WaitWhile(() => frame < 150);
+        yield return new WaitWhile(() => frame < 6f);
         frame = 0;
 
         /* find player with turn previously */

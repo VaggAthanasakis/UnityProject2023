@@ -66,6 +66,7 @@ public class InteractableObject : MonoBehaviour {
         /* Check if the hero is far away */
         if (distance > interactableDistance) {
             Debug.Log("Hero Far Away");
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return false;
         }
 
@@ -74,19 +75,31 @@ public class InteractableObject : MonoBehaviour {
         /* 25% heal, 25% damage, 25% decrease attack range decrease, 25% range increase */
         if (randomNumber <= 25) { // then heal else damage
             mysteryBoxAction = "HEAL";
-            heroInteracted.GetHeal(randomNumber, null);
+            heroInteracted.GetHeal(randomNumber / 2 + 1, null);
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.HEAL_MUSIC);
         }
         else if (randomNumber <= 50) {
             mysteryBoxAction = "DAMAGE";
-            heroInteracted.TakeDamage(randomNumber - 2, null);
+            heroInteracted.TakeDamage(randomNumber/2 - 8, null);
+            /* if this is the last hero and dies */
+            if (GameManager.Instance.aliveHeroes.Count == 0) {
+                GameManager.Instance.SetCurrentState(GameManager.State.GameOver);
+                SoundManager.Instance.StopSoundWithoutFade(SoundManager.COMBAT_MODE_MUSIC);
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.DEFEAT_MUSIC);
+                SoundManager.Instance.PlaySoundWithoutFade(SoundManager.MAIN_MENU_CHAR_SELECTION_MUSIC);
+                Debug.Log("DEFEAT");
+            }
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.ATTACK_MUSIC);
         }
         else if (randomNumber <= 75) {
             mysteryBoxAction = "RANGE DOWN";
             heroInteracted.SetAttackRange(heroInteracted.GetAttackRange()/2 +1); // decrease attack range
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.ATTACK_MUSIC);
         }
         else {
             mysteryBoxAction = "RANGE UP";
-            heroInteracted.SetAttackRange(heroInteracted.GetAttackRange() * 2 - 2); // decrease attack range
+            heroInteracted.SetAttackRange(heroInteracted.GetAttackRange() * 2 - 2); // increase attack range
+            SoundManager.Instance.PlaySoundWithoutFade(SoundManager.HEAL_MUSIC);
         }
         UI_Manager.Instance.selectedObjectPanel.SetActive(false);
         return true;

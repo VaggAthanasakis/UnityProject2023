@@ -450,9 +450,9 @@ public class Heroes : MonoBehaviour {
     /* This method is called when an oneother hero heals this hero */
     public void GetHeal(int healAmount, Heroes otherHero) {
         /* if we already have max health */
-        if (this.currentHealAmount == this.healthPoints) {
-            UI_Manager.Instance.SetGameInfo("Unsuccessful Heal");
-            Debug.Log("Player Already Healed!");
+        if (this.currentHealthPoints == this.healthPoints) {
+            UI_Manager.Instance.SetGameInfo("Already Healed");
+            Debug.Log("Player Already Healled!");
             return;
         }
         int newHealth = this.GetCurrentHealthPoints() + healAmount;
@@ -476,25 +476,38 @@ public class Heroes : MonoBehaviour {
         Vector3 moveDirection;
 
         /* Cannot Perform Move When Is Dead */
-        if (this.isDead) { return; }
+        if (this.isDead) {
+            this.SetIsWalking(false);
+            SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
+            return; 
+        }
+
+        /* If it is not players turn but the position list is not zero, make it zero */
+        if (!isPlayersTurn && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
+            this.SetPositionsList(null);
+        
+        }
 
         /* If we are at free roam state => we can move
          * If we are at combat mode and it is our turn => we can move 
            else, we cannot */
         if ((isPlayersTurn && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
-            if (positionList.Count <= 0) {
+            if (positionList == null ||positionList.Count <= 0) {
+                Debug.Log("Null Or 0");
                 this.SetIsWalking(false);
                 SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
                 return;
             }
+
             targetPosition = positionList[currentPositionIndex];
             /**/
+            //SoundManager.Instance.PlaySoundWithoutFade(SoundManager.WALKING_MUSIC);
             Vector3 endPosition = positionList[positionList.Count - 1];
             /* Check if we are already there */
             if (this.transform.position == endPosition) {
                 Debug.Log("Already there");
                 this.SetIsWalking(false);
-                //SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
+                SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
                 SetWalkableNodeAtHeroPosition(false);
                 return;
             }
@@ -545,6 +558,12 @@ public class Heroes : MonoBehaviour {
 
     /* Set the path that the hero must follow in order to move */
     public void SetPositionsList(List<Vector3> pathGridPositions) {
+        if (pathGridPositions == null) { // ADDED
+            positionList.Clear(); // ADDED
+            //Debug.Log("null");
+            return;
+        }
+
         /* When we are at combat mode, we check if the position we want to move to can be reached with the hero's moveRange amount
          * If we are at free roam, we dont mind about the moveRange and the hero can move freely */
         if (pathGridPositions.Count - 1 > this.remainingMoveRange && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
@@ -553,18 +572,9 @@ public class Heroes : MonoBehaviour {
             /* move as much as you can */
             List<Vector3> tmpList = pathGridPositions.Take(this.remainingMoveRange).ToList();
             pathGridPositions = tmpList;
-            /*if (pathGridPositions.Count <= 0) {
-                Debug.Log("Hero cannot move that far!");
-                UI_Manager.Instance.SetGameInfo("Hero Cannot Move That Far!");
-                return;
-            }*/
         }
         if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             this.remainingMoveRange -= pathGridPositions.Count - 1; // decrease the current move range 
-            /* If there are no remaining steps, next turn */
-            /*if (this.remain) { 
-            
-            }*/
             float remainingRange = (float)(this.remainingMoveRange) / this.moveRange;
             /* Fire the event to Inform the UI Step Bar */
             OnRemainingMoveRangeChanged?.Invoke(this, new OnRemainingMoveRangeChangedEventArgs {
@@ -852,8 +862,8 @@ public class Heroes : MonoBehaviour {
 
     /********** CAST SPELL ************/
     /* This function is called when the hero (Mage or Priest) want to cast a spell
-     * The Spell will randomly either heal all the heroes or damage all the enemies */
-    public void CastSpell() {
+     * The Spell will randomly (based on a probability that takes as input) either heal all the heroes or damage all the enemies */
+    public void CastSpell(int healProbability) {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
         if (this.heroClass != Priest.HERO_CLASS && this.heroClass != Mage.HERO_CLASS) { return; }
         this.performedActions++;                                     // increase the number of permoemed actionsof the hero
@@ -869,14 +879,14 @@ public class Heroes : MonoBehaviour {
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }
-        int randNumber = UnityEngine.Random.Range(1, 11);
+        int randNumber = UnityEngine.Random.Range(1, 101);
         /* Heal All Heroes */
         /* Because we will permorm heal for every hero, numOfAllowedActions will be increased by PerformHeal each time -> will perform only one (none because of the above increasement) */
         /* so temporarly, we increase the numOfAllowedActions and decrease it again later */
         int initial_numOfAllowedActions = this.numOfAllowedActions;
-        if (randNumber <= 3) {
+        if (randNumber <= healProbability) {
             if (!this.GetIsEnemy()) {
-                this.numOfAllowedActions = GameManager.Instance.aliveHeroes.Count + 1;
+                this.numOfAllowedActions = GameManager.Instance.aliveHeroes.Count + 1; // plus one because cast spell is also an  action
                 foreach (Heroes hero in GameManager.Instance.aliveHeroes) {
                     this.PerformHeal(hero);
                 }
@@ -889,7 +899,7 @@ public class Heroes : MonoBehaviour {
             }
         }
         /* Attack all enemies */
-        else if (randNumber > 3) {
+        else if (randNumber > healProbability) {
             if (!this.GetIsEnemy()) {
                 this.numOfAllowedActions = GameManager.Instance.aliveEnemies.Count + 1;
                 foreach (Heroes hero in GameManager.Instance.aliveEnemies) {
@@ -1097,15 +1107,15 @@ public class Heroes : MonoBehaviour {
         // find the gridPosition and the specific node next to the calling hero
         //Vector3 spawnPos = new Vector3(position.x + 1, 0, position.z);
         GridPosition tmp = PathFinding.Instance.GetGridPosition(position);
-        GridPosition spawnPos = new GridPosition(tmp.x +1,tmp.z);
+        GridPosition spawnPos = new GridPosition(tmp.x -1,tmp.z);
         //GridPosition gridPos = PathFinding.Instance.GetGridPosition(new GridPosition(tmp.x,tmp.z));
         PathNode node = PathFinding.Instance.Grid().GetPathNode(spawnPos);
 
         /* If the above Node is not walkable or null, try to the next one */
         int i = 1;
-        while (node == null || !node.IsWalkable() || i < 3) {
+        while ((node == null || !node.IsWalkable() ) && i < 6) {
             Debug.Log("i = " + i);
-            spawnPos = new GridPosition(spawnPos.x, spawnPos.z + i);
+            spawnPos = new GridPosition(spawnPos.x -i, spawnPos.z - i);
             //gridPos = PathFinding.Instance.GetGridPosition(spawnPos);
             node = PathFinding.Instance.Grid().GetPathNode(spawnPos);
             i++;
@@ -1135,14 +1145,14 @@ public class Heroes : MonoBehaviour {
         Debug.Log("Inside AI");
         /* Check if the enemy has permormed all the allowed action on the round */
         if (this.performedActions >= this.numOfAllowedActions) {
-            //UI_Manager.Instance.SetGameInfo("Max Allowed Actions Performed. Next Turn!");
-            //SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return;
         }
         /* If the enemy has diceValue == 1 -> lost turn */
         if (diceValue == 1) {
             UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
+            StartCoroutine(TurnSystem.Instance.NextTurn());
+            return; // GHANGED THIS, PREVIOUSLY DID NOT RETURN
         }
         
         /* If this hero is an enemy and has turn and we are at combat mode */
@@ -1158,7 +1168,6 @@ public class Heroes : MonoBehaviour {
             foreach (Heroes enemy in aliveEnemies) {
                 int distance;
                 distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position,enemy.transform.position);
-                //Debug.Log("DistanceToEnemy"+ distance/10);
                 hashMap_distanceToEnemies.Add(enemy,distance);
             }
 
@@ -1174,7 +1183,6 @@ public class Heroes : MonoBehaviour {
             foreach (Heroes hero in aliveHeroes) {
                 int distance;
                 distance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, hero.transform.position);
-                //Debug.Log("DistanceToHero" + distance/10);
                 hashMap_distanceToHeroes.Add(hero, distance);
             }
 
@@ -1191,7 +1199,6 @@ public class Heroes : MonoBehaviour {
             // First check if the this enemy is a FIGHTER or a RANGER and if the distance is < attack range
             if ((this.heroClass.Equals("Fighter") || this.heroClass.Equals("Ranger"))) {
                 if (closerHeroDistance <= this.attackRange) {
-                    Debug.Log("Enemy AI Attacking!");
                     // now attack the hero who is closer
                     this.PerformAttack(closerHero);
                     this.EnemyAIAction();
@@ -1201,7 +1208,7 @@ public class Heroes : MonoBehaviour {
                 else {
                     //MoveEnemyAI(closerHero);
                     this.Dash();
-                    MoveEnemyAI(closerHero);
+                    MoveEnemyAI(closerHero); // Move towards his closer enemy
                     this.EnemyAIAction();
                     Debug.Log(this + " Dash");
                     StartCoroutine(TurnSystem.Instance.NextTurn());
@@ -1220,9 +1227,9 @@ public class Heroes : MonoBehaviour {
                 else {
                     // else either cast a spell or dash
                     int k = UnityEngine.Random.Range(1, 11);
-                    if (k < 7) {
-                        //MoveEnemyAI(closerHero); // move towards the enemy and cast spell
-                        this.CastSpell();
+                    if (k <= 7) {
+                        if (closerHeroDistance <= this.attackRange) { this.CastSpell(0); } // try cast a spell that attacks the enemies
+                        else { this.CastSpell(100); }  // try cast a spell that heals your allies
                         Debug.Log(this + " CastSpell");
                         this.EnemyAIAction();
                         StartCoroutine(TurnSystem.Instance.NextTurn());
@@ -1242,10 +1249,18 @@ public class Heroes : MonoBehaviour {
                 int k = UnityEngine.Random.Range(1, 11);
                 // if there is an hero near, try beg him
                 if (closerHeroDistance <= this.attackRange) {
-                    this.Beg(closerHero);
-                    Debug.Log(this + " Beg");
-                    this.EnemyAIAction();
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    if (k < 6) { // then Action Beg
+                        this.Beg(closerHero);
+                        Debug.Log(this + " Beg");
+                        this.EnemyAIAction();
+                        StartCoroutine(TurnSystem.Instance.NextTurn());
+                    }
+                    else {
+                        this.CastSpell(70);  // else cast spell 
+                        Debug.Log(this + " Cast spell");
+                        this.EnemyAIAction();
+                        StartCoroutine(TurnSystem.Instance.NextTurn());
+                    }
                 }
                 // else, heal 
                 else if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealthPoints() < closerEnemy.GetHealthPoints()) {
@@ -1254,20 +1269,12 @@ public class Heroes : MonoBehaviour {
                     this.EnemyAIAction();
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
-                else if (closerHeroDistance > this.attackRange) {
-                    if (k >= 6) { // else spell cast or do nothing(Dash)
-                        this.CastSpell();
-                        Debug.Log(this + " Cast spell");
-                        this.EnemyAIAction();
-                        StartCoroutine(TurnSystem.Instance.NextTurn());
-                    }
-                    else { // dash
-                        this.Dash();
-                        MoveEnemyAI(closerHero);
-                        this.EnemyAIAction();
-                        Debug.Log(this + " Dash");
-                        StartCoroutine(TurnSystem.Instance.NextTurn());
-                    }
+                else { // dash
+                    this.Dash();
+                    MoveEnemyAI(closerHero);
+                    this.EnemyAIAction();
+                    Debug.Log(this + " Dash");
+                    StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
             }
             /******************************************* If this hero is a MUSICIAN ***********************************/
@@ -1281,7 +1288,6 @@ public class Heroes : MonoBehaviour {
                     StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 else {
-                    //MoveEnemyAI(closerEnemy);  // move him to the closer ally for protection
                     this.Dash();               // or dash
                     MoveEnemyAI(closerEnemy);  // move him to the closer ally for protection
                     Debug.Log(this + " Dash");
@@ -1292,7 +1298,7 @@ public class Heroes : MonoBehaviour {
             /********************************************** If this hero is a Summoner ************************************/
             else if (this.heroClass.Equals("Summoner")) {
                 int offset = 5;
-                /* If the musician is far away from the closer ally, approach him */
+                /* If the summoner is far away from the closer ally, approach him */
                 if (closerEnemyDistance < offset) {
                     this.CallForHelp();          // call for help
                     Debug.Log(this + " Call For Help");
@@ -1307,7 +1313,7 @@ public class Heroes : MonoBehaviour {
                 }
             }
             /********************************************** if this is the final boss ************************************/
-            if (this.heroClass.Equals("Final Boss")) {
+            else if (this.heroClass.Equals("Final Boss")) {
                 if (closerHeroDistance <= this.attackRange) {
                     Debug.Log("Enemy Boss Attacking!");
                     // now attack the hero who is closer
@@ -1334,7 +1340,6 @@ public class Heroes : MonoBehaviour {
     }
 
     /* function that is called to move the enemy AI characters */
-    /* Returns the new distance to the heroToFollow */
     private int MoveEnemyAI(Heroes heroToFollow) {
         /* at first, we find the heroToFollow pathnode that is in front of him */
         Vector3 heroPos = heroToFollow.transform.position;

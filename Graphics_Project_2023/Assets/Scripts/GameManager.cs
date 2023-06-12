@@ -161,6 +161,9 @@ public class GameManager : MonoBehaviour {
             hero.SetRemainingMoveRange(hero.GetMoveRange());
             hero.SetCurrentArmorClass(hero.GetArmorClass());
             hero.performedActions = 0;
+            hero.SetPositionsList(new List<Vector3>());
+            hero.SetIsWalking(false);
+            hero.SetIsPlayersTurn(false);
         }
     }
 
@@ -246,21 +249,21 @@ public class GameManager : MonoBehaviour {
         // If we are the first group of enemies
         if (atEnemyGroup == 1) {
             Debug.Log("Heroes Alive: " + numOfAliveHeroes);
-            enemiesToSpawn = numOfAliveHeroes - 2;
+            enemiesToSpawn = numOfAliveHeroes - 1;
             if (enemiesToSpawn <= 0) { enemiesToSpawn = 1; }
             Debug.Log("enemies To spawn: " + enemiesToSpawn);
             positionOfFirstEnemy = new GridPosition(76, 14);   // checked this via debug objects
             Debug.Log("At First Group");
         }
         else if (atEnemyGroup == 2) {
-            enemiesToSpawn = numOfAliveHeroes - 1;
+            enemiesToSpawn = numOfAliveHeroes;
             if (enemiesToSpawn <= 0) { enemiesToSpawn = 1; }
-            positionOfFirstEnemy = new GridPosition(80, 66); // adding at x axis for the next
+            positionOfFirstEnemy = new GridPosition(65, 65); // adding at z axis for the next
             Debug.Log("At Second Group");
         }
         else if (atEnemyGroup == 3) {
             // here we will spawn the final boss of the enemies
-            enemiesToSpawn = numOfAliveHeroes - 1;
+            enemiesToSpawn = numOfAliveHeroes;
             if (enemiesToSpawn <= 0) { enemiesToSpawn = 1; }
             positionOfFirstEnemy = new GridPosition(23, 61);
             Debug.Log("At 3rd Group");
@@ -272,8 +275,15 @@ public class GameManager : MonoBehaviour {
         //atEnemyGroup++; // increase the counter
 
         /* Now Randomly Spawn The Enemies */
-        int i;
-        for (i=0; i< enemiesToSpawn; i++) { 
+
+        /* if we are at the 3rd group, we also need to spawn the enemy boss */
+        if (atEnemyGroup == 3) {
+            Debug.Log("Spawn Boss");
+            positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z);
+            Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
+            InstantiateHeroOnPosition(FinalBoss.HERO_CLASS, worldPos, true); // true because it is an enemy
+        }
+        for (int i=1; i<= enemiesToSpawn; i++) { 
             int randNumber = Random.Range(1, 7); // since we have 6 prefabs of enemies
             if (randNumber == 1) {               // spawn fighter
                 positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
@@ -306,13 +316,6 @@ public class GameManager : MonoBehaviour {
                 InstantiateHeroOnPosition(Summoner.HERO_CLASS, worldPos, true); // true because it is an enemy
             }
         }
-        /* if we are at the 3rd group, we also need to spawn the enemy boss */
-        if (atEnemyGroup == 3) {
-            Debug.Log("Spawn Boss");
-            positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i + 1);
-            Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
-            InstantiateHeroOnPosition(FinalBoss.HERO_CLASS, worldPos, true); // true because it is an enemy
-        }
 
         atEnemyGroup++; // increase the counter
 
@@ -335,9 +338,9 @@ public class GameManager : MonoBehaviour {
     /* This method creates a randmom amount of gameObjects to the board at random places */
     private void RandomGameObjectsInstantiation() {
         int numOfChests = Random.Range(5, 10); // number of chest to instantiate
-        int numOfRocks = Random.Range(8, 15); // number of rocks to instantiate
+        int numOfRocks = Random.Range(10, 15); // number of rocks to instantiate
 
-        // intantiate all the chests
+        // instantiate all the chests
         while (numOfChests != 0) {
             int randx = Random.Range(1, 101);
             int randz = Random.Range(1, 81);
@@ -360,7 +363,7 @@ public class GameManager : MonoBehaviour {
                 if (node != null) { node.SetIsWalkable(false); }
                 numOfChests--;
             }
-            else if ((randx >= 22 && randx <= 66) && (randz >= 43 && randz <= 75)) {
+            else if ((randx >= 22 && randx <= 66) && (randz >= 43 && randz <= 60)) {
                 Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(randx, randz));
                 GameObject chest = Instantiate(chestPrefab, posToSpawn, Quaternion.identity);
                 PathNode node = PathFinding.Instance.Grid().GetPathNode(new GridPosition(randx, randz));
