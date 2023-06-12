@@ -580,12 +580,15 @@ public class Heroes : MonoBehaviour {
             pathGridPositions = tmpList;
         }
         if (GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            this.remainingMoveRange -= pathGridPositions.Count - 1; // decrease the current move range 
-            float remainingRange = (float)(this.remainingMoveRange) / this.moveRange;
-            /* Fire the event to Inform the UI Step Bar */
-            OnRemainingMoveRangeChanged?.Invoke(this, new OnRemainingMoveRangeChangedEventArgs {
-                remainingSteps = remainingRange
-            });
+            if (this.remainingMoveRange != 0) {
+                this.remainingMoveRange -= pathGridPositions.Count - 1; // decrease the current move range 
+                float remainingRange = (float)(this.remainingMoveRange) / this.moveRange;
+                Debug.Log("RemainingRange: " + remainingRange);
+                /* Fire the event to Inform the UI Step Bar */
+                OnRemainingMoveRangeChanged?.Invoke(this, new OnRemainingMoveRangeChangedEventArgs {
+                    remainingSteps = remainingRange
+                });
+            }
         }
         foreach (Vector3 pathPosition in pathGridPositions)
             positionList.Add(pathPosition);
@@ -672,7 +675,7 @@ public class Heroes : MonoBehaviour {
 
     /* This method controlls the animations of the characters in order to be performed 
      * a spesific amount of times by changing the state of each hero back to idle after an action */
-    protected void AnimationsDurationControll() {
+    protected IEnumerator AnimationsDurationControll() {
         int animationHitDuration = 2;
         int animationsAttackingDuration = 100;
         int animationHealingDuration = 2;
@@ -682,52 +685,67 @@ public class Heroes : MonoBehaviour {
 
         /* if the hero gets hit */
         if (this.GetGetsHit()) {
-            this.getHitAnimationsCounter++;
+            yield return new WaitForSeconds(2f);
+            this.SetGetsHit(false);
+            /*this.getHitAnimationsCounter++;
             if (getHitAnimationsCounter >= animationHitDuration) {
                 this.SetGetsHit(false);
                 this.getHitAnimationsCounter = 0;
-            }
+            }*/
         }
         /* If the hero is attacking */
         if (this.GetIsAttacking()) {
-            this.attackingAnimationsCounter++;
+            yield return new WaitForSeconds(2f);
+            this.SetIsAttacking(false);
+            /*this.attackingAnimationsCounter++;
             if (attackingAnimationsCounter >= animationsAttackingDuration) {
                 this.SetIsAttacking(false);
                 this.attackingAnimationsCounter = 0;
-            }
+            }*/
         }
         /* If the hero is healing */
         if (this.GetIsHealing()) {
-            this.healingAnimationCounter++;
+            yield return new WaitForSeconds(2f);
+            this.SetIsHealing(false);
+            /*this.healingAnimationCounter++;
             if (healingAnimationCounter >= animationHealingDuration) {
                 this.SetIsHealing(false);
                 this.healingAnimationCounter = 0;
-            }
+            }*/
         }
         /* If the hero is begging */
         if (this.GetIsBegging()) {
-            this.beggingAnimationCounter++;
+            yield return new WaitForSeconds(2f);
+            this.SetIsBegging(false);
+            /*this.beggingAnimationCounter++;
             if (beggingAnimationCounter >= animationBeggingDuration) {
                 this.SetIsBegging(false);
                 this.beggingAnimationCounter = 0;
-            }
+            }*/
         }
         /* if the hero cast a spell */
         if (this.isCastSpelling) {
+            yield return new WaitForSeconds(2f);
+            this.SetIsCastSpelling(false);
+            /*
             this.castSpellingAnimationCounter++;
             if (castSpellingAnimationCounter >= animationCastSpellingDuration) {
                 this.SetIsCastSpelling(false);
                 this.castSpellingAnimationCounter = 0;
-            }
+            }*/
 
         }
         /* if the hero is musician */
         if (this.isPlayingMusic) {
+            yield return new WaitForSeconds(2f);
+            this.SetIsPlayingMusic(false);
+
+            /*
             this.musicPlayingAnimationCounter++;
             if (musicPlayingAnimationCounter >= animationMusicPlayingDuration) {
                 this.SetIsPlayingMusic(false);
                 this.musicPlayingAnimationCounter = 0;
-            }
+            }*/
         }
 
     }
@@ -909,7 +927,7 @@ public class Heroes : MonoBehaviour {
         else if (randNumber >= healProbability) {
             Debug.Log("Probability for attack");
             if (!this.GetIsEnemy()) {
-                List<Heroes> tmpListOfHeroes = new List<Heroes>(GameManager.Instance.aliveHeroes);
+                List<Heroes> tmpListOfHeroes = new List<Heroes>(GameManager.Instance.aliveEnemies);
                 this.numOfAllowedActions = GameManager.Instance.aliveEnemies.Count + 1;
                 foreach (Heroes hero in tmpListOfHeroes) {
                     if (hero != null && !hero.GetIsDead()) { this.PerformAttack(hero); }
@@ -1225,9 +1243,8 @@ public class Heroes : MonoBehaviour {
                 }
                 // else move
                 else if (closerHeroDistance < moveRange) {
-                    //MoveEnemyAI(closerHero);
-                    //this.Dash();
-                    MoveEnemyAI(closerHero); // Move towards his closer enemy
+                    if (!MoveEnemyAI(closerHero)) { this.performedActions++; }
+                   //MoveEnemyAI(closerHero); // Move towards his closer enemy
                     StartCoroutine(EnemyAIAction());
                     //this.EnemyAIAction();
                     Debug.Log(this + " Moving");
@@ -1265,7 +1282,8 @@ public class Heroes : MonoBehaviour {
                         StartCoroutine(EnemyAIAction());
                     }
                     else if (closerHeroDistance < moveRange) {
-                        MoveEnemyAI(closerHero);
+                        if (!MoveEnemyAI(closerHero)) { this.performedActions++; }
+                       //MoveEnemyAI(closerHero);
                         Debug.Log(this + " Moving");
                         StartCoroutine(EnemyAIAction());
                     }
@@ -1307,7 +1325,8 @@ public class Heroes : MonoBehaviour {
                     //StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 else if (closerHeroDistance < moveRange) {
-                    MoveEnemyAI(closerHero);
+                    if (!MoveEnemyAI(closerHero)) { this.performedActions++; }
+                    //MoveEnemyAI(closerHero);
                     Debug.Log(this + " Moving");
                     StartCoroutine(EnemyAIAction());
                 }
@@ -1334,7 +1353,8 @@ public class Heroes : MonoBehaviour {
                     //StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 else if (closerEnemyDistance < moveRange) {
-                    MoveEnemyAI(closerEnemy);
+                    if (!MoveEnemyAI(closerEnemy)) { this.performedActions++; }
+                    //MoveEnemyAI(closerEnemy);
                     Debug.Log(this + " Moving");
                     StartCoroutine(EnemyAIAction());
                 }
@@ -1362,7 +1382,8 @@ public class Heroes : MonoBehaviour {
                     //StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
                 else if (closerEnemyDistance < moveRange) {
-                    MoveEnemyAI(closerEnemy);
+                    if (!MoveEnemyAI(closerEnemy)) { this.performedActions++; }
+                    //MoveEnemyAI(closerEnemy);
                     Debug.Log(this + " Moving");
                     StartCoroutine(EnemyAIAction());
                 }
@@ -1387,7 +1408,7 @@ public class Heroes : MonoBehaviour {
                     //StartCoroutine(TurnSystem.Instance.NextTurn());   // na mpei elegxos an exei kai allo move
                 }
                 else if (closerHeroDistance < moveRange) {
-                    MoveEnemyAI(closerHero);
+                    if (!MoveEnemyAI(closerHero)) { this.performedActions++; }
                     Debug.Log(this + " Moving");
                     StartCoroutine(EnemyAIAction());
                 }
@@ -1411,7 +1432,7 @@ public class Heroes : MonoBehaviour {
     }
 
     /* function that is called to move the enemy AI characters */
-    private int MoveEnemyAI(Heroes heroToFollow) {
+    private bool MoveEnemyAI(Heroes heroToFollow) {
         /* at first, we find the heroToFollow pathnode that is in front of him */
         Vector3 heroPos = heroToFollow.transform.position;
 
@@ -1427,28 +1448,15 @@ public class Heroes : MonoBehaviour {
             k++;
             Debug.Log("Inside While");
             if (k > 5) {
-                break;
+                return false;
+               //reak;
             }
         }
 
         // check if the hero front is inside the grid
         bool found;
         found = PathFinding.Instance.FindPathForEnemyAI(heroFront);
-        //int i = 1;
-        /*while (!found && i<=3) {
-            Vector3 tmp1 = new Vector3(heroPos.x +i , heroPos.y, heroPos.z + i);
-            tmp = tmp1;
-            heroFront = PathFinding.Instance.GetGridPosition(tmp);
-            found = PathFinding.Instance.FindPathForEnemyAI(heroFront);
-            if (found == true)
-                break;
-            i++;
-            Debug.Log(i);
-        }*/
-
-        int newDistance = PathFinding.Instance.CalculateSimpleDistance(this.transform.position, heroToFollow.transform.position);
-        //Debug.Log("NewDistance "+newDistance);
-        return newDistance;
+        return found;
     }
 
  

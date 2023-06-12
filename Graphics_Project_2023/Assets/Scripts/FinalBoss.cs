@@ -32,7 +32,7 @@ public class FinalBoss : Heroes {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam || GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             PerformMove();
         }
-        base.AnimationsDurationControll();
+        StartCoroutine(base.AnimationsDurationControll());
     }
 
     /* Getters*/
@@ -69,7 +69,7 @@ public class FinalBoss : Heroes {
         this.strength += 1;
 
         // setting the features
-        this.SetHealthPoints(15 + this.GetConstitution());
+        this.SetHealthPoints(20 + this.GetConstitution());
         this.SetArmorClass(10 + this.GetDexterity());
         this.SetAttackRange(7);
         this.SetMoveRange(5);

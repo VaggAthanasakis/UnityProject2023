@@ -55,10 +55,10 @@ public class GridPathSystem {
                 if ((x >= 51 && x <= 62) && (z >= 29 && z <= 45)) { newNode.SetIsWalkable(false); }
                 if ((x >= 39 && x <= 49) && (z >= 14 && z <= 29)) { newNode.SetIsWalkable(false); }
                 if ((x >= 21 && x <= 31) && (z >= 23 && z <= 30)) { newNode.SetIsWalkable(false); }
-                if ((x >= 69 && x <= 81) && (z >= 52 && z <= 61)) { newNode.SetIsWalkable(false); }
+                if ((x >= 69 && x <= 80) && (z >= 52 && z <= 60)) { newNode.SetIsWalkable(false); }
                 if((x >= 22 && x <= 53) && (z <= 5)) { newNode.SetIsWalkable(false); }
-                if ((x >= 72) && (z >= 68)) { newNode.SetIsWalkable(false); }
-                if (x >= 89 && z >= 55) { newNode.SetIsWalkable(false); }
+                if ((x >= 73) && (z >= 69)) { newNode.SetIsWalkable(false); }
+                if (x >= 90 && z >= 55) { newNode.SetIsWalkable(false); }
                 gridPathArray[x, z] = newNode;
 
             }

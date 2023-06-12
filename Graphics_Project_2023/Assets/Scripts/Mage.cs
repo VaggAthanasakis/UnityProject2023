@@ -35,7 +35,7 @@ public class Mage : Heroes {
         if (GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam || GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             PerformMove();
         }
-        base.AnimationsDurationControll();
+        StartCoroutine(base.AnimationsDurationControll());
     }
 
     /* Getters*/

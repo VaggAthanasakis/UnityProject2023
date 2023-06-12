@@ -163,11 +163,6 @@ public class GameManager : MonoBehaviour {
             hero.performedActions = 0;
             //hero.currentPositionIndex = 0;
             hero.SetPositionsList(null);
-            
-            //List<Vector3> endPosList = new List<Vector3>();
-            //endPosList.Add(hero.transform.position);
-            //hero.SetPositionsList(endPosList);
-            //hero.currentPositionIndex = 0;
             hero.SetIsWalking(false);
             hero.SetIsPlayersTurn(false);
             hero.SetIsSelected(false);
@@ -263,7 +258,7 @@ public class GameManager : MonoBehaviour {
         else if (atEnemyGroup == 2) {
             enemiesToSpawn = numOfAliveHeroes;
             if (enemiesToSpawn <= 0) { enemiesToSpawn = 1; }
-            positionOfFirstEnemy = new GridPosition(65, 65); // adding at z axis for the next
+            positionOfFirstEnemy = new GridPosition(65, 62); // adding at z axis for the next
             Debug.Log("At Second Group");
         }
         else if (atEnemyGroup == 3) {
@@ -277,7 +272,6 @@ public class GameManager : MonoBehaviour {
             Debug.Log("Spawned all Enemies");
             return;
         }
-        //atEnemyGroup++; // increase the counter
 
         /* Now Randomly Spawn The Enemies */
 
@@ -292,31 +286,37 @@ public class GameManager : MonoBehaviour {
             int randNumber = Random.Range(1, 7); // since we have 6 prefabs of enemies
             if (randNumber == 1) {               // spawn fighter
                 positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                if (positionOfFirstEnemy == null || positionOfFirstEnemy.x >= 100 || positionOfFirstEnemy.z >=80) { continue; }
                 Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
                 InstantiateHeroOnPosition(Fighter.HERO_CLASS, worldPos, true); // true because it is an enemy
             }
             else if (randNumber == 2) {         // spawn ranger
                 positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                if (positionOfFirstEnemy == null || positionOfFirstEnemy.x >= 100 || positionOfFirstEnemy.z >= 80) { continue; }
                 Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
                 InstantiateHeroOnPosition(Ranger.HERO_CLASS, worldPos, true); // true because it is an enemy
             }
             else if (randNumber == 3) {         // spawn mage
                 positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                if (positionOfFirstEnemy == null || positionOfFirstEnemy.x >= 100 || positionOfFirstEnemy.z >= 80) { continue; }
                 Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
                 InstantiateHeroOnPosition(Mage.HERO_CLASS, worldPos, true); // true because it is an enemy
             }
             else if (randNumber == 4) {         // spawn priest
                 positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                if (positionOfFirstEnemy == null || positionOfFirstEnemy.x >= 100 || positionOfFirstEnemy.z >= 80) { continue; }
                 Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
                 InstantiateHeroOnPosition(Priest.HERO_CLASS, worldPos, true); // true because it is an enemy
             }
             else if (randNumber == 5) {         // spawn musician
                 positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                if (positionOfFirstEnemy == null || positionOfFirstEnemy.x >= 100 || positionOfFirstEnemy.z >= 80) { continue; }
                 Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
                 InstantiateHeroOnPosition(Musician.HERO_CLASS, worldPos, true); // true because it is an enemy
             }
             else if (randNumber == 6) {         // spawn summoner
                 positionOfFirstEnemy = new GridPosition(positionOfFirstEnemy.x, positionOfFirstEnemy.z + i);
+                if (positionOfFirstEnemy == null || positionOfFirstEnemy.x >= 100 || positionOfFirstEnemy.z >= 80) { continue; }
                 Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(positionOfFirstEnemy);
                 InstantiateHeroOnPosition(Summoner.HERO_CLASS, worldPos, true); // true because it is an enemy
             }
@@ -430,7 +430,6 @@ public class GameManager : MonoBehaviour {
                 isCheckingForCombat = false;
                 currentState = GameManager.State.CombatMode;
                 ResetCharactersFeatures();
-                //currentState = GameManager.State.CombatMode;
                 UI_Manager.Instance.diceButton.SetActive(true);
                 isCheckingForCombat = false;
                 StartCoroutine(SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC));
