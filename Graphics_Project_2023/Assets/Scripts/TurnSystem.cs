@@ -79,7 +79,8 @@ public class TurnSystem : MonoBehaviour {
                 this.playingCharacters[j].SetIsPlayersTurn(true);
                 Debug.Log("Player's turn: " + this.playingCharacters[j].ToString());
                 this.heroWithTurn = this.playingCharacters[j];
-                StartCoroutine(FirstTurn(this.playingCharacters[j]));
+                //StartCoroutine(FirstTurn(this.playingCharacters[j]));
+                FirstTurn(this.playingCharacters[j]);
                /* OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
                     heroWithTurn = this.playingCharacters[j]
                 });*/
@@ -90,13 +91,9 @@ public class TurnSystem : MonoBehaviour {
     }
 
     /* Wait for some time after the dice button is pushed */
-    public IEnumerator FirstTurn(Heroes heroTurn) {
-        yield return new WaitWhile(() => frame < 6f);
-        frame = 0;
+    public void FirstTurn(Heroes heroTurn) {
         /**/
-        if (heroWithTurn.GetIsEnemy()) {
-            UI_Manager.Instance.nextTurnButton.SetActive(false);
-        }
+        UI_Manager.Instance.nextTurnButton.SetActive(!heroWithTurn.GetIsEnemy());
         /**/
         OnTurnChanged?.Invoke(this, new OnTurnChangedEventArgs { // inform the first player that it is his turn
             heroWithTurn = heroTurn
@@ -104,29 +101,8 @@ public class TurnSystem : MonoBehaviour {
         UI_Manager.Instance.SetTurnInfo(this.heroWithTurn.GetIsEnemy(),true);
 
     }
-
-    /* create a buffer time to apply after every action in order the actions not to be
-     * executed immediantly one after the other */
-    float frame;
-    float incrementAmount = 1f;
-    float elapsedTime = 0;
-    private void Update() {
-        elapsedTime += Time.deltaTime;
-        if (elapsedTime >= incrementAmount && frame <=6f) {
-            frame += incrementAmount;
-            elapsedTime = 0;
-        }
-
-        /*
-        if (frame <= 10f)
-            frame = frame + incrementAmount * Time.deltaTime;*/
-    }
-
-    public IEnumerator NextTurn() {
-
-        yield return new WaitWhile(() => frame < 6f);
-        frame = 0;
-
+    
+    public void NextTurn() {
         /* find player with turn previously */
         int indexOfHeroWithTurn = 0;
         foreach (Heroes hadTurnHero in this.playingCharacters) {

@@ -32,8 +32,10 @@ public class HeroMoveRangeBarUI : MonoBehaviour
     }
 
     private void TurnSystem_OnRoundEnded(object sender, TurnSystem.OnRoundEndedEventArgs e) {
-        barImage.fillAmount = 1f;
-        HideBar();
+        if (this.hero != null && !this.hero.GetIsDead()) {
+            barImage.fillAmount = 1f;
+            HideBar();
+        }
     }
 
     private void ShowBar() {

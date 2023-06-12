@@ -154,7 +154,8 @@ public class UI_Manager : MonoBehaviour {
         if (attackedHero != null && attackedHero != heroWithTurn) {
             heroWithTurn.PerformAttack(attackedHero);
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-                StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+                //StartCoroutine(TurnSystem.Instance.NextTurn());
+                TurnSystem.Instance.NextTurn();
             }
         }
         else if(attackedHero == null) {
@@ -174,7 +175,8 @@ public class UI_Manager : MonoBehaviour {
             heroWithTurn.PerformHeal(heroToHeal);
             /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-                StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+                //StartCoroutine(TurnSystem.Instance.NextTurn());
+                TurnSystem.Instance.NextTurn();
             }
         }
     }
@@ -187,14 +189,14 @@ public class UI_Manager : MonoBehaviour {
         TurnSystem.Instance.SetPlayingCharacters(GameManager.Instance.aliveCharacters);// some heroes may died in the previous round 
         foreach (Heroes character in GameManager.Instance.aliveCharacters) {
             int diceValue = Dice.instance.RollDice();
-            Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
+            //Debug.Log("Class: " + character.ToString() + " Is Enemy: " + character.GetIsEnemy() + " Dice Value = " + diceValue);
             character.diceValue = diceValue;
-            Debug.Log("DIce Value "+character.diceValue);
+            //Debug.Log("DIce Value "+character.diceValue);
             TurnSystem.Instance.turnBasedOnDice.Add(diceValue);
         }
         TurnSystem.Instance.CharactersSortByDicePlay();
         this.diceButton.SetActive(false);
-        UI_Manager.Instance.nextTurnButton.SetActive(true); // pop up the next turn button
+        //UI_Manager.Instance.nextTurnButton.SetActive(true); // pop up the next turn button
 
     }
 
@@ -202,7 +204,8 @@ public class UI_Manager : MonoBehaviour {
     public void Button_NextTurn() {
         SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
-        StartCoroutine(TurnSystem.Instance.NextTurn()); 
+        //StartCoroutine(TurnSystem.Instance.NextTurn());
+        TurnSystem.Instance.NextTurn();
     }
 
     /* button for enemy beg */
@@ -216,7 +219,8 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.Beg(enemyToBeg);
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            StartCoroutine(TurnSystem.Instance.NextTurn()); 
+            //StartCoroutine(TurnSystem.Instance.NextTurn());
+            TurnSystem.Instance.NextTurn();
         }
     }
 
@@ -231,7 +235,8 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.CastSpell(healProbability);
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            StartCoroutine(TurnSystem.Instance.NextTurn()); // na mpei elegxos an exei kai allo move
+            //StartCoroutine(TurnSystem.Instance.NextTurn());
+            TurnSystem.Instance.NextTurn();
         }
     }
 
@@ -243,7 +248,8 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.Dash();
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            StartCoroutine(TurnSystem.Instance.NextTurn()); 
+            //StartCoroutine(TurnSystem.Instance.NextTurn());
+            TurnSystem.Instance.NextTurn();
         }
     }
 
@@ -257,7 +263,8 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.PlayMusic();
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            StartCoroutine(TurnSystem.Instance.NextTurn()); 
+            //StartCoroutine(TurnSystem.Instance.NextTurn());
+            TurnSystem.Instance.NextTurn();
         }
     }
 
@@ -271,7 +278,8 @@ public class UI_Manager : MonoBehaviour {
         heroWithTurn.CallForHelp();
         /* if the hero cannot move further and has complete the number of allowed actions per round, then next turn */
         if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
-            StartCoroutine(TurnSystem.Instance.NextTurn());
+            //StartCoroutine(TurnSystem.Instance.NextTurn());
+            TurnSystem.Instance.NextTurn();
         }
 
     }

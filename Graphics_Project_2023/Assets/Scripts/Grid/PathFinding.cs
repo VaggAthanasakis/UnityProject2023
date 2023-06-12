@@ -189,7 +189,7 @@ public class PathFinding : MonoBehaviour {
 
     /******************************************************************************************/
     public bool FindPathForEnemyAI(GridPosition endEnemyGridPos) {
-        Debug.Log("START");
+        //Debug.Log("START");
         if ((heroWithTurn == null && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || !heroWithTurn.GetIsEnemy()) {
             return false;
         }
@@ -245,7 +245,7 @@ public class PathFinding : MonoBehaviour {
         if (heroWithTurn != null && heroWithTurn.GetIsPlayersTurn() && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
             heroWithTurn.SetPositionsList(heroPositionsList);
         }
-        Debug.Log("FINISH");
+        //Debug.Log("FINISH");
         return true;
     }
     

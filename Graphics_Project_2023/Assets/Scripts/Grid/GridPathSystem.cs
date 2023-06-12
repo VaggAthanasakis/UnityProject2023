@@ -49,7 +49,7 @@ public class GridPathSystem {
                 if (x == 77 && z <= 27) { newNode.SetIsWalkable(false); }
 
                 /* Make the nodes that are below the houses, no walkable */
-                if (z == 8 && (x >= 1 && x <= 9)) { newNode.SetIsWalkable(false); }
+                if ((z >=0 && z <= 8) && (x >= 0 && x <= 9)) { newNode.SetIsWalkable(false); }
                 if ((x >= 0 && x <= 14) && (z >= 14 && z <= 34)) { newNode.SetIsWalkable(false); }
                 if ((x >= 14 && x <= 62) && (z >= 34 && z <= 44)) { newNode.SetIsWalkable(false); }
                 if ((x >= 51 && x <= 62) && (z >= 29 && z <= 45)) { newNode.SetIsWalkable(false); }
@@ -196,17 +196,11 @@ public class GridPathSystem {
     private bool CheckForColliderAtNode(PathNode node) {
         GridPosition nodePos = node.GetGridPosition();
         Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(nodePos);
-
-        //bool hasHit = Physics.Raycast(worldPos, Vector3.up, out RaycastHit hit, float.MaxValue);
         bool hasHit = Physics.Raycast(worldPos, Vector3.up, out RaycastHit hit, float.MaxValue, PathFinding.Instance.gameObjectsLayerMask);
-        if (hasHit) { 
-            //Debug.Log("Found Something!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (hasHit) {
             return true;
         }
-         
-        //Debug.Log("Nothing Found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return false;
-
     }
 
 

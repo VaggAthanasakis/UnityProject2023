@@ -152,7 +152,7 @@ public class Heroes : MonoBehaviour {
             SelectedHeroVisual();
             Debug.Log("This Players Turn: " + this.ToString());
             if (this.isEnemy) {
-                EnemyAIAction();
+                StartCoroutine(EnemyAIAction());
             }
             else {
                 MouseClick.instance.SetSelectedHero(this);
@@ -484,8 +484,14 @@ public class Heroes : MonoBehaviour {
 
         /* If it is not players turn but the position list is not zero, make it zero */
         if (!isPlayersTurn && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
-            this.SetPositionsList(null);
-        
+            //this.SetPositionsList(null);
+            //Debug.Log("Returning");
+            positionList.Clear();
+            currentPositionIndex = 0;
+            this.SetIsWalking(false);
+            SetWalkableNodeAtHeroPosition(false);
+            SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
+            return;            
         }
 
         /* If we are at free roam state => we can move
@@ -493,9 +499,9 @@ public class Heroes : MonoBehaviour {
            else, we cannot */
         if ((isPlayersTurn && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) || GameManager.Instance.GetCurrentState() == GameManager.State.FreeRoam) {
             if (positionList == null ||positionList.Count <= 0) {
-                Debug.Log("Null Or 0");
+                //Debug.Log("Null Or 0");
                 this.SetIsWalking(false);
-                SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
+                //SoundManager.Instance.StopSoundWithoutFade(SoundManager.WALKING_MUSIC);
                 return;
             }
 
@@ -559,7 +565,7 @@ public class Heroes : MonoBehaviour {
     /* Set the path that the hero must follow in order to move */
     public void SetPositionsList(List<Vector3> pathGridPositions) {
         if (pathGridPositions == null) { // ADDED
-            positionList.Clear(); // ADDED
+            //positionList.Clear(); // ADDED
             //Debug.Log("null");
             return;
         }
@@ -885,31 +891,35 @@ public class Heroes : MonoBehaviour {
         /* so temporarly, we increase the numOfAllowedActions and decrease it again later */
         int initial_numOfAllowedActions = this.numOfAllowedActions;
         if (randNumber <= healProbability) {
+            Debug.Log("Probability for heal");
             if (!this.GetIsEnemy()) {
                 this.numOfAllowedActions = GameManager.Instance.aliveHeroes.Count + 1; // plus one because cast spell is also an  action
                 foreach (Heroes hero in GameManager.Instance.aliveHeroes) {
-                    this.PerformHeal(hero);
+                    if (hero != null && !hero.GetIsDead()) { this.PerformHeal(hero); }
                 }
             }
             else if (this.GetIsEnemy()) {
                 this.numOfAllowedActions = GameManager.Instance.aliveEnemies.Count + 1;
                 foreach (Heroes hero in GameManager.Instance.aliveEnemies) {
-                    this.PerformHeal(hero);
+                    if (hero != null && !hero.GetIsDead()) { this.PerformHeal(hero); }
                 }
             }
         }
         /* Attack all enemies */
-        else if (randNumber > healProbability) {
+        else if (randNumber >= healProbability) {
+            Debug.Log("Probability for attack");
             if (!this.GetIsEnemy()) {
+                List<Heroes> tmpListOfHeroes = new List<Heroes>(GameManager.Instance.aliveHeroes);
                 this.numOfAllowedActions = GameManager.Instance.aliveEnemies.Count + 1;
-                foreach (Heroes hero in GameManager.Instance.aliveEnemies) {
-                    this.PerformAttack(hero);
+                foreach (Heroes hero in tmpListOfHeroes) {
+                    if (hero != null && !hero.GetIsDead()) { this.PerformAttack(hero); }
                 }
             }
             else if (this.GetIsEnemy()) {
+                List<Heroes> tmpListOfHeroes = new List<Heroes>(GameManager.Instance.aliveHeroes); // copy the list to another because we will modify the first 
                 this.numOfAllowedActions = GameManager.Instance.aliveHeroes.Count + 1;
-                foreach (Heroes hero in GameManager.Instance.aliveHeroes) {
-                    this.PerformAttack(hero);
+                foreach (Heroes hero in tmpListOfHeroes) {
+                    if (hero != null && !hero.GetIsDead()) { this.PerformAttack(hero); }
                 }
             }
         }
@@ -1141,19 +1151,26 @@ public class Heroes : MonoBehaviour {
     }
 
     /*********** Enemy AI Behaviour ************/
-    public void EnemyAIAction() {
+    public IEnumerator EnemyAIAction() {
         Debug.Log("Inside AI");
+        Debug.Log("Before Wait");
+        yield return new WaitForSeconds(3f);
+        Debug.Log("After Wait");
         /* Check if the enemy has permormed all the allowed action on the round */
         if (this.performedActions >= this.numOfAllowedActions) {
-            return;
+            //StartCoroutine(TurnSystem.Instance.NextTurn());
+            TurnSystem.Instance.NextTurn();
+            yield return null;
         }
         /* If the enemy has diceValue == 1 -> lost turn */
         if (diceValue == 1) {
             UI_Manager.Instance.SetGameInfo("Dice Value = 1. Lost Turn!");
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
-            StartCoroutine(TurnSystem.Instance.NextTurn());
-            return; // GHANGED THIS, PREVIOUSLY DID NOT RETURN
+            //StartCoroutine(TurnSystem.Instance.NextTurn());
+            TurnSystem.Instance.NextTurn();
+            yield return null; // GHANGED THIS, PREVIOUSLY DID NOT RETURN
         }
+        //yield return new WaitForSeconds(3f);
         
         /* If this hero is an enemy and has turn and we are at combat mode */
         if (this.isEnemy && this.isPlayersTurn && GameManager.Instance.GetCurrentState() == GameManager.State.CombatMode) {
@@ -1198,137 +1215,191 @@ public class Heroes : MonoBehaviour {
             /* if we are at range of actions -> permorm action, else move towards target */
             // First check if the this enemy is a FIGHTER or a RANGER and if the distance is < attack range
             if ((this.heroClass.Equals("Fighter") || this.heroClass.Equals("Ranger"))) {
+                Debug.Log("CloseHero: "+closerHeroDistance+" move Range: "+moveRange);
                 if (closerHeroDistance <= this.attackRange) {
                     // now attack the hero who is closer
                     this.PerformAttack(closerHero);
-                    this.EnemyAIAction();
-                    StartCoroutine(TurnSystem.Instance.NextTurn());   
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());   
                 }
-                // else dash
-                else {
+                // else move
+                else if (closerHeroDistance < moveRange) {
                     //MoveEnemyAI(closerHero);
-                    this.Dash();
+                    //this.Dash();
                     MoveEnemyAI(closerHero); // Move towards his closer enemy
-                    this.EnemyAIAction();
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    Debug.Log(this + " Moving");
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());
+                } // else dash
+                else {
+                    this.Dash();
                     Debug.Log(this + " Dash");
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    MoveEnemyAI(closerHero); // Move towards his closer enemy
+                    StartCoroutine(EnemyAIAction());
                 }
 
             }
             /********************************************** If this hero is a MAGE ************************************/
             else if (this.heroClass.Equals("Mage")) {
                 // if an ally, is close and needs healing, -> heal
-                if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealAmount() < closerEnemy.GetHealthPoints()) {
+                Debug.Log("CloseHero: " + closerHeroDistance + " move range: " + moveRange);
+                if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealthPoints() < closerEnemy.GetHealthPoints()) {
                     this.PerformHeal(closerEnemy);
                     Debug.Log(this + " Heal");
-                    this.EnemyAIAction();
-                    StartCoroutine(TurnSystem.Instance.NextTurn()); 
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn()); 
                 }
                 else {
                     // else either cast a spell or dash
-                    int k = UnityEngine.Random.Range(1, 11);
-                    if (k <= 7) {
-                        if (closerHeroDistance <= this.attackRange) { this.CastSpell(0); } // try cast a spell that attacks the enemies
-                        else { this.CastSpell(100); }  // try cast a spell that heals your allies
-                        Debug.Log(this + " CastSpell");
-                        this.EnemyAIAction();
-                        StartCoroutine(TurnSystem.Instance.NextTurn());
+                    if (closerHeroDistance <= this.attackRange) {
+                        this.CastSpell(0);       // try cast a spell that attacks the enemies
+                        Debug.Log(this + " CastSpell For Attack");
+                        StartCoroutine(EnemyAIAction());
+                    }
+                    else if (closerEnemyDistance <= attackRange) {
+                        this.CastSpell(80);      // try cast a spell that heals your allies (80% probability)
+                        Debug.Log(this + " CastSpell For Heal");
+                        StartCoroutine(EnemyAIAction());
+                    }
+                    else if (closerHeroDistance < moveRange) {
+                        MoveEnemyAI(closerHero);
+                        Debug.Log(this + " Moving");
+                        StartCoroutine(EnemyAIAction());
                     }
                     else {
-                        //MoveEnemyAI(closerHero);
-                        this.Dash();
+                        Dash();
                         MoveEnemyAI(closerHero);
                         Debug.Log(this + " Dash");
-                        this.EnemyAIAction();
-                        StartCoroutine(TurnSystem.Instance.NextTurn());
+                        StartCoroutine(EnemyAIAction());
                     }
                 }
             }
             /******************************************* If this hero is a PRIEST ***********************************/
             else if (this.heroClass.Equals("Priest")) {
+                Debug.Log("CloseHero: " + closerEnemyDistance + " move range: " + moveRange);
                 int k = UnityEngine.Random.Range(1, 11);
                 // if there is an hero near, try beg him
                 if (closerHeroDistance <= this.attackRange) {
-                    if (k < 6) { // then Action Beg
+                    if (k < 5) { // then Action Beg   
                         this.Beg(closerHero);
                         Debug.Log(this + " Beg");
-                        this.EnemyAIAction();
-                        StartCoroutine(TurnSystem.Instance.NextTurn());
+                        StartCoroutine(EnemyAIAction());
+                        //this.EnemyAIAction();
+                        // StartCoroutine(TurnSystem.Instance.NextTurn());
                     }
                     else {
-                        this.CastSpell(70);  // else cast spell 
+                        this.CastSpell(10);  // else cast spell with 90% attack probability
                         Debug.Log(this + " Cast spell");
-                        this.EnemyAIAction();
-                        StartCoroutine(TurnSystem.Instance.NextTurn());
+                        StartCoroutine(EnemyAIAction());
+                        //this.EnemyAIAction();
+                        //StartCoroutine(TurnSystem.Instance.NextTurn());
                     }
                 }
                 // else, heal 
                 else if (closerEnemyDistance <= this.attackRange && closerEnemy.GetCurrentHealthPoints() < closerEnemy.GetHealthPoints()) {
                     this.PerformHeal(closerEnemy);
                     Debug.Log(this + " Heal");
-                    this.EnemyAIAction();
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());
+                }
+                else if (closerHeroDistance < moveRange) {
+                    MoveEnemyAI(closerHero);
+                    Debug.Log(this + " Moving");
+                    StartCoroutine(EnemyAIAction());
                 }
                 else { // dash
                     this.Dash();
                     MoveEnemyAI(closerHero);
-                    this.EnemyAIAction();
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
                     Debug.Log(this + " Dash");
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
             }
             /******************************************* If this hero is a MUSICIAN ***********************************/
             else if (this.heroClass.Equals("Musician")) {
+                Debug.Log("CloseHero: " + closerEnemyDistance + " move range: " + moveRange);
+
                 int offset = 5;
                 /* If the musician is far away from the closer ally, approach him */
                 if (closerEnemyDistance < offset) {
                     this.PlayMusic();          // play music
                     Debug.Log(this + " Play Music");
-                    this.EnemyAIAction();
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());
+                }
+                else if (closerEnemyDistance < moveRange) {
+                    MoveEnemyAI(closerEnemy);
+                    Debug.Log(this + " Moving");
+                    StartCoroutine(EnemyAIAction());
                 }
                 else {
-                    this.Dash();               // or dash
+                    //this.Dash();               // or dash
                     MoveEnemyAI(closerEnemy);  // move him to the closer ally for protection
                     Debug.Log(this + " Dash");
-                    this.EnemyAIAction();
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
             }
             /********************************************** If this hero is a Summoner ************************************/
             else if (this.heroClass.Equals("Summoner")) {
+                Debug.Log("CloseHero: " + closerEnemyDistance + " move range: " + moveRange);
+
                 int offset = 5;
+                Debug.Log("closerEnemyDistance < offset "+closerEnemyDistance+" < "+offset);
                 /* If the summoner is far away from the closer ally, approach him */
                 if (closerEnemyDistance < offset) {
                     this.CallForHelp();          // call for help
                     Debug.Log(this + " Call For Help");
-                    this.EnemyAIAction();
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());
+                }
+                else if (closerEnemyDistance < moveRange) {
+                    MoveEnemyAI(closerEnemy);
+                    Debug.Log(this + " Moving");
+                    StartCoroutine(EnemyAIAction());
                 }
                 else {
                     this.Dash();               // dash
                     MoveEnemyAI(closerEnemy);  // move him to the closer ally for protection
-                    Debug.Log(this + " Dash");
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
             }
             /********************************************** if this is the final boss ************************************/
             else if (this.heroClass.Equals("Final Boss")) {
+                Debug.Log("CloseHero: " + closerHeroDistance + " move range: " + moveRange);
+
                 if (closerHeroDistance <= this.attackRange) {
                     Debug.Log("Enemy Boss Attacking!");
                     // now attack the hero who is closer
                     this.PerformAttack(closerHero);
-                    this.EnemyAIAction();
-                    StartCoroutine(TurnSystem.Instance.NextTurn());   // na mpei elegxos an exei kai allo move
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());   // na mpei elegxos an exei kai allo move
+                }
+                else if (closerHeroDistance < moveRange) {
+                    MoveEnemyAI(closerHero);
+                    Debug.Log(this + " Moving");
+                    StartCoroutine(EnemyAIAction());
                 }
                 // else dash
                 else {
                     //MoveEnemyAI(closerHero);
                     this.Dash();
-                    MoveEnemyAI(closerHero);
-                    this.EnemyAIAction();
                     Debug.Log(this + " Dash");
-                    StartCoroutine(TurnSystem.Instance.NextTurn());
+                    MoveEnemyAI(closerHero);
+                    StartCoroutine(EnemyAIAction());
+                    //this.EnemyAIAction();
+                    //StartCoroutine(TurnSystem.Instance.NextTurn());
                 }
 
             }
@@ -1355,7 +1426,7 @@ public class Heroes : MonoBehaviour {
             node = PathFinding.Instance.Grid().GetPathNode(heroFront);
             k++;
             Debug.Log("Inside While");
-            if (k > 2) {
+            if (k > 5) {
                 break;
             }
         }

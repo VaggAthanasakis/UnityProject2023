@@ -161,9 +161,17 @@ public class GameManager : MonoBehaviour {
             hero.SetRemainingMoveRange(hero.GetMoveRange());
             hero.SetCurrentArmorClass(hero.GetArmorClass());
             hero.performedActions = 0;
-            hero.SetPositionsList(new List<Vector3>());
+            //hero.currentPositionIndex = 0;
+            hero.SetPositionsList(null);
+            
+            //List<Vector3> endPosList = new List<Vector3>();
+            //endPosList.Add(hero.transform.position);
+            //hero.SetPositionsList(endPosList);
+            //hero.currentPositionIndex = 0;
             hero.SetIsWalking(false);
             hero.SetIsPlayersTurn(false);
+            hero.SetIsSelected(false);
+            hero.SelectedHeroVisual(); // update the UI of the player
         }
     }
 
@@ -183,6 +191,7 @@ public class GameManager : MonoBehaviour {
         this.enemiesPrefabs.Add(enemyMusicianPrefab);
     }
 
+    /* Spawn the heroes that the user has select */
     private void HeroesToSpawn(List<string> listOfHeroes) {
         int xWorldPos = 0;
         this.aliveHeroes = new List<Heroes>();
@@ -191,11 +200,7 @@ public class GameManager : MonoBehaviour {
 
         if (currentState == GameManager.State.FreeRoam) {
             /* Create Heroes */
-            foreach (string heroString in listOfHeroes) {
-                //Debug.Log(heroString);
-            }
-
-            GridPosition startGridPosition = new GridPosition(9,7);  // checked this via the debag objects
+            GridPosition startGridPosition = new GridPosition(10,7);  // checked this via the debag objects
             foreach (string heroString in listOfHeroes) {
                 if (heroString.Equals(Fighter.HERO_CLASS)) {
                     Vector3 posToSpawn = PathFinding.Instance.Grid().GetWorldPosition(new GridPosition(startGridPosition.x + xWorldPos, startGridPosition.z));
@@ -425,6 +430,7 @@ public class GameManager : MonoBehaviour {
                 isCheckingForCombat = false;
                 currentState = GameManager.State.CombatMode;
                 ResetCharactersFeatures();
+                //currentState = GameManager.State.CombatMode;
                 UI_Manager.Instance.diceButton.SetActive(true);
                 isCheckingForCombat = false;
                 StartCoroutine(SoundManager.Instance.StopSound(SoundManager.FREE_ROAM_MUSIC));
