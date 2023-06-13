@@ -146,6 +146,7 @@ public class TurnSystem : MonoBehaviour {
             }/**/
             UI_Manager.Instance.nextTurnButton.SetActive(false); // hide next turn button
             roundNumber++;
+            UI_Manager.Instance.actionButtons.SetActive(false);
             UI_Manager.Instance.diceButton.SetActive(true);
             OnRoundEnded?.Invoke(this, new OnRoundEndedEventArgs {
                 roundNum = roundNumber

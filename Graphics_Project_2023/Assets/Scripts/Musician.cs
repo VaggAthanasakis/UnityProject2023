@@ -73,7 +73,7 @@ public class Musician : Heroes {
 
         /* Case Upgrade To Level 3 */
         /* We level up if the hero has 4 experience points */
-        if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
+        if (this.GetLevel() == 2 && this.GetExperiencePoints() >= 4) {
             /// code for level up
             this.intelligence += 5;
             this.SetArmorClass(this.GetArmorClass() + 2);
@@ -88,6 +88,10 @@ public class Musician : Heroes {
             this.numOfAllowedActions++;
             this.SetLevel(this.GetLevel() + 1);
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
+        }
+        else {
+            Debug.Log("Error At Level Up. XP = " + this.GetExperiencePoints() + " level = " + this.GetLevel());
+
         }
     }
 

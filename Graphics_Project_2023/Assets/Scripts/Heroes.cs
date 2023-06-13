@@ -606,11 +606,11 @@ public class Heroes : MonoBehaviour {
     /* Get hero's statistscs to string */
     public String HeroStatisticsToString() {
         return heroClass switch {
-            Fighter.HERO_CLASS or Ranger.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Kills: " + this.GetNumOfKills() + "\nXP: " + this.GetExperiencePoints(),
-            Mage.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Heals: " + this.GetNumOfHeals() + "\nXP: " + this.GetExperiencePoints(),
-            Priest.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Heals: " + this.GetNumOfHeals() + "\nHero Begs: " + this.GetNumOfBegs() + "\nXP: " + this.GetExperiencePoints(),
-            Musician.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Protections: " + this.GetNumOfProtections() + "\nXP: " + this.GetExperiencePoints(),
-            Summoner.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Help Calls: " + this.GetNumOfHelpCalls() + "\nXP: " + this.GetExperiencePoints(),
+            Fighter.HERO_CLASS or Ranger.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Kills: " + this.GetNumOfKills() + "\nXP: " + this.GetExperiencePoints()+"\nActions Per Round: "+this.numOfAllowedActions,
+            Mage.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Heals: " + this.GetNumOfHeals() + "\nXP: " + this.GetExperiencePoints() + "\nActions Per Round: " + this.numOfAllowedActions,
+            Priest.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Heals: " + this.GetNumOfHeals() + "\nHero Begs: " + this.GetNumOfBegs() + "\nXP: " + this.GetExperiencePoints() + "\nActions Per Round: " + this.numOfAllowedActions,
+            Musician.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Protections: " + this.GetNumOfProtections() + "\nXP: " + this.GetExperiencePoints() + "\nActions Per Round: " + this.numOfAllowedActions,
+            Summoner.HERO_CLASS => "Hero Class: " + this.heroClass + "\nHero Level: " + this.GetLevel() + "\nHero Help Calls: " + this.GetNumOfHelpCalls() + "\nXP: " + this.GetExperiencePoints() + "\nActions Per Round: " + this.numOfAllowedActions,
             _ => "",
         };
     }
@@ -656,7 +656,7 @@ public class Heroes : MonoBehaviour {
     /* At the first level up, we increase the health, the dexterity and the constitution of the hero */
     /* It happens if the hero has at least 2 experience points */
     public void FirstLevelUp() {
-        if (this.GetLevel() == 1 && this.GetExperiencePoints() == 2) {
+        if (this.GetLevel() == 1 && this.GetExperiencePoints() >= 2) {
             this.currentHealthPoints += 5;
             this.healthPoints += 5;
             this.dexterity += 2;
@@ -671,6 +671,7 @@ public class Heroes : MonoBehaviour {
             LevelUp();
             //this.OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
         }
+
     }
 
     /* This method controlls the animations of the characters in order to be performed 
@@ -767,6 +768,11 @@ public class Heroes : MonoBehaviour {
         /* If we are not in combat mode, return */
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
 
+        if (!this.isPlayersTurn) {
+            UI_Manager.Instance.SetGameInfo("Not Hero's Turn!");
+            return;
+        }
+
         if (heroToAttack.GetIsEnemy() != this.GetIsEnemy()) {
             this.performedActions++;                                // increase the number of permoemed actionsof the hero
             if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
@@ -825,6 +831,12 @@ public class Heroes : MonoBehaviour {
     /* This Function is called when this hero wants to heal another hero */
     public void PerformHeal(Heroes heroToHeal) {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+
+        if (!this.isPlayersTurn) {
+            UI_Manager.Instance.SetGameInfo("Not Hero's Turn!");
+            return;
+        }
+
         if (heroToHeal.GetIsEnemy() == this.GetIsEnemy()) {          // we want to have the same GetIsEnemy()
             this.performedActions++;                                 // increase the number of permoemed actionsof the hero
             if (this.performedActions > this.numOfAllowedActions) {  // hero can permorm numOfAllowedActions action at every turn
@@ -889,6 +901,12 @@ public class Heroes : MonoBehaviour {
      * The Spell will randomly (based on a probability that takes as input) either heal all the heroes or damage all the enemies */
     public void CastSpell(int healProbability) {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+
+        if (!this.isPlayersTurn) {
+            UI_Manager.Instance.SetGameInfo("Not Hero's Turn!");
+            return;
+        }
+
         if (this.heroClass != Priest.HERO_CLASS && this.heroClass != Mage.HERO_CLASS) { return; }
         this.performedActions++;                                     // increase the number of permoemed actionsof the hero
         if (this.performedActions > this.numOfAllowedActions) {      // hero can permorm numOfAllowedActions action at every turn
@@ -953,6 +971,11 @@ public class Heroes : MonoBehaviour {
         /* If the game is not in combat mode, then return */
         /* If this hero is not a priest, then return since only he can use this action  */
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) { return; }
+
+        if (!this.isPlayersTurn) {
+            UI_Manager.Instance.SetGameInfo("Not Hero's Turn!");
+            return;
+        }
         if (this.heroClass != Priest.HERO_CLASS || this.GetIsEnemy() == enemyHero.GetIsEnemy()) { return; }
         this.performedActions++; // increase the number of permoemed actionsof the hero
         if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
@@ -1014,6 +1037,12 @@ public class Heroes : MonoBehaviour {
     /* This function allows the hero to move twice the distance he normally could in a round */
     public void Dash() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+
+        if (!this.isPlayersTurn) {
+            UI_Manager.Instance.SetGameInfo("Not Hero's Turn!");
+            return;
+        }
+
         this.performedActions++; // increase the number of permoemed actions of the hero
         if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             Debug.Log("Max Allowed Actions Performed. Next Turn!");
@@ -1039,6 +1068,13 @@ public class Heroes : MonoBehaviour {
     public virtual void SoundVolumeCalculation() { } // Calculate the volume of the music
     public void PlayMusic() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+
+
+        if (!this.isPlayersTurn) {
+            UI_Manager.Instance.SetGameInfo("Not Hero's Turn!");
+            return;
+        }
+
         this.performedActions++; // increase the number of permomed actions of the hero
         if (this.performedActions > this.numOfAllowedActions) { // hero can permorm numOfAllowedActions action at every turn
             Debug.Log("Max Allowed Actions Performed. Next Turn!");
@@ -1089,6 +1125,12 @@ public class Heroes : MonoBehaviour {
 
     public void CallForHelp() {
         if (GameManager.Instance.GetCurrentState() != GameManager.State.CombatMode) return;
+
+        if (!this.isPlayersTurn) {
+            UI_Manager.Instance.SetGameInfo("Not Hero's Turn!");
+            return;
+        }
+
         this.performedActions++;                                  // increase the number of permomed actions of the hero
         if (this.performedActions > this.numOfAllowedActions) {   // hero can permorm numOfAllowedActions action at every turn
             Debug.Log("Max Allowed Actions Performed. Next Turn!");

@@ -24,10 +24,6 @@ public class Mage : Heroes {
     protected override void Start() { 
         base.Start();
         HeroAttributesToString();
-        /*gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
-        PathFinding.Instance.AddUnitAtGridPosition(gridPosition,this.gameObject.GetComponent<Unit>());
-        currentPositionIndex = 0;
-        */
     }
 
     // Update is called once per frame
@@ -90,7 +86,7 @@ public class Mage : Heroes {
 
         /* Case Upgrade To Level 3 */
         /* We level up if the hero has 4 experience points */
-        if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
+        if (this.GetLevel() == 2 && this.GetExperiencePoints() >= 4) {
             /// code for level up
             this.SetIntelligence(this.GetIntelligence()+3);
             this.SetAttackRange(this.GetAttackRange() + 2);
@@ -101,7 +97,7 @@ public class Mage : Heroes {
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
         /* Case Upgrade To Level 4 */
-        else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
+        else if (this.GetLevel() == 3 && this.GetExperiencePoints() >= 6) {
             // code for level up
             /* At this level the character is allowed to perform 2 main actions at the same turn */
             this.numOfAllowedActions++;
@@ -110,6 +106,10 @@ public class Mage : Heroes {
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
             OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
+        }
+        else {
+            Debug.Log("Error At Level Up. XP = " + this.GetExperiencePoints() + " level = " + this.GetLevel());
+
         }
 
     }

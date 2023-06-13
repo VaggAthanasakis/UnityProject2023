@@ -21,10 +21,6 @@ public class Fighter : Heroes {
     protected override void Start() {
         base.Start();
         HeroAttributesToString();
-        /*gridPosition = PathFinding.Instance.GetGridPosition(this.transform.position);
-        PathFinding.Instance.AddUnitAtGridPosition(gridPosition,this.gameObject.GetComponent<Unit>());
-        currentPositionIndex = 0;
-        */
     }
  
     // Update is called once per frame
@@ -90,11 +86,11 @@ public class Fighter : Heroes {
 
         /* Case Upgrade To Level 3 */
         /* We level up if the hero has 4 experience points */
-        if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
+        if (this.GetLevel() == 2 && this.GetExperiencePoints() >= 4) {
             /// code for level up
-            this.SetStrength(this.GetStrength()+3);
-            this.SetArmorClass(this.GetArmorClass()+2);
-            this.SetCurrentArmorClass(this.GetCurrentArmorClass()+2);
+            this.SetStrength(this.GetStrength() + 3);
+            this.SetArmorClass(this.GetArmorClass() + 2);
+            this.SetCurrentArmorClass(this.GetCurrentArmorClass() + 2);
             this.SetLevel(this.GetLevel() + 1);
             Debug.Log("Level Up");
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
@@ -102,7 +98,7 @@ public class Fighter : Heroes {
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
         /* Case Upgrade To Level 4 */
-        else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
+        else if (this.GetLevel() == 3 && this.GetExperiencePoints() >= 6) {
             // code for level up
             /* At this level the character is allowed to perform 2 main actions at the same turn */
             this.numOfAllowedActions++;
@@ -111,6 +107,10 @@ public class Fighter : Heroes {
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
             OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
+        }
+        else {
+            Debug.Log("Error At Level Up. XP = "+this.GetExperiencePoints()+" level = "+this.GetLevel());
+        
         }
     }
 

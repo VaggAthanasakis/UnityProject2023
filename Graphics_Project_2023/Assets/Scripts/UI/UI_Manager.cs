@@ -21,7 +21,7 @@ public class UI_Manager : MonoBehaviour {
 
     /* Actions/Turn System Panel */
     [SerializeField] GameObject footerBarInfo;
-    [SerializeField] GameObject actionButtons;
+    [SerializeField] public GameObject actionButtons;
     [SerializeField] GameObject gameTurnButtons;
     [SerializeField] public GameObject nextTurnButton;
     [SerializeField] public GameObject diceButton;
@@ -38,7 +38,7 @@ public class UI_Manager : MonoBehaviour {
     /* Game Info Panel */
     [SerializeField] public GameObject gameInfo;
     [SerializeField] public TextMeshProUGUI gameInfoText;
-    private int gameInfoVisualTimer = 100;
+    private int gameInfoVisualTimer = 300;
     private int gameStoryPanelPopUpDelay = 100;
 
     /* Header Texts */
@@ -100,14 +100,13 @@ public class UI_Manager : MonoBehaviour {
         /* If the gameInfo panel is active for some frames, then diactivate it */
         if (this.gameInfo.activeSelf == true && this.gameInfoVisualTimer <= 0) {
             this.gameInfo.SetActive(false);
-            this.gameInfoVisualTimer = 100;
+            this.gameInfoVisualTimer = 300;
         }
         else if(this.gameInfo.activeSelf == true && this.gameInfoVisualTimer > 0) {
             this.gameInfoVisualTimer -= 1;
         }
         /* Code For Poping Up The Game Story Panel */
         if (gameStoryPanelPopUpDelay <= 0 && !this.gameStoryPanel.activeSelf && isGameStoryPanelOpen) {
-            Debug.Log("Activate");
             this.gameStoryPanel.SetActive(true); }
         else if (!gameStoryPanel.activeSelf && isGameStoryPanelOpen) {
 
@@ -123,7 +122,7 @@ public class UI_Manager : MonoBehaviour {
         //this.selectedHero = e.selectedHero;
         if (e.selectedHero != null && !e.selectedHero.GetIsEnemy()) {
             this.selectedHero = e.selectedHero;
-            this.SelectedHeroInfoTitle.text = "Selected Hero Info";
+            this.SelectedHeroInfoTitle.text = "Selected Hero";
             this.HeroInfo.text = selectedHero.HeroStatisticsToString();
             this.selectedHeroPanel.SetActive(true);
         }

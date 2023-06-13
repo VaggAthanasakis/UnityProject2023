@@ -88,7 +88,7 @@ public class FinalBoss : Heroes {
 
         /* Case Upgrade To Level 3 */
         /* We level up if the hero has 4 experience points */
-        if (this.GetLevel() == 2 && this.GetExperiencePoints() == 4) {
+        if (this.GetLevel() == 2 && this.GetExperiencePoints() >= 4) {
             /// code for level up
             this.SetStrength(this.GetStrength()+2);
             this.SetIntelligence(this.GetIntelligence() + 2);
@@ -100,7 +100,7 @@ public class FinalBoss : Heroes {
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
         }
         /* Case Upgrade To Level 4 */
-        else if (this.GetLevel() == 3 && this.GetExperiencePoints() == 6) {
+        else if (this.GetLevel() == 3 && this.GetExperiencePoints() >= 6) {
             // code for level up
             /* At this level the character is allowed to perform 2 main actions at the same turn */
             this.numOfAllowedActions++;
@@ -111,6 +111,10 @@ public class FinalBoss : Heroes {
             UI_Manager.Instance.SetGameInfo("Level Up!\nNew Level = " + this.GetLevel());
             OnHeroLevelChanged?.Invoke(this, EventArgs.Empty);
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.LEVEL_UP);
+        }
+        else {
+            Debug.Log("Error At Level Up. XP = " + this.GetExperiencePoints() + " level = " + this.GetLevel());
+
         }
 
     }
