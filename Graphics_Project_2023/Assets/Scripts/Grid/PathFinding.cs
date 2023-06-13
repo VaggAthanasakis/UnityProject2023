@@ -36,10 +36,6 @@ public class PathFinding : MonoBehaviour {
     private void Start() {
         MouseClick.instance.OnHeroSelectAction += Instance_OnHeroSelectAction;
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
-        //startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
-        //Debug.Log("Starting Hero Position: " + startGridPosition.ToString());
-        //startGridPosition = new GridPosition(0, 0);
-        //startGridPosition = PathFinding.Instance.GetGridPosition(hero.transform.position);
     }
 
     private void TurnSystem_OnTurnChanged(object sender, TurnSystem.OnTurnChangedEventArgs e) {

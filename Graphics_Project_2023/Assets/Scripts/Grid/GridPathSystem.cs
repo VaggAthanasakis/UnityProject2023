@@ -193,6 +193,7 @@ public class GridPathSystem {
         return null;
     }
 
+    /* Check if there is something above the given node by firing a raycast  */
     private bool CheckForColliderAtNode(PathNode node) {
         GridPosition nodePos = node.GetGridPosition();
         Vector3 worldPos = PathFinding.Instance.Grid().GetWorldPosition(nodePos);

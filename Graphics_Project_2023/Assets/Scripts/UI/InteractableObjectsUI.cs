@@ -12,10 +12,10 @@ public class InteractableObjectsUI : MonoBehaviour {
     [SerializeField] private GameObject actionPanel;
 
 
-    private string healString = "HEAL";
-    private string damageString = "DAMAGE";
-    private string rangeDown = "RANGE DOWN";
-    private string rangeUp = "RANGE UP";
+    //private string healString = "HEAL";
+    //private string damageString = "DAMAGE";
+    //private string rangeDown = "RANGE DOWN";
+    //private string rangeUp = "RANGE UP";
     public string actionInsideMysteryBox;
 
 
@@ -68,15 +68,16 @@ public class InteractableObjectsUI : MonoBehaviour {
     }
 
     // is not used
+    /*
     public void Button_Open() {
         Debug.Log("Button Open");
         SoundManager.Instance.PlaySoundWithoutFade(SoundManager.BUTTON_PRESS);
         Heroes heroToOpenIt = MouseClick.instance.GetSelectedHero();
         if (heroToOpenIt != null) {
             heroToOpenIt.PointAtTheInteractedObject(this.interactable.gameObject);
-            /* If the hero cannot interact, return */
+            // If the hero cannot interact, return 
             if (!heroToOpenIt.ObjectInteract()) { return; }
-            /* else */
+            // else 
             this.interactable.isOpen = true;
             this.buttonOpen.SetActive(false);
             this.actionPanel.SetActive(true);
@@ -94,5 +95,5 @@ public class InteractableObjectsUI : MonoBehaviour {
     }
 
 
-
+    */
 }

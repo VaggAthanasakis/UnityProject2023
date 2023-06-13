@@ -17,13 +17,6 @@ public class HeroAttributesUI : MonoBehaviour {
 
     private void Update() {
         this.gameObjectCanvas.transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
-        /*if (hero.IsPointedByMouse()) {
-            this.gameObjectCanvas.SetActive(true);
-            this.attributesInfo.text = hero.attributesToString;
-        }
-        else {
-            this.gameObjectCanvas.SetActive(false);
-        }*/
     }
 
     /* Event that arrives when the hero is pointed */

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LoadingSceneWait : MonoBehaviour
 {
-
     /* Our Goal Is To Wait For The First Update And Then To Load The Next Scene */
 
     private bool isFirstUpdate = true;

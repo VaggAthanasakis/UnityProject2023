@@ -250,7 +250,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 638777698}
     m_Modifications:
     - target: {fileID: 3676974689985237261, guid: a69410e549920124f933d79736ebacc2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -286,7 +286,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4455521177444065879, guid: a69410e549920124f933d79736ebacc2, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4455521177444065879, guid: a69410e549920124f933d79736ebacc2, type: 3}
       propertyPath: m_LocalScale.x
@@ -302,15 +302,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4455521177444065879, guid: a69410e549920124f933d79736ebacc2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.91
+      value: 10.434968
       objectReference: {fileID: 0}
     - target: {fileID: 4455521177444065879, guid: a69410e549920124f933d79736ebacc2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000009536743
+      value: -4.2393236
       objectReference: {fileID: 0}
     - target: {fileID: 4455521177444065879, guid: a69410e549920124f933d79736ebacc2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.35
+      value: 14.277824
       objectReference: {fileID: 0}
     - target: {fileID: 4455521177444065879, guid: a69410e549920124f933d79736ebacc2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -354,6 +354,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a69410e549920124f933d79736ebacc2, type: 3}
+--- !u!4 &4581576 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4455521177444065879, guid: a69410e549920124f933d79736ebacc2, type: 3}
+  m_PrefabInstance: {fileID: 4581575}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &122346707
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,98 +719,30 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Game Design, Programming, Art, Sound:
-
-    -Athanasakis Evangelos
-
-    ----------------------------------------
-
-    External
-    Sources Credits:
-
-
-
-    Music && Sound Effects:
-
-    - Unity Asset Store (https://assetstore.unity.com/packages/audio/sound-fx/rpg-essentials-sound-effects-free-227708)
-
-    -
-    Unity Asset Store (https://assetstore.unity.com/packages/audio/music/25-fantasy-rpg-game-tracks-music-pack-240154)
-
-
-
-    Art
-    Assets and Character''s sprites:
-
-    - Unity Asset Store (https://assetstore.unity.com/packages/3d/characters/humanoids/lowpoly-medieval-priest-free-medieval-fantasy-series-164796)
-
-    -
-    Unity Asset Store (https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/crusader-tank-101601)
-
-    -
-    mixamo (https://www.mixamo.com/#/?page=1&type=Character)
-
-
-
-    Textures, Materials
-    and UI Elements:
-
-    - Unity Asset Store (https://assetstore.unity.com/packages/3d/props/interior/animated-pbr-chest-demo-194755)
-
-    -
-    Unity Asset Store (https://assetstore.unity.com/packages/2d/gui/rpg-fantasy-mobile-gui-with-source-files-166086)
-
-    -
-    Unity Asset Store (https://assetstore.unity.com/packages/2d/textures-materials/free-fantasy-terrain-textures-233640)
-
-
-
-    ----------------------------------------
-
-    Special
-    Thanks To:
-
-
-
-    Code Monkey:
-
-    - (https://www.youtube.com/@CodeMonkeyUnity)
-
-    -
-    (https://www.youtube.com/watch?v=AmGSEH7QcDg)
-
-    - (https://www.youtube.com/watch?v=LdoImzaY6M4&t=592s)
-
-    -
-    (https://www.youtube.com/watch?v=pJQndtJ2rk0&t=843s)
-
-    - (https://www.youtube.com/watch?v=Zwgj3mwOVlg)
-
-    -
-    (https://www.youtube.com/watch?v=Ml8ptNeezsU)
-
-
-
-    Brackeys:
-
-    - (https://www.youtube.com/watch?v=JivuXdrIHK0&t=618s)
-
-    -
-    (https://www.youtube.com/watch?v=zc8ac_qUXQY&t=2s)
-
-    - (https://www.youtube.com/watch?v=6OT43pvUyfY&t=624s)
-
-    -
-    (https://www.youtube.com/watch?v=2PVPz8Pnnrw)
-
-
-
-    Year: 2023
-
-    Course:
-    Graphics
-
-    Organization: TUC'
+  m_text: "Game Design, Programming:\r\n-Athanasakis Evangelos\r\n----------------------------------------\r\nExternal
+    Sources Credits:\r\n\r\nMusic && Sound Effects:\r\n- Unity Asset Store (https://assetstore.unity.com/packages/audio/sound-fx/rpg-essentials-sound-effects-free-227708)\r\n-
+    Unity Asset Store (https://assetstore.unity.com/packages/audio/music/25-fantasy-rpg-game-tracks-music-pack-240154)\r\n\r\nArt
+    Assets and Character's sprites:\r\n- Unity Asset Store (https://assetstore.unity.com/packages/3d/characters/humanoids/lowpoly-medieval-priest-free-medieval-fantasy-series-164796)\r\n-
+    Unity Asset Store (https://assetstore.unity.com/packages/3d/characters/humanoids/fantasy/crusader-tank-101601)\r\n-
+    mixamo\r\n(https://www.mixamo.com/#/?page=1&type=Character)\r\n-mixamo\r\n(https://www.mixamo.com/#/?page=1&query=scared&type=Motion%2CMotionPack)\r\n\r\nTextures,
+    Objects,Materials and UI Elements:\r\n- Unity Asset Store (https://assetstore.unity.com/packages/3d/props/interior/animated-pbr-chest-demo-194755)\r\n-
+    Unity Asset Store (https://assetstore.unity.com/packages/2d/gui/rpg-fantasy-mobile-gui-with-source-files-166086)\r\n-
+    Unity Asset Store (https://assetstore.unity.com/packages/2d/textures-materials/free-fantasy-terrain-textures-233640)\r\n-
+    Unity Asset Store (https://assetstore.unity.com/packages/tools/terrain/bush-or-grass-bend-as-detail-mesh-210986)\r\n-
+    Unity Asset Store (https://assetstore.unity.com/packages/3d/vegetation/trees/realistic-tree-pack-vol-1-50418)\r\n-
+    Unity Asset Store \r\n(https://assetstore.unity.com/packages/3d/props/furniture/raw-wooden-furniture-free-166329)\r\n-
+    Unity Asset Store \r\n(https://assetstore.unity.com/packages/3d/props/exterior/wooden-barricades-111243)\r\n-
+    Unity Asset Store \r\n(https://assetstore.unity.com/packages/3d/environments/medieval-castle-227378)\r\n-
+    Unity Asset Store \r\n(https://assetstore.unity.com/packages/3d/environments/ruins-creation-kit-2235)\r\n-
+    Unity Asset Store \r\n(https://assetstore.unity.com/packages/3d/environments/historic/lowpoly-medieval-buildings-58289)\r\n-
+    Photo By\r\n(https://www.peakpx.com/en/hd-wallpaper-desktop-kpebg)\r\n\r\n----------------------------------------\r\n\r\nSpecial
+    Thanks To:\r\n\r\nCode Monkey:\r\n- (https://www.youtube.com/@CodeMonkeyUnity)\r\n-
+    (https://www.youtube.com/watch?v=AmGSEH7QcDg)\r\n- (https://www.youtube.com/watch?v=LdoImzaY6M4&t=592s)\r\n-
+    (https://www.youtube.com/watch?v=pJQndtJ2rk0&t=843s)\r\n- (https://www.youtube.com/watch?v=Zwgj3mwOVlg)\r\n-
+    (https://www.youtube.com/watch?v=Ml8ptNeezsU)\r\n\r\nBrackeys:\r\n- (https://www.youtube.com/watch?v=JivuXdrIHK0&t=618s)\r\n-
+    (https://www.youtube.com/watch?v=zc8ac_qUXQY&t=2s)\r\n- (https://www.youtube.com/watch?v=6OT43pvUyfY&t=624s)\r\n-
+    (https://www.youtube.com/watch?v=2PVPz8Pnnrw)\r\n\r\nYear: 2023\r\nCourse: Graphics\r\nOrganization:
+    TUC\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1512,8 +1449,9 @@ Transform:
   - {fileID: 416803923}
   - {fileID: 566190134}
   - {fileID: 1966409335}
+  - {fileID: 4581576}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &643890649
 PrefabInstance:
@@ -1825,7 +1763,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &855655969
 GameObject:
@@ -1921,7 +1859,7 @@ RectTransform:
   m_Children:
   - {fileID: 998642408}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2340,7 +2278,7 @@ Transform:
   - {fileID: 987793072}
   - {fileID: 145558767}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1271837189
 GameObject:
@@ -2534,7 +2472,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1580004053
 GameObject:
@@ -3284,7 +3222,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1966409331
 GameObject:
@@ -3781,7 +3719,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3134355544575661969, guid: 5c630c252d999604bbb7a72f701de359, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3134355544575661969, guid: 5c630c252d999604bbb7a72f701de359, type: 3}
       propertyPath: m_LocalPosition.x
