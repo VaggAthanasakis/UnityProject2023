@@ -143,7 +143,7 @@ public class MouseClick : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, instance.interactableObjectsLayerMask)) { // if we select a hero                
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, instance.interactableObjectsLayerMask)) { // if we select a interactable                
                 Debug.Log(raycastHit.transform);
                 if (raycastHit.transform.TryGetComponent(out InteractableObject selectedObject)) {
                     this.selectedObject = selectedObject;

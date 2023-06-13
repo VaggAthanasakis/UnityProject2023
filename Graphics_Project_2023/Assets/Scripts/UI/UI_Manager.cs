@@ -152,6 +152,11 @@ public class UI_Manager : MonoBehaviour {
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         Heroes attackedHero;
         attackedHero = MouseClick.instance.GetSelectedEnemy();
+        if (attackedHero == null || attackedHero.GetIsDead()) {
+            SetGameInfo("Please Select An Enemy!");
+            return;
+        }
+
         if (attackedHero != null && attackedHero != heroWithTurn) {
             heroWithTurn.PerformAttack(attackedHero);
             if (heroWithTurn.GetRemainingMoveRange() <= 0 && heroWithTurn.performedActions >= heroWithTurn.numOfAllowedActions) {
@@ -171,6 +176,10 @@ public class UI_Manager : MonoBehaviour {
         if (heroWithTurn.heroClass != Mage.HERO_CLASS && heroWithTurn.heroClass != Priest.HERO_CLASS) { return; }
 
         Heroes heroToHeal = MouseClick.instance.GetSelectedHero();
+        if (heroToHeal == null || heroToHeal.GetIsDead() || heroToHeal == heroWithTurn) {
+            SetGameInfo("Please Select A Hero To Heal!");
+            return;
+        }
         /* If we have selected an other hero to heal */
         if (heroToHeal != null && heroToHeal != heroWithTurn && heroWithTurn.GetIsEnemy() == heroToHeal.GetIsEnemy()) {
             heroWithTurn.PerformHeal(heroToHeal);
@@ -215,6 +224,11 @@ public class UI_Manager : MonoBehaviour {
         Debug.Log("Buttom Beg Enemy Pushed");
         Heroes heroWithTurn = GameManager.Instance.GetHeroWithTurn();
         Heroes enemyToBeg = MouseClick.instance.GetSelectedEnemy();
+
+        if (enemyToBeg == null || enemyToBeg.GetIsDead()) {
+            SetGameInfo("Please Select An Enemy!");
+            return;
+        }
 
         if (heroWithTurn.heroClass != Priest.HERO_CLASS || heroWithTurn.GetIsEnemy() == enemyToBeg.GetIsEnemy()) { return; }
         heroWithTurn.Beg(enemyToBeg);
