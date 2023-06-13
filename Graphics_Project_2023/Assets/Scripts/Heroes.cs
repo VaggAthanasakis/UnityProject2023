@@ -677,76 +677,36 @@ public class Heroes : MonoBehaviour {
     /* This method controlls the animations of the characters in order to be performed 
      * a spesific amount of times by changing the state of each hero back to idle after an action */
     protected IEnumerator AnimationsDurationControll() {
-        int animationHitDuration = 2;
-        int animationsAttackingDuration = 100;
-        int animationHealingDuration = 2;
-        int animationBeggingDuration = 2;
-        int animationCastSpellingDuration = 3;
-        int animationMusicPlayingDuration = 3;
 
         /* if the hero gets hit */
         if (this.GetGetsHit()) {
             yield return new WaitForSeconds(2f);
             this.SetGetsHit(false);
-            /*this.getHitAnimationsCounter++;
-            if (getHitAnimationsCounter >= animationHitDuration) {
-                this.SetGetsHit(false);
-                this.getHitAnimationsCounter = 0;
-            }*/
         }
         /* If the hero is attacking */
         if (this.GetIsAttacking()) {
             yield return new WaitForSeconds(2f);
             this.SetIsAttacking(false);
-            /*this.attackingAnimationsCounter++;
-            if (attackingAnimationsCounter >= animationsAttackingDuration) {
-                this.SetIsAttacking(false);
-                this.attackingAnimationsCounter = 0;
-            }*/
         }
         /* If the hero is healing */
         if (this.GetIsHealing()) {
             yield return new WaitForSeconds(2f);
             this.SetIsHealing(false);
-            /*this.healingAnimationCounter++;
-            if (healingAnimationCounter >= animationHealingDuration) {
-                this.SetIsHealing(false);
-                this.healingAnimationCounter = 0;
-            }*/
         }
         /* If the hero is begging */
         if (this.GetIsBegging()) {
             yield return new WaitForSeconds(2f);
             this.SetIsBegging(false);
-            /*this.beggingAnimationCounter++;
-            if (beggingAnimationCounter >= animationBeggingDuration) {
-                this.SetIsBegging(false);
-                this.beggingAnimationCounter = 0;
-            }*/
         }
         /* if the hero cast a spell */
         if (this.isCastSpelling) {
             yield return new WaitForSeconds(2f);
             this.SetIsCastSpelling(false);
-            /*
-            this.castSpellingAnimationCounter++;
-            if (castSpellingAnimationCounter >= animationCastSpellingDuration) {
-                this.SetIsCastSpelling(false);
-                this.castSpellingAnimationCounter = 0;
-            }*/
-
         }
         /* if the hero is musician */
         if (this.isPlayingMusic) {
             yield return new WaitForSeconds(2f);
             this.SetIsPlayingMusic(false);
-
-            /*
-            this.musicPlayingAnimationCounter++;
-            if (musicPlayingAnimationCounter >= animationMusicPlayingDuration) {
-                this.SetIsPlayingMusic(false);
-                this.musicPlayingAnimationCounter = 0;
-            }*/
         }
 
     }

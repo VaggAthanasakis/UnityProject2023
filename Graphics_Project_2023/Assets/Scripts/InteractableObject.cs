@@ -66,6 +66,7 @@ public class InteractableObject : MonoBehaviour {
         /* Check if the hero is far away */
         if (distance > interactableDistance) {
             Debug.Log("Hero Far Away");
+            UI_Manager.Instance.SetGameInfo("Hero Far Away!");
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.NO_ACTION);
             return false;
         }
@@ -76,11 +77,13 @@ public class InteractableObject : MonoBehaviour {
         if (randomNumber <= 25) { // then heal else damage
             mysteryBoxAction = "HEAL";
             heroInteracted.GetHeal(randomNumber / 2 + 1, null);
+            UI_Manager.Instance.SetGameInfo("Heal!");
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.HEAL_MUSIC);
         }
         else if (randomNumber <= 50) {
             mysteryBoxAction = "DAMAGE";
             heroInteracted.TakeDamage(randomNumber/2 - 8, null);
+            UI_Manager.Instance.SetGameInfo("Damage!");
             /* if this is the last hero and dies */
             if (GameManager.Instance.aliveHeroes.Count == 0) {
                 GameManager.Instance.SetCurrentState(GameManager.State.GameOver);
@@ -93,11 +96,13 @@ public class InteractableObject : MonoBehaviour {
         }
         else if (randomNumber <= 75) {
             mysteryBoxAction = "RANGE DOWN";
+            UI_Manager.Instance.SetGameInfo("Range Down!");
             heroInteracted.SetAttackRange(heroInteracted.GetAttackRange()/2 +1); // decrease attack range
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.ATTACK_MUSIC);
         }
         else {
             mysteryBoxAction = "RANGE UP";
+            UI_Manager.Instance.SetGameInfo("Range Up!");
             heroInteracted.SetAttackRange(heroInteracted.GetAttackRange() * 2 - 2); // increase attack range
             SoundManager.Instance.PlaySoundWithoutFade(SoundManager.HEAL_MUSIC);
         }
