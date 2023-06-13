@@ -59,7 +59,7 @@ public class InteractableObject : MonoBehaviour {
     /* This function is called in order to open the mystery box
      * if we can open it, return true else false */
     public bool ChestOpen(Heroes heroInteracted) {
-        int interactableDistance = 30;
+        int interactableDistance = 3;
         int distance =  PathFinding.Instance.CalculateSimpleDistance(this.interactableObject.transform.position,heroInteracted.transform.position);
       
         Debug.Log("Distance "+distance);
