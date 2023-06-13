@@ -719,7 +719,6 @@ public class Heroes : MonoBehaviour {
     }
 
     /********** ATTACK ACTION *********/
-
     /* Calculate the attack damage amount of the attack action */
     public virtual void AttackAmountCalculation() { }
 
